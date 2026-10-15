@@ -361,3 +361,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+# Local SQLite customer data (already tracked databases must be untracked separately)
+**/dackhem.db
+**/dackhem.db-shm
+**/dackhem.db-wal
+**/secrets.json
