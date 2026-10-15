@@ -4,6 +4,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dackhem-api-admin-2026-10</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
