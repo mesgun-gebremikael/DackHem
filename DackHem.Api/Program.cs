@@ -1,4 +1,3 @@
-
 using DackHem.Api.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +11,8 @@ namespace DackHem.Api
 
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlite("Data Source=dackhem.db"));
@@ -21,16 +22,15 @@ namespace DackHem.Api
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
-
             app.MapControllers();
 
             app.Run();
         }
     }
 }
-
