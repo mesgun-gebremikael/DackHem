@@ -35,21 +35,21 @@ async function api(path,payload){
 }
 $('booking').addEventListener('submit',async e=>{
  e.preventDefault();
- const msg=$('message'),button=e.currentTarget.querySelector('button');
+ const form=e.currentTarget,msg=$('message'),button=form.querySelector('button');
  const dateTime=`${$('date').value}T${$('time').value}:00`;
  if(new Date(dateTime)<=new Date()){msg.textContent='Välj en tid i framtiden.';return;}
  button.disabled=true;msg.textContent='Skickar bokningen…';
  try{
   const result=await api('/api/bookings',{customerName:$('name').value.trim(),phoneNumber:$('phone').value.trim(),email:$('email').value.trim(),registrationNumber:$('plate').value.trim(),address:$('address').value.trim(),bookingDateTime:dateTime,notes:$('notes').value.trim()||null});
-  e.currentTarget.reset();
+  form.reset();
   msg.textContent=`Bokningen är registrerad! Bokningsnummer: ${result.id}. Pris: ${result.price} kr. Spara din avbokningsnyckel: ${result.cancellationToken}. Den visas bara här och ska inte delas med andra.`;
  }catch(err){msg.textContent=err instanceof TypeError?'Kunde inte nå servern. Öppna hemsidan via DäckHem.Api och försök igen.':err.message;}
  finally{button.disabled=false;}
 });
 $('cancel-form').addEventListener('submit',async e=>{
- e.preventDefault();const msg=$('cancel-message'),button=e.currentTarget.querySelector('button');
+ e.preventDefault();const form=e.currentTarget,msg=$('cancel-message'),button=form.querySelector('button');
  button.disabled=true;msg.textContent='Avbokar…';
- try{const result=await api('/api/bookings/cancel',{token:$('cancel-token').value.trim()});msg.textContent=result.message||'Din bokning är avbokad.';e.currentTarget.reset();}
+ try{const result=await api('/api/bookings/cancel',{token:$('cancel-token').value.trim()});msg.textContent=result.message||'Din bokning är avbokad.';form.reset();}
  catch(err){msg.textContent=err instanceof TypeError?'Kunde inte nå servern. Försök igen.':err.message;}
  finally{button.disabled=false;}
 });
