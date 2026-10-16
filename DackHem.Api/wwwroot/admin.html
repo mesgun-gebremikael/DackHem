@@ -128,7 +128,18 @@ function renderBookings(){
   const tr=document.createElement('tr');tr.dataset.bookingId=b.id;
   if(b.status!=='Cancelled'&&(counts.get(b.bookingDateTime?.slice(0,16))||0)>1){tr.classList.add('conflict');tr.title='Flera aktiva bokningar på samma tid';}
   const timeCell=document.createElement('td');timeCell.textContent=b.bookingDateTime?.replace('T',' ').slice(0,16)||'';tr.appendChild(timeCell);
-  for(const value of [b.status==='Cancelled'?'Avbokad':'Bekräftad',b.customerName,b.phoneNumber,b.email,b.registrationNumber,b.address,b.price+' kr',b.notes])addCell(tr,value);
+  for(const value of [b.status==='Cancelled'?'Avbokad':'Bekräftad',b.customerName,b.phoneNumber,b.email,b.registrationNumber])addCell(tr,value);
+  const addressCell=document.createElement('td');
+  if(String(b.address||'').trim()){
+   const mapsLink=document.createElement('a');
+   mapsLink.href='https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(b.address.trim());
+   mapsLink.target='_blank';mapsLink.rel='noopener noreferrer';
+   mapsLink.textContent=b.address+' ↗ Google Maps';
+   mapsLink.title='Öppna vägbeskrivning i Google Maps';
+   addressCell.appendChild(mapsLink);
+  }else{addressCell.textContent='–';}
+  tr.appendChild(addressCell);
+  for(const value of [b.price+' kr',b.notes])addCell(tr,value);
   const workCell=document.createElement('td');workCell.textContent=b.status==='Cancelled'?'Avbokad':({Waiting:'Väntar',InProgress:'Pågår',Done:'Klar'}[b.workStatus]||'Väntar');tr.appendChild(workCell);
   const assigneeCell=document.createElement('td');assigneeCell.textContent=({Owner:'Mesgun',Colleague:'Semere'}[b.assignedTo]||'–');tr.appendChild(assigneeCell);
   const noteCell=document.createElement('td');noteCell.textContent=b.internalNote||'';tr.appendChild(noteCell);
