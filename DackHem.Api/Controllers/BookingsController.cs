@@ -133,10 +133,10 @@ namespace DackHem.Api.Controllers
                     TimeZoneInfo.FindSystemTimeZoneById(
                         "Europe/Stockholm"));
 
-            if (booking.BookingDateTime <= swedishNow.AddHours(7))
+            if (booking.BookingDateTime <= swedishNow.AddHours(3))
             {
                 return BadRequest(
-                    "Avbokning måste ske mer än 7 timmar före besöket.");
+                    "Du kan avboka via hemsidan mer än 3 timmar före besöket. Ring 070-789 23 40 vid senare avbokning.");
             }
 
             booking.Status = "Cancelled";
