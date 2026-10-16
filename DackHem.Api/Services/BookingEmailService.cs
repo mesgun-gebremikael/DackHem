@@ -35,7 +35,7 @@ public sealed class BookingEmailService
 
             Din bokning hos DäckHem är registrerad.
 
-            Bokningsnummer: {booking.Id}
+            Bokningsnummer: DH-{booking.Id.ToString("N")[..8].ToUpperInvariant()}
             Datum och tid: {booking.BookingDateTime:yyyy-MM-dd HH:mm} (svensk tid)
             Adress: {booking.Address}
             Registreringsnummer: {booking.RegistrationNumber}
@@ -48,6 +48,7 @@ public sealed class BookingEmailService
 
             Hälsningar,
             DäckHem
+            Telefon: 070-789 23 40
             """;
 
         try
@@ -93,17 +94,16 @@ public sealed class BookingEmailService
 
             Tidigare tid: {previousTime:yyyy-MM-dd HH:mm} (svensk tid)
             Ny tid: {booking.BookingDateTime:yyyy-MM-dd HH:mm} (svensk tid)
-            Bokningsnummer: {booking.Id}
+            Bokningsnummer: DH-{booking.Id.ToString("N")[..8].ToUpperInvariant()}
             Adress: {booking.Address}
             Registreringsnummer: {booking.RegistrationNumber}
             Pris: {booking.Price} kr
 
             Din tidigare avbokningslänk gäller fortfarande. Du kan avboka via länken mer än 3 timmar före besöket.\n            Behöver du avboka senare eller har frågor? Ring oss på 070-789 23 40.
 
-            Har du frågor eller stämmer inte tiden? Kontakta DäckHem.
-
             Hälsningar,
             DäckHem
+            Telefon: 070-789 23 40
             """;
 
         try
