@@ -162,7 +162,7 @@ public class AdminBookingsController : ControllerBase
             latest = Math.Max(after, Convert.ToInt64(await maxCommand.ExecuteScalarAsync()));
             using var command = connection.CreateCommand();
             command.CommandText = """
-                SELECT e.Id, b.CustomerName, b.BookingDateTime
+                SELECT e.Id, b.CustomerName, b.BookingDateTime, b.RegistrationNumber
                 FROM BookingCancellationEvents e
                 JOIN Bookings b ON UPPER(b.Id) = e.BookingId
                 WHERE e.Id > $after
@@ -176,7 +176,7 @@ public class AdminBookingsController : ControllerBase
             using var reader = await command.ExecuteReaderAsync();
             while (await reader.ReadAsync())
                 events.Add(new { id = reader.GetInt64(0), customerName = reader.GetString(1),
-                    bookingDateTime = reader.GetString(2) });
+                    bookingDateTime = reader.GetString(2), registrationNumber = reader.GetString(3) });
         }
         finally { await connection.CloseAsync(); }
         return Ok(new { latest, events });
