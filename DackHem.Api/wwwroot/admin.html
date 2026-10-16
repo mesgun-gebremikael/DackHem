@@ -1,6 +1,41 @@
 <!doctype html>
 <html lang="sv"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DäckHem Admin</title><style>
 body{font:16px system-ui;background:#0c1726;color:#eef4fb;margin:0;padding:32px}main{max-width:1200px;margin:auto}a{color:#f5b942}.panel{background:#15263b;padding:24px;border-radius:12px;margin:20px 0}input{padding:12px;border-radius:6px}button{padding:12px;background:#f5b942;border:0;border-radius:6px;cursor:pointer;margin:6px}table{border-collapse:collapse;width:100%;min-width:850px}th,td{border-bottom:1px solid #43566c;padding:10px;text-align:left}th{color:#f5b942}.conflict{background:#49351c}.warning{background:#49351c;border:1px solid #f5b942;border-radius:8px;padding:12px;margin:12px 0}.filters{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:16px 0}.filters input,.filters select{padding:10px;border-radius:6px;background:#fff;color:#111}.filters label{display:flex;gap:6px;align-items:center}.edit{background:#263c54;color:#fff;border:1px solid #f5b942;padding:7px}.reschedule{margin:16px 0;padding:16px;border:1px solid #f5b942;border-radius:8px}.reschedule input{margin:8px}.workPanel{border:1px solid #f5b942;padding:16px;border-radius:8px;margin:14px 0}.workPanel label{display:block;margin:10px 0}.workPanel select,.workPanel textarea{padding:9px;border-radius:6px;max-width:100%;width:300px}.workPanel textarea{width:420px;height:65px}.inlineWork{display:flex;flex-direction:column;gap:6px;position:absolute;right:0;top:100%;z-index:10;width:205px;box-sizing:border-box;padding:12px;background:#263c54;border:1px solid #f5b942;border-radius:8px;box-shadow:0 6px 20px #0009}.workActions{position:relative;min-width:145px}.inlineWork button{margin:3px 0}.inlineWork select{max-width:150px;padding:7px;border-radius:6px;background:white;color:#111}.inlineWork textarea{max-width:160px;min-height:54px;border-radius:6px;padding:6px}.inlineWork small{font-size:12px}.inlineTime{width:240px}.inlineTime input{width:100%;box-sizing:border-box;padding:7px;border-radius:6px}.inlineTime small{line-height:1.4}.workBadge{font-weight:bold}.scroll{overflow-x:auto}[hidden]{display:none!important}
+
+/* Mobil och surfplatta: en tydlig bokningsruta i stället för en bred tabell. */
+@media(max-width:900px){
+ body{padding:12px;font-size:15px}
+ main{max-width:100%}
+ h1{font-size:1.55rem}
+ .panel{padding:14px;margin:12px 0;border-radius:12px}
+ .filters{display:grid;grid-template-columns:1fr;gap:10px}
+ .filters label{display:flex;flex-direction:column;align-items:stretch;gap:4px}
+ .filters input,.filters select{width:100%;box-sizing:border-box}
+ #refresh,#lock{margin:3px 5px 6px 0}
+ .scroll{overflow:visible}
+ table,tbody,tr,td{display:block;width:100%;min-width:0;box-sizing:border-box}
+ thead{display:none}
+ tbody{display:grid;gap:14px}
+ tr{background:#20354c;border:1px solid #43566c;border-radius:12px;padding:10px 12px}
+ tr.conflict{background:#49351c;border-color:#f5b942}
+ td{display:grid;grid-template-columns:minmax(94px,34%) minmax(0,1fr);gap:8px;align-items:start;padding:8px 0;border-bottom:1px solid #364b61;overflow-wrap:anywhere}
+ td:last-child{border-bottom:0}
+ td::before{content:attr(data-label);color:#f5b942;font-weight:650}
+ td[data-label="Tid"]{font-size:1.07rem;font-weight:700}
+ td[data-label="Åtgärd"]{display:block;padding-top:12px}
+ td[data-label="Åtgärd"]::before{display:block;margin-bottom:6px}
+ .workActions{display:flex;flex-wrap:wrap;gap:8px;min-width:0;position:static}
+ .workActions>.edit{margin:0;flex:1 1 120px}
+ .inlineWork{position:fixed;top:50%;left:50%;right:auto;transform:translate(-50%,-50%);width:min(340px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow-y:auto;z-index:1000;padding:16px}
+ .inlineWork select,.inlineWork textarea{max-width:100%;width:100%;box-sizing:border-box}
+ .inlineTime{width:min(340px,calc(100vw - 32px))}
+ .inlineWork button{margin:3px 0}
+ #prev,#next{padding:10px}
+}
+@media(min-width:901px){
+ th,td{vertical-align:middle}
+ .workActions>.edit{display:block;margin:6px 0;white-space:nowrap}
+}
 </style></head><body><main><a href="/">Tillbaka till DäckHem</a><h1>Admin – bokningar</h1><p>Endast för administratören.</p><div class="panel" id="login"><form id="loginForm"><label>Adminnyckel <input id="key" type="password" required autocomplete="off"></label><button>Visa bokningar</button></form></div><p id="message" role="status"></p><div class="panel" id="result" hidden><button id="refresh">Uppdatera</button><button id="lock">Lås</button><p id="count"></p><div class="filters"><label>Sök kund <input id="search" type="search" placeholder="Namn, telefon eller regnummer"></label><label>Status <select id="status"><option value="all">Alla</option><option value="Confirmed">Aktiva</option><option value="Cancelled">Avbokade</option></select></label><label>Sortering <select id="sort"><option value="upcoming">Kommande först</option><option value="newest">Senaste datum först</option></select></label></div><p id="filteredCount"></p><p>Obs: sökning och filtrering gäller de 30 bokningarna på aktuell sida.</p><div id="conflicts" role="status" hidden></div><div class="reschedule" id="editPanel" hidden><h2>Ändra bokningstid</h2><p id="editCustomer"></p><form id="editForm"><label>Ny tid <input id="newTime" type="datetime-local" required></label><button type="submit">Spara och mejla kunden</button><button type="button" id="cancelEdit">Avbryt</button></form><p id="editMessage" role="status"></p></div><div class="workPanel" id="workPanel" hidden><h2>Uppdatera arbete</h2><p id="workCustomer"></p><form id="workForm"><label>Arbetsstatus <select id="workStatus"><option value="Waiting">Väntar</option><option value="InProgress">Pågår</option><option value="Done">Klar</option></select></label><label>Ansvarig <select id="assignedTo"><option value="">Ingen vald</option><option value="Owner">Jag</option><option value="Colleague">Kollegan</option></select></label><label>Intern kommentar <textarea id="internalNote" maxlength="1000" placeholder="Syns bara i adminpanelen"></textarea></label><button type="submit">Spara</button><button type="button" id="closeWork">Stäng</button></form><p id="workMessage" role="status"></p></div><div class="scroll"><table><thead><tr><th>Tid</th><th>Status</th><th>Namn</th><th>Telefon</th><th>E-post</th><th>Regnummer</th><th>Adress</th><th>Pris</th><th>Övrigt</th><th>Arbete</th><th>Ansvarig</th><th>Intern kommentar</th><th>Åtgärd</th></tr></thead><tbody id="rows"></tbody></table></div><button id="prev">Föregående</button><span id="page"></span><button id="next">Nästa</button></div></main>
 <script>
 const el=id=>document.getElementById(id);
@@ -155,6 +190,8 @@ function renderBookings(){
     box.append(statusSelect,assigneeSelect,note,saveButton,hint);actions.appendChild(box);
    });actions.appendChild(workButton);tr.appendChild(td);
   }else addCell(tr,'–');
+  const labels=['Tid','Status','Namn','Telefon','E-post','Regnummer','Adress','Pris','Övrigt','Arbete','Ansvarig','Intern kommentar','Åtgärd'];
+  [...tr.children].forEach((cell,index)=>{cell.dataset.label=labels[index]||'';});
   el('rows').appendChild(tr);
  }
  el('filteredCount').textContent='Visar '+filtered.length+' av '+currentBookings.length+' bokningar på sidan.';
