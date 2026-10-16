@@ -1,6 +1,7 @@
 ﻿
 using DackHem.Api.Data;
 using DackHem.Api.Models;
+using DackHem.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
@@ -13,10 +14,12 @@ namespace DackHem.Api.Controllers
     public class BookingsController : ControllerBase
     {
         private readonly AppDbContext _db;
+        private readonly BookingEmailService _email;
 
-        public BookingsController(AppDbContext db)
+        public BookingsController(AppDbContext db, BookingEmailService email)
         {
             _db = db;
+            _email = email;
         }
 
         public class CreateBookingRequest
@@ -88,6 +91,7 @@ namespace DackHem.Api.Controllers
 
             _db.Bookings.Add(booking);
             await _db.SaveChangesAsync();
+            var emailSent = await _email.SendConfirmationAsync(booking, token);
 
             return Created(
                 $"/api/bookings/{booking.Id}",
@@ -97,7 +101,8 @@ namespace DackHem.Api.Controllers
                     booking.BookingDateTime,
                     booking.Price,
                     booking.Status,
-                    CancellationToken = token
+                    CancellationToken = token,
+                    EmailSent = emailSent
                 });
         }
 
