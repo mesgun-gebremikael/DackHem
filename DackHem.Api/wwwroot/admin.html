@@ -139,7 +139,7 @@ function renderBookings(){
    const mapsLink=document.createElement('a');
    const address=b.address.trim();
    // Add municipality for street-only addresses to reduce ambiguous map matches.
-   const fullAddress=/upplands\\s+väsby|stockholm|sverige|sweden|\\b\\d{3}\\s?\\d{2}\\b/i.test(address)
+   const fullAddress=/upplands\s+väsby|stockholm|sverige|sweden|\b\d{3}\s?\d{2}\b/i.test(address)
      ?address:address+', Upplands Väsby, Sverige';
    mapsLink.href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(fullAddress);
    mapsLink.target='_blank';mapsLink.rel='noopener noreferrer';
