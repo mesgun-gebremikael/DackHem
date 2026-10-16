@@ -48,6 +48,18 @@ namespace DackHem.Api
                     """);
             }
 
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                db.Database.ExecuteSqlRaw("""
+                    CREATE TABLE IF NOT EXISTS BookingCancellationEvents (
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        BookingId TEXT NOT NULL UNIQUE,
+                        CancelledAtUtc TEXT NOT NULL
+                    )
+                    """);
+            }
+
             app.Run();
         }
     }

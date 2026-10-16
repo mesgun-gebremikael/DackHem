@@ -139,8 +139,14 @@ namespace DackHem.Api.Controllers
                     "Du kan avboka via hemsidan mer än 3 timmar före besöket. Ring 070-789 23 40 vid senare avbokning.");
             }
 
+            await using var transaction = await _db.Database.BeginTransactionAsync();
             booking.Status = "Cancelled";
             await _db.SaveChangesAsync();
+            await _db.Database.ExecuteSqlInterpolatedAsync($"""
+                INSERT INTO BookingCancellationEvents (BookingId, CancelledAtUtc)
+                VALUES ({booking.Id.ToString().ToUpperInvariant()}, {DateTime.UtcNow.ToString("O")})
+                """);
+            await transaction.CommitAsync();
 
             return Ok(new
             {
