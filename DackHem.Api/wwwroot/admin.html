@@ -223,7 +223,7 @@ function renderBookings(){
       workCell.textContent=({Waiting:'Väntar',InProgress:'Pågår',Done:'Klar'}[b.workStatus]||'Väntar');
       assigneeCell.textContent=({Owner:'Mesgun',Colleague:'Semere'}[b.assignedTo]||'–');
       noteCell.textContent=b.internalNote||'';
-      box.remove();renderOverviewOnly();el('message').textContent='Arbetet sparades för '+b.customerName+'.';
+      box.remove();await refreshOverview();el('message').textContent='Arbetet sparades för '+b.customerName+'.';
      }catch(error){
       statusSelect.value=b.workStatus||'Waiting';assigneeSelect.value=b.assignedTo||'';note.value=b.internalNote||'';
       hint.textContent=error.message||'Kunde inte spara.';
