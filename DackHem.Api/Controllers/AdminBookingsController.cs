@@ -29,7 +29,7 @@ public class AdminBookingsController : ControllerBase
         [FromQuery] int page = 1, [FromQuery] int pageSize = 30,
         [FromQuery] string? search = null, [FromQuery] string status = "all",
         [FromQuery] string workStatus = "all", [FromQuery] bool todayOnly = false,
-        [FromQuery] string sort = "upcoming")
+        [FromQuery] string sort = "upcoming", [FromQuery] DateTime? date = null)
     {
         var authError = AuthorizeAdmin();
         if (authError != null) return authError;
@@ -54,6 +54,14 @@ public class AdminBookingsController : ControllerBase
                 EF.Functions.Like(b.PhoneNumber, "%" + search + "%") ||
                 EF.Functions.Like(b.RegistrationNumber, "%" + search + "%"));
         if (status != "all") query = query.Where(b => b.Status == status);
+        if (date.HasValue)
+        {
+            if (date.Value.Kind != DateTimeKind.Unspecified)
+                return BadRequest(new { message = "Ange datum utan tidszon." });
+            var selected = date.Value.Date;
+            var nextDay = selected.AddDays(1);
+            query = query.Where(b => b.BookingDateTime >= selected && b.BookingDateTime < nextDay);
+        }
         if (todayOnly) query = query.Where(b => b.Status != "Cancelled" &&
             b.BookingDateTime >= today && b.BookingDateTime < tomorrow);
 
@@ -120,6 +128,25 @@ public class AdminBookingsController : ControllerBase
             };
         }).ToList();
         return Ok(new { total, page, pageSize, overview, bookings });
+    }
+
+    [HttpGet("calendar")]
+    public async Task<IActionResult> GetCalendar([FromQuery] int year, [FromQuery] int month)
+    {
+        var authError = AuthorizeAdmin();
+        if (authError != null) return authError;
+        if (year < 2000 || year > 2100 || month < 1 || month > 12)
+            return BadRequest(new { message = "Ogiltig månad." });
+
+        var first = new DateTime(year, month, 1);
+        var next = first.AddMonths(1);
+        var days = await _db.Bookings.AsNoTracking()
+            .Where(b => b.Status != "Cancelled" &&
+                b.BookingDateTime >= first && b.BookingDateTime < next)
+            .GroupBy(b => b.BookingDateTime.Date)
+            .Select(g => new { date = g.Key, count = g.Count() })
+            .ToListAsync();
+        return Ok(new { year, month, days });
     }
 
     public sealed class RescheduleRequest
