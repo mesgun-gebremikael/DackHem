@@ -3,6 +3,7 @@
 body{font:16px system-ui;background:#0c1726;color:#eef4fb;margin:0;padding:32px}main{max-width:1200px;margin:auto}a{color:#f5b942}.panel{background:#15263b;padding:24px;border-radius:12px;margin:20px 0}input{padding:12px;border-radius:6px}button{padding:12px;background:#f5b942;border:0;border-radius:6px;cursor:pointer;margin:6px}table{border-collapse:collapse;width:100%;min-width:850px}th,td{border-bottom:1px solid #43566c;padding:10px;text-align:left}th{color:#f5b942}.conflict{background:#49351c}.warning{background:#49351c;border:1px solid #f5b942;border-radius:8px;padding:12px;margin:12px 0}.filters{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:16px 0}.filters input,.filters select{padding:10px;border-radius:6px;background:#fff;color:#111}.filters label{display:flex;gap:6px;align-items:center}.edit{background:#263c54;color:#fff;border:1px solid #f5b942;padding:7px}.reschedule{margin:16px 0;padding:16px;border:1px solid #f5b942;border-radius:8px}.reschedule input{margin:8px}.workPanel{border:1px solid #f5b942;padding:16px;border-radius:8px;margin:14px 0}.workPanel label{display:block;margin:10px 0}.workPanel select,.workPanel textarea{padding:9px;border-radius:6px;max-width:100%;width:300px}.workPanel textarea{width:420px;height:65px}.inlineWork{display:flex;flex-direction:column;gap:6px;position:absolute;right:0;top:100%;z-index:10;width:205px;box-sizing:border-box;padding:12px;background:#263c54;border:1px solid #f5b942;border-radius:8px;box-shadow:0 6px 20px #0009}.workActions{position:relative;min-width:145px}.inlineWork button{margin:3px 0}.inlineWork select{max-width:150px;padding:7px;border-radius:6px;background:white;color:#111}.inlineWork textarea{max-width:160px;min-height:54px;border-radius:6px;padding:6px}.inlineWork small{font-size:12px}.inlineTime{width:240px}.inlineTime input{width:100%;box-sizing:border-box;padding:7px;border-radius:6px}.inlineTime small{line-height:1.4}.workBadge{font-weight:bold}.scroll{overflow-x:auto}[hidden]{display:none!important}
 
 .overview{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:16px 0}.overviewItem{background:#20354c;border:1px solid #43566c;border-radius:10px;padding:12px}.overviewItem strong{display:block;font-size:1.8rem;color:#f5b942}.overviewItem span{font-size:.92rem}.todayControls{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.todayControls button{margin:0}.todayControls button[aria-pressed="true"]{background:#f5b942;color:#101c2b;font-weight:700}.todayControls button[aria-pressed="false"]{background:#263c54;color:#eef4fb;border:1px solid #f5b942}.overviewNote{color:#bfcddd;font-size:.9rem}@media(max-width:650px){.overview{grid-template-columns:repeat(2,minmax(0,1fr))}.overviewItem strong{font-size:1.5rem}}
+.calendarHeader{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.calendarHeader h2{margin:0;min-width:165px;text-transform:capitalize}.calendarGrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin:12px 0}.calendarGrid .weekday{text-align:center;font-weight:700;color:#f5b942;padding:6px 0}.calendarDay{min-height:64px;margin:0;padding:7px 3px;background:#20354c;color:#fff;border:1px solid #43566c;border-radius:7px;text-align:center}.calendarDay.hasBookings{border-color:#f5b942}.calendarDay.selected{outline:3px solid #f5b942}.calendarDay .dayNumber{display:block;font-weight:700}.calendarDay .dayCount{display:block;font-size:.75rem;margin-top:4px}.calendarDay:disabled{opacity:.4;cursor:default}.calendarSelection{display:flex;gap:10px;align-items:center;flex-wrap:wrap}@media(max-width:650px){.calendarDay{min-height:52px;padding:5px 1px;font-size:.85rem}.calendarDay .dayCount{font-size:.65rem}}
 /* Mobil och surfplatta: en tydlig bokningsruta i stället för en bred tabell. */
 @media(max-width:900px){
  body{padding:12px;font-size:15px}
@@ -37,10 +38,11 @@ body{font:16px system-ui;background:#0c1726;color:#eef4fb;margin:0;padding:32px}
  th,td{vertical-align:middle}
  .workActions>.edit{display:block;margin:6px 0;white-space:nowrap}
 }
-</style></head><body><main><a href="/">Tillbaka till DäckHem</a><h1>Admin – bokningar</h1><p>Endast för administratören.</p><div class="panel" id="login"><form id="loginForm"><label>Adminnyckel <input id="key" type="password" required autocomplete="off"></label><button>Visa bokningar</button></form></div><p id="message" role="status"></p><div class="panel" id="result" hidden><button id="refresh">Uppdatera</button><button id="lock">Lås</button><p id="count"></p><h2>Dagens arbetsöversikt</h2><div class="overview" id="overview"><div class="overviewItem"><strong id="todayCount">0</strong><span>Bokningar idag</span></div><div class="overviewItem"><strong id="waitingCount">0</strong><span>Väntar</span></div><div class="overviewItem"><strong id="progressCount">0</strong><span>Pågår</span></div><div class="overviewItem"><strong id="doneCount">0</strong><span>Klara</span></div></div><p class="overviewNote">Översikten räknar alla aktiva bokningar för idag.</p><div class="todayControls"><button type="button" id="showToday" aria-pressed="false">Visa dagens bokningar</button><button type="button" id="showAll" aria-pressed="true">Visa alla bokningar</button></div><div class="filters"><label>Sök kund <input id="search" type="search" placeholder="Namn, telefon eller regnummer"></label><label>Status <select id="status"><option value="all">Alla</option><option value="Confirmed">Aktiva</option><option value="Cancelled">Avbokade</option></select></label><label>Arbetsstatus <select id="workFilter"><option value="all">Alla</option><option value="Waiting">Väntar</option><option value="InProgress">Pågår</option><option value="Done">Klar</option></select></label><label>Sortering <select id="sort"><option value="upcoming">Kommande först</option><option value="newest">Senaste datum först</option></select></label></div><p id="filteredCount"></p><p>Sökning och filtrering gäller alla bokningar, även de som ligger på andra sidor.</p><div id="conflicts" role="status" hidden></div><div class="reschedule" id="editPanel" hidden><h2>Ändra bokningstid</h2><p id="editCustomer"></p><form id="editForm"><label>Ny tid <input id="newTime" type="datetime-local" required></label><button type="submit">Spara och mejla kunden</button><button type="button" id="cancelEdit">Avbryt</button></form><p id="editMessage" role="status"></p></div><div class="workPanel" id="workPanel" hidden><h2>Uppdatera arbete</h2><p id="workCustomer"></p><form id="workForm"><label>Arbetsstatus <select id="workStatus"><option value="Waiting">Väntar</option><option value="InProgress">Pågår</option><option value="Done">Klar</option></select></label><label>Ansvarig <select id="assignedTo"><option value="">Ingen vald</option><option value="Owner">Jag</option><option value="Colleague">Kollegan</option></select></label><label>Intern kommentar <textarea id="internalNote" maxlength="1000" placeholder="Syns bara i adminpanelen"></textarea></label><button type="submit">Spara</button><button type="button" id="closeWork">Stäng</button></form><p id="workMessage" role="status"></p></div><div class="scroll"><table><thead><tr><th>Tid</th><th>Status</th><th>Namn</th><th>Telefon</th><th>E-post</th><th>Regnummer</th><th>Adress</th><th>Pris</th><th>Övrigt</th><th>Arbete</th><th>Ansvarig</th><th>Intern kommentar</th><th>Åtgärd</th></tr></thead><tbody id="rows"></tbody></table></div><button id="prev">Föregående</button><span id="page"></span><button id="next">Nästa</button></div></main>
+</style></head><body><main><a href="/">Tillbaka till DäckHem</a><h1>Admin – bokningar</h1><p>Endast för administratören.</p><div class="panel" id="login"><form id="loginForm"><label>Adminnyckel <input id="key" type="password" required autocomplete="off"></label><button>Visa bokningar</button></form></div><p id="message" role="status"></p><div class="panel" id="result" hidden><button id="refresh">Uppdatera</button><button id="lock">Lås</button><p id="count"></p><section aria-label="Bokningskalender"><div class="calendarHeader"><h2 id="calendarMonth">Kalender</h2><button type="button" id="calendarPrev">← Föregående</button><button type="button" id="calendarNext">Nästa →</button></div><p id="calendarMessage" role="status"></p><div id="calendarGrid" class="calendarGrid"></div><div class="calendarSelection"><span id="selectedDateLabel">Välj en dag för att se bokningarna.</span><button type="button" id="clearDate" hidden>Visa alla datum</button></div></section><h2>Dagens arbetsöversikt</h2><div class="overview" id="overview"><div class="overviewItem"><strong id="todayCount">0</strong><span>Bokningar idag</span></div><div class="overviewItem"><strong id="waitingCount">0</strong><span>Väntar</span></div><div class="overviewItem"><strong id="progressCount">0</strong><span>Pågår</span></div><div class="overviewItem"><strong id="doneCount">0</strong><span>Klara</span></div></div><p class="overviewNote">Översikten räknar alla aktiva bokningar för idag.</p><div class="todayControls"><button type="button" id="showToday" aria-pressed="false">Visa dagens bokningar</button><button type="button" id="showAll" aria-pressed="true">Visa alla bokningar</button></div><div class="filters"><label>Sök kund <input id="search" type="search" placeholder="Namn, telefon eller regnummer"></label><label>Status <select id="status"><option value="all">Alla</option><option value="Confirmed">Aktiva</option><option value="Cancelled">Avbokade</option></select></label><label>Arbetsstatus <select id="workFilter"><option value="all">Alla</option><option value="Waiting">Väntar</option><option value="InProgress">Pågår</option><option value="Done">Klar</option></select></label><label>Sortering <select id="sort"><option value="upcoming">Kommande först</option><option value="newest">Senaste datum först</option></select></label></div><p id="filteredCount"></p><p>Sökning och filtrering gäller alla bokningar, även de som ligger på andra sidor.</p><div id="conflicts" role="status" hidden></div><div class="reschedule" id="editPanel" hidden><h2>Ändra bokningstid</h2><p id="editCustomer"></p><form id="editForm"><label>Ny tid <input id="newTime" type="datetime-local" required></label><button type="submit">Spara och mejla kunden</button><button type="button" id="cancelEdit">Avbryt</button></form><p id="editMessage" role="status"></p></div><div class="workPanel" id="workPanel" hidden><h2>Uppdatera arbete</h2><p id="workCustomer"></p><form id="workForm"><label>Arbetsstatus <select id="workStatus"><option value="Waiting">Väntar</option><option value="InProgress">Pågår</option><option value="Done">Klar</option></select></label><label>Ansvarig <select id="assignedTo"><option value="">Ingen vald</option><option value="Owner">Jag</option><option value="Colleague">Kollegan</option></select></label><label>Intern kommentar <textarea id="internalNote" maxlength="1000" placeholder="Syns bara i adminpanelen"></textarea></label><button type="submit">Spara</button><button type="button" id="closeWork">Stäng</button></form><p id="workMessage" role="status"></p></div><div class="scroll"><table><thead><tr><th>Tid</th><th>Status</th><th>Namn</th><th>Telefon</th><th>E-post</th><th>Regnummer</th><th>Adress</th><th>Pris</th><th>Övrigt</th><th>Arbete</th><th>Ansvarig</th><th>Intern kommentar</th><th>Åtgärd</th></tr></thead><tbody id="rows"></tbody></table></div><button id="prev">Föregående</button><span id="page"></span><button id="next">Nästa</button></div></main>
 <script>
 const el=id=>document.getElementById(id);
-let key='',page=1,total=0,currentBookings=[],todayOnly=false,searchTimer=null,loadVersion=0;
+let key='',page=1,total=0,currentBookings=[],todayOnly=false,searchTimer=null,loadVersion=0,selectedDate='',calendarVersion=0;
+const initialMonth=stockholmDate().slice(0,7).split('-').map(Number);let calendarYear=initialMonth[0],calendarMonth=initialMonth[1];
 function stockholmDate(){return new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Stockholm',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());}
 function updateTodayButtons(){el('showToday').setAttribute('aria-pressed',String(todayOnly));el('showAll').setAttribute('aria-pressed',String(!todayOnly));}
 function addCell(tr,value){const td=document.createElement('td');td.textContent=String(value??'');tr.appendChild(td);}
@@ -48,7 +50,7 @@ async function load(){
  const version=++loadVersion;
  el('message').textContent='Hämtar bokningar...';
  try{
- const params=new URLSearchParams({page:String(page),pageSize:'30',search:el('search').value.trim(),status:el('status').value,workStatus:el('workFilter').value,todayOnly:String(todayOnly),sort:el('sort').value});
+ const params=new URLSearchParams({page:String(page),pageSize:'30',search:el('search').value.trim(),status:el('status').value,workStatus:el('workFilter').value,todayOnly:String(todayOnly),sort:el('sort').value});if(selectedDate)params.set('date',selectedDate);
  const response=await fetch('/api/admin/bookings?'+params,{headers:{'X-Admin-Key':key},cache:'no-store'});
  if(version!==loadVersion)return;
  if(!response.ok){const error=await response.json();if(response.status===401){key='';el('result').hidden=true;el('login').hidden=false;}throw Error(error.message||'Kunde inte hämta bokningar.');}
@@ -56,9 +58,48 @@ async function load(){
  setOverview(data.overview);el('editPanel').hidden=true;editingId=null;el('workPanel').hidden=true;workingId=null;
  renderBookings();
 
- el('count').textContent=total+' bokningar';el('page').textContent=' Sida '+page+' ';el('prev').disabled=page===1;el('next').disabled=page*30>=total;el('login').hidden=true;el('result').hidden=false;el('message').textContent='Bokningarna är uppdaterade.';
+ el('count').textContent=total+' matchande bokningar';el('page').textContent=' Sida '+page+' ';el('prev').disabled=page===1;el('next').disabled=page*30>=total;el('login').hidden=true;el('result').hidden=false;el('message').textContent='Bokningarna är uppdaterade.';
  }catch(error){if(version===loadVersion)el('message').textContent=error.message||'Ett fel uppstod.';}
 }
+async function loadCalendar(){
+ const version=++calendarVersion;
+ const label=new Intl.DateTimeFormat('sv-SE',{month:'long',year:'numeric',timeZone:'Europe/Stockholm'}).format(new Date(Date.UTC(calendarYear,calendarMonth-1,1)));
+ el('calendarMonth').textContent=label;
+ el('calendarMessage').textContent='Hämtar kalender...';
+ try{
+  const response=await fetch('/api/admin/bookings/calendar?year='+calendarYear+'&month='+calendarMonth,{headers:{'X-Admin-Key':key},cache:'no-store'});
+  if(version!==calendarVersion)return;
+  if(!response.ok)throw Error('Kunde inte hämta kalendern.');
+  const data=await response.json();if(version!==calendarVersion)return;
+  const counts=new Map(data.days.map(x=>[String(x.date).slice(0,10),x.count]));
+  const grid=el('calendarGrid');grid.replaceChildren();
+  for(const name of ['Mån','Tis','Ons','Tor','Fre','Lör','Sön']){
+   const heading=document.createElement('div');heading.className='weekday';heading.textContent=name;grid.appendChild(heading);
+  }
+  const offset=(new Date(Date.UTC(calendarYear,calendarMonth-1,1)).getUTCDay()+6)%7;
+  for(let i=0;i<offset;i++){const blank=document.createElement('div');grid.appendChild(blank);}
+  const daysInMonth=new Date(Date.UTC(calendarYear,calendarMonth,0)).getUTCDate();
+  for(let day=1;day<=daysInMonth;day++){
+   const date=calendarYear+'-'+String(calendarMonth).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+   const count=counts.get(date)||0;
+   const button=document.createElement('button');button.type='button';button.className='calendarDay'+(count?' hasBookings':'')+(selectedDate===date?' selected':'');
+   button.setAttribute('aria-label',date+', '+count+' bokningar');
+   const number=document.createElement('span');number.className='dayNumber';number.textContent=day;
+   const numberOfBookings=document.createElement('span');numberOfBookings.className='dayCount';numberOfBookings.textContent=count+' bokn.';
+   button.append(number,numberOfBookings);
+   button.addEventListener('click',()=>{selectedDate=date;todayOnly=false;updateTodayButtons();page=1;el('selectedDateLabel').textContent='Vald dag: '+date;el('clearDate').hidden=false;load();loadCalendar();});
+   grid.appendChild(button);
+  }
+  el('calendarMessage').textContent='Välj en dag för att visa dess bokningar. Avbokade bokningar räknas inte i kalendern.';
+ }catch(error){if(version===calendarVersion)el('calendarMessage').textContent=error.message;}
+}
+function changeCalendarMonth(delta){
+ const next=new Date(Date.UTC(calendarYear,calendarMonth-1+delta,1));
+ calendarYear=next.getUTCFullYear();calendarMonth=next.getUTCMonth()+1;loadCalendar();
+}
+el('calendarPrev').addEventListener('click',()=>changeCalendarMonth(-1));
+el('calendarNext').addEventListener('click',()=>changeCalendarMonth(1));
+el('clearDate').addEventListener('click',()=>{selectedDate='';page=1;el('selectedDateLabel').textContent='Välj en dag för att se bokningarna.';el('clearDate').hidden=true;load();loadCalendar();});
 function setOverview(o){
  if(!o)return;
  for(const id of ['todayCount','waitingCount','progressCount','doneCount'])el(id).textContent=o[id]??0;
@@ -128,7 +169,7 @@ function renderBookings(){
       b.bookingDateTime=data.bookingDateTime;
       refreshOverview();
       timeCell.textContent=savedTime.replace('T',' ');
-      box.remove();
+      box.remove();loadCalendar();
       if(savedTime!==time){
        el('message').textContent='Varning: servern sparade '+savedTime.replace('T',' ')+' men du valde '+time.replace('T',' ')+'. Kontrollera bokningen och kontakta kunden vid behov.';
       }else{
@@ -244,12 +285,12 @@ el('editForm').addEventListener('submit',async e=>{
  }catch(error){el('editMessage').textContent=error.message||'Ett fel uppstod.';}
  finally{submit.disabled=false;}
 });
-el('showToday').addEventListener('click',()=>{todayOnly=true;page=1;updateTodayButtons();load();});
+el('showToday').addEventListener('click',()=>{todayOnly=true;selectedDate='';el('clearDate').hidden=true;el('selectedDateLabel').textContent='Välj en dag för att se bokningarna.';page=1;updateTodayButtons();load();loadCalendar();});
 el('showAll').addEventListener('click',()=>{todayOnly=false;page=1;updateTodayButtons();load();});
 for(const id of ['search','status','workFilter','sort'])el(id).addEventListener(id==='search'?'input':'change',()=>{page=1;if(id==='search'){clearTimeout(searchTimer);searchTimer=setTimeout(load,300);}else{clearTimeout(searchTimer);load();}});
-el('loginForm').addEventListener('submit',async e=>{e.preventDefault();key=el('key').value;el('key').value='';page=1;await load();});
-el('refresh').addEventListener('click',load);
+el('loginForm').addEventListener('submit',async e=>{e.preventDefault();key=el('key').value;el('key').value='';page=1;await load();if(key)loadCalendar();});
+el('refresh').addEventListener('click',()=>{load();loadCalendar();});
 el('prev').addEventListener('click',()=>{if(page>1){page--;load();}});
 el('next').addEventListener('click',()=>{if(page*30<total){page++;load();}});
-el('lock').addEventListener('click',()=>{++loadVersion;clearTimeout(searchTimer);key='';workingId=null;el('workPanel').hidden=true;editingId=null;el('editPanel').hidden=true;currentBookings=[];el('rows').replaceChildren();el('conflicts').hidden=true;el('result').hidden=true;el('login').hidden=false;el('message').textContent='Adminpanelen är låst.';});
+el('lock').addEventListener('click',()=>{++calendarVersion;++loadVersion;clearTimeout(searchTimer);key='';workingId=null;el('workPanel').hidden=true;editingId=null;el('editPanel').hidden=true;currentBookings=[];el('rows').replaceChildren();el('conflicts').hidden=true;el('result').hidden=true;el('login').hidden=false;el('message').textContent='Adminpanelen är låst.';});
 </script></body></html>
