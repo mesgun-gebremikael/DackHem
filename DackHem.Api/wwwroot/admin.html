@@ -51,7 +51,7 @@ function renderBookings(){
   if(b.status!=='Cancelled'&&(counts.get(b.bookingDateTime?.slice(0,16))||0)>1){tr.classList.add('conflict');tr.title='Flera aktiva bokningar på samma tid';}
   for(const value of [b.bookingDateTime?.replace('T',' ').slice(0,16),b.status==='Cancelled'?'Avbokad':'Bekräftad',b.customerName,b.phoneNumber,b.email,b.registrationNumber,b.address,b.price+' kr',b.notes])addCell(tr,value);
   const workCell=document.createElement('td');workCell.textContent=b.status==='Cancelled'?'Avbokad':({Waiting:'Väntar',InProgress:'Pågår',Done:'Klar'}[b.workStatus]||'Väntar');tr.appendChild(workCell);
-  const assigneeCell=document.createElement('td');assigneeCell.textContent=({Owner:'Jag',Colleague:'Kollegan'}[b.assignedTo]||'–');tr.appendChild(assigneeCell);
+  const assigneeCell=document.createElement('td');assigneeCell.textContent=({Owner:'Mesgun',Colleague:'Semere'}[b.assignedTo]||'–');tr.appendChild(assigneeCell);
   const noteCell=document.createElement('td');noteCell.textContent=b.internalNote||'';tr.appendChild(noteCell);
   if(b.status!=='Cancelled'){
    const td=document.createElement('td'),button=document.createElement('button');
@@ -66,14 +66,14 @@ function renderBookings(){
     }
     statusSelect.value=b.workStatus||'Waiting';statusSelect.setAttribute('aria-label','Arbetsstatus');
     const assigneeSelect=document.createElement('select');
-    for(const [value,label] of [['','Ingen vald'],['Owner','Jag'],['Colleague','Kollegan']]){
+    for(const [value,label] of [['','Ingen vald'],['Owner','Mesgun'],['Colleague','Semere']]){
      const option=document.createElement('option');option.value=value;option.textContent=label;assigneeSelect.appendChild(option);
     }
     assigneeSelect.value=b.assignedTo||'';assigneeSelect.setAttribute('aria-label','Ansvarig');
     const note=document.createElement('textarea');note.maxLength=1000;note.placeholder='Intern kommentar';note.value=b.internalNote||'';
-    const hint=document.createElement('small');hint.setAttribute('role','status');hint.textContent='Välj status – sparas direkt.';
+    const hint=document.createElement('small');hint.setAttribute('role','status');hint.textContent='Välj alternativ och klicka på Spara.';
     async function saveWork(){
-     statusSelect.disabled=true;assigneeSelect.disabled=true;note.disabled=true;hint.textContent='Sparar...';
+     statusSelect.disabled=true;assigneeSelect.disabled=true;note.disabled=true;saveButton.disabled=true;hint.textContent='Sparar...';
      const next={workStatus:statusSelect.value,assignedTo:assigneeSelect.value,internalNote:note.value};
      try{
       const response=await fetch('/api/admin/bookings/'+encodeURIComponent(b.id)+'/work',{
@@ -83,18 +83,17 @@ function renderBookings(){
       const data=await response.json();if(!response.ok)throw Error(data.message||'Kunde inte spara.');
       Object.assign(b,next);
       workCell.textContent=({Waiting:'Väntar',InProgress:'Pågår',Done:'Klar'}[b.workStatus]||'Väntar');
-      assigneeCell.textContent=({Owner:'Jag',Colleague:'Kollegan'}[b.assignedTo]||'–');
+      assigneeCell.textContent=({Owner:'Mesgun',Colleague:'Semere'}[b.assignedTo]||'–');
       noteCell.textContent=b.internalNote||'';
       hint.textContent='Sparat ✓';
      }catch(error){
       statusSelect.value=b.workStatus||'Waiting';assigneeSelect.value=b.assignedTo||'';note.value=b.internalNote||'';
       hint.textContent=error.message||'Kunde inte spara.';
-     }finally{statusSelect.disabled=false;assigneeSelect.disabled=false;note.disabled=false;}
+     }finally{statusSelect.disabled=false;assigneeSelect.disabled=false;note.disabled=false;saveButton.disabled=false;}
     }
-    statusSelect.addEventListener('change',saveWork);
-    assigneeSelect.addEventListener('change',saveWork);
-    note.addEventListener('change',saveWork);
-    box.append(statusSelect,assigneeSelect,note,hint);td.appendChild(box);
+    const saveButton=document.createElement('button');saveButton.type='button';saveButton.textContent='Spara';
+    saveButton.addEventListener('click',saveWork);
+    box.append(statusSelect,assigneeSelect,note,saveButton,hint);td.appendChild(box);
    });td.appendChild(workButton);tr.appendChild(td);
   }else addCell(tr,'–');
   el('rows').appendChild(tr);
