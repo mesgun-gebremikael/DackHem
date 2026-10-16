@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="sv"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DäckHem Admin</title><style>
-body{font:16px system-ui;background:#0c1726;color:#eef4fb;margin:0;padding:32px}main{max-width:1200px;margin:auto}a{color:#f5b942}.panel{background:#15263b;padding:24px;border-radius:12px;margin:20px 0}input{padding:12px;border-radius:6px}button{padding:12px;background:#f5b942;border:0;border-radius:6px;cursor:pointer;margin:6px}table{border-collapse:collapse;width:100%;min-width:850px}th,td{border-bottom:1px solid #43566c;padding:10px;text-align:left}th{color:#f5b942}.conflict{background:#49351c}.warning{background:#49351c;border:1px solid #f5b942;border-radius:8px;padding:12px;margin:12px 0}.filters{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:16px 0}.filters input,.filters select{padding:10px;border-radius:6px;background:#fff;color:#111}.filters label{display:flex;gap:6px;align-items:center}.scroll{overflow-x:auto}[hidden]{display:none!important}
-</style></head><body><main><a href="/">Tillbaka till DäckHem</a><h1>Admin – bokningar</h1><p>Endast för administratören.</p><div class="panel" id="login"><form id="loginForm"><label>Adminnyckel <input id="key" type="password" required autocomplete="off"></label><button>Visa bokningar</button></form></div><p id="message" role="status"></p><div class="panel" id="result" hidden><button id="refresh">Uppdatera</button><button id="lock">Lås</button><p id="count"></p><div class="filters"><label>Sök kund <input id="search" type="search" placeholder="Namn, telefon eller regnummer"></label><label>Status <select id="status"><option value="all">Alla</option><option value="Confirmed">Aktiva</option><option value="Cancelled">Avbokade</option></select></label><label>Sortering <select id="sort"><option value="upcoming">Kommande först</option><option value="newest">Senaste datum först</option></select></label></div><p id="filteredCount"></p><p>Obs: sökning och filtrering gäller de 30 bokningarna på aktuell sida.</p><div id="conflicts" role="status" hidden></div><div class="scroll"><table><thead><tr><th>Tid</th><th>Status</th><th>Namn</th><th>Telefon</th><th>E-post</th><th>Regnummer</th><th>Adress</th><th>Pris</th><th>Övrigt</th></tr></thead><tbody id="rows"></tbody></table></div><button id="prev">Föregående</button><span id="page"></span><button id="next">Nästa</button></div></main>
+body{font:16px system-ui;background:#0c1726;color:#eef4fb;margin:0;padding:32px}main{max-width:1200px;margin:auto}a{color:#f5b942}.panel{background:#15263b;padding:24px;border-radius:12px;margin:20px 0}input{padding:12px;border-radius:6px}button{padding:12px;background:#f5b942;border:0;border-radius:6px;cursor:pointer;margin:6px}table{border-collapse:collapse;width:100%;min-width:850px}th,td{border-bottom:1px solid #43566c;padding:10px;text-align:left}th{color:#f5b942}.conflict{background:#49351c}.warning{background:#49351c;border:1px solid #f5b942;border-radius:8px;padding:12px;margin:12px 0}.filters{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:16px 0}.filters input,.filters select{padding:10px;border-radius:6px;background:#fff;color:#111}.filters label{display:flex;gap:6px;align-items:center}.edit{background:#263c54;color:#fff;border:1px solid #f5b942;padding:7px}.reschedule{margin:16px 0;padding:16px;border:1px solid #f5b942;border-radius:8px}.reschedule input{margin:8px}.scroll{overflow-x:auto}[hidden]{display:none!important}
+</style></head><body><main><a href="/">Tillbaka till DäckHem</a><h1>Admin – bokningar</h1><p>Endast för administratören.</p><div class="panel" id="login"><form id="loginForm"><label>Adminnyckel <input id="key" type="password" required autocomplete="off"></label><button>Visa bokningar</button></form></div><p id="message" role="status"></p><div class="panel" id="result" hidden><button id="refresh">Uppdatera</button><button id="lock">Lås</button><p id="count"></p><div class="filters"><label>Sök kund <input id="search" type="search" placeholder="Namn, telefon eller regnummer"></label><label>Status <select id="status"><option value="all">Alla</option><option value="Confirmed">Aktiva</option><option value="Cancelled">Avbokade</option></select></label><label>Sortering <select id="sort"><option value="upcoming">Kommande först</option><option value="newest">Senaste datum först</option></select></label></div><p id="filteredCount"></p><p>Obs: sökning och filtrering gäller de 30 bokningarna på aktuell sida.</p><div id="conflicts" role="status" hidden></div><div class="reschedule" id="editPanel" hidden><h2>Ändra bokningstid</h2><p id="editCustomer"></p><form id="editForm"><label>Ny tid <input id="newTime" type="datetime-local" required></label><button type="submit">Spara och mejla kunden</button><button type="button" id="cancelEdit">Avbryt</button></form><p id="editMessage" role="status"></p></div><div class="scroll"><table><thead><tr><th>Tid</th><th>Status</th><th>Namn</th><th>Telefon</th><th>E-post</th><th>Regnummer</th><th>Adress</th><th>Pris</th><th>Övrigt</th><th>Åtgärd</th></tr></thead><tbody id="rows"></tbody></table></div><button id="prev">Föregående</button><span id="page"></span><button id="next">Nästa</button></div></main>
 <script>
 const el=id=>document.getElementById(id);
 let key='',page=1,total=0,currentBookings=[];
@@ -11,7 +11,7 @@ async function load(){
  try{
  const response=await fetch('/api/admin/bookings?page='+page+'&pageSize=30',{headers:{'X-Admin-Key':key},cache:'no-store'});
  if(!response.ok){const error=await response.json();if(response.status===401){key='';el('result').hidden=true;el('login').hidden=false;}throw Error(error.message||'Kunde inte hämta bokningar.');}
- const data=await response.json();total=data.total;currentBookings=data.bookings;
+ const data=await response.json();total=data.total;currentBookings=data.bookings;el('editPanel').hidden=true;editingId=null;
  renderBookings();
 
  el('count').textContent=total+' bokningar';el('page').textContent=' Sida '+page+' ';el('prev').disabled=page===1;el('next').disabled=page*30>=total;el('login').hidden=true;el('result').hidden=false;el('message').textContent='Bokningarna är uppdaterade.';
@@ -50,14 +50,42 @@ function renderBookings(){
   const tr=document.createElement('tr');
   if(b.status!=='Cancelled'&&(counts.get(b.bookingDateTime?.slice(0,16))||0)>1){tr.classList.add('conflict');tr.title='Flera aktiva bokningar på samma tid';}
   for(const value of [b.bookingDateTime?.replace('T',' ').slice(0,16),b.status==='Cancelled'?'Avbokad':'Bekräftad',b.customerName,b.phoneNumber,b.email,b.registrationNumber,b.address,b.price+' kr',b.notes])addCell(tr,value);
+  if(b.status!=='Cancelled'){
+   const td=document.createElement('td'),button=document.createElement('button');
+   button.className='edit';button.type='button';button.textContent='Ändra tid';
+   button.addEventListener('click',()=>openEdit(b));td.appendChild(button);tr.appendChild(td);
+  }else addCell(tr,'–');
   el('rows').appendChild(tr);
  }
  el('filteredCount').textContent='Visar '+filtered.length+' av '+currentBookings.length+' bokningar på sidan.';
 }
+let editingId=null;
+function openEdit(b){
+ editingId=b.id;el('editCustomer').textContent='Kund: '+b.customerName+' | Nuvarande tid: '+b.bookingDateTime.replace('T',' ').slice(0,16);
+ el('newTime').value=b.bookingDateTime.slice(0,16);el('editMessage').textContent='';
+ el('editPanel').hidden=false;el('editPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+el('cancelEdit').addEventListener('click',()=>{editingId=null;el('editPanel').hidden=true;});
+el('editForm').addEventListener('submit',async e=>{
+ e.preventDefault();if(!editingId)return;
+ const time=el('newTime').value;
+ if(!time||!confirm('Har du kommit överens med kunden om den nya tiden? Ett mejl skickas till kunden.'))return;
+ const submit=el('editForm').querySelector('[type=submit]');submit.disabled=true;el('editMessage').textContent='Sparar ändringen...';
+ try{
+  const response=await fetch('/api/admin/bookings/'+encodeURIComponent(editingId)+'/reschedule',{
+   method:'PUT',headers:{'Content-Type':'application/json','X-Admin-Key':key},
+   body:JSON.stringify({bookingDateTime:time+':00'}),cache:'no-store'
+  });
+  const data=await response.json();
+  if(!response.ok)throw Error(data.message||'Kunde inte ändra bokningen.');
+  editingId=null;el('editPanel').hidden=true;await load();el('message').textContent=data.message;
+ }catch(error){el('editMessage').textContent=error.message||'Ett fel uppstod.';}
+ finally{submit.disabled=false;}
+});
 for(const id of ['search','status','sort'])el(id).addEventListener(id==='search'?'input':'change',renderBookings);
 el('loginForm').addEventListener('submit',async e=>{e.preventDefault();key=el('key').value;el('key').value='';page=1;await load();});
 el('refresh').addEventListener('click',load);
 el('prev').addEventListener('click',()=>{if(page>1){page--;load();}});
 el('next').addEventListener('click',()=>{if(page*30<total){page++;load();}});
-el('lock').addEventListener('click',()=>{key='';currentBookings=[];el('rows').replaceChildren();el('conflicts').hidden=true;el('result').hidden=true;el('login').hidden=false;el('message').textContent='Adminpanelen är låst.';});
+el('lock').addEventListener('click',()=>{key='';editingId=null;el('editPanel').hidden=true;currentBookings=[];el('rows').replaceChildren();el('conflicts').hidden=true;el('result').hidden=true;el('login').hidden=false;el('message').textContent='Adminpanelen är låst.';});
 </script></body></html>
