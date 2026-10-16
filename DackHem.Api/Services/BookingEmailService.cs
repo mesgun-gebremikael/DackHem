@@ -75,4 +75,59 @@ public sealed class BookingEmailService
             return false;
         }
     }
+
+    public async Task<bool> SendRescheduleAsync(Booking booking, DateTime previousTime)
+    {
+        var host = _configuration["Email:SmtpHost"];
+        var username = _configuration["Email:Username"];
+        var password = _configuration["Email:Password"];
+        var sender = _configuration["Email:From"];
+        if (string.IsNullOrWhiteSpace(host) || string.IsNullOrWhiteSpace(username) ||
+            string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(sender))
+            return false;
+
+        var body = $"""
+            Hej {booking.CustomerName}!
+
+            Din bokning hos DäckHem har fått en ny tid efter överenskommelse.
+
+            Tidigare tid: {previousTime:yyyy-MM-dd HH:mm} (svensk tid)
+            Ny tid: {booking.BookingDateTime:yyyy-MM-dd HH:mm} (svensk tid)
+            Bokningsnummer: {booking.Id}
+            Adress: {booking.Address}
+            Registreringsnummer: {booking.RegistrationNumber}
+            Pris: {booking.Price} kr
+
+            Din tidigare avbokningslänk gäller fortfarande. Avbokning måste ske mer än 7 timmar före besöket.
+
+            Har du frågor eller stämmer inte tiden? Kontakta DäckHem.
+
+            Hälsningar,
+            DäckHem
+            """;
+
+        try
+        {
+            using var message = new MailMessage(new MailAddress(sender, "DäckHem"), new MailAddress(booking.Email))
+            {
+                Subject = "DäckHem – din bokning har fått en ny tid",
+                Body = body,
+                IsBodyHtml = false
+            };
+            using var client = new SmtpClient(host, _configuration.GetValue<int?>("Email:SmtpPort") ?? 587)
+            {
+                EnableSsl = true,
+                Credentials = new NetworkCredential(username, password),
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                Timeout = 15000
+            };
+            await client.SendMailAsync(message);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning("Booking reschedule email failed ({ErrorType}).", ex.GetType().Name);
+            return false;
+        }
+    }
 }
