@@ -50,8 +50,9 @@ public class AdminBookingsController : ControllerBase
         // Apply search and date filters before paging, across the entire database.
         var query = _db.Bookings.AsNoTracking();
         if (search.Length > 0)
-            query = query.Where(b => b.CustomerName.Contains(search) ||
-                b.PhoneNumber.Contains(search) || b.RegistrationNumber.Contains(search));
+            query = query.Where(b => EF.Functions.Like(b.CustomerName, "%" + search + "%") ||
+                EF.Functions.Like(b.PhoneNumber, "%" + search + "%") ||
+                EF.Functions.Like(b.RegistrationNumber, "%" + search + "%"));
         if (status != "all") query = query.Where(b => b.Status == status);
         if (todayOnly) query = query.Where(b => b.Status != "Cancelled" &&
             b.BookingDateTime >= today && b.BookingDateTime < tomorrow);
