@@ -25,36 +25,38 @@ public class AdminBookingsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetBookings([FromQuery] int page = 1, [FromQuery] int pageSize = 50)
+    public async Task<IActionResult> GetBookings(
+        [FromQuery] int page = 1, [FromQuery] int pageSize = 30,
+        [FromQuery] string? search = null, [FromQuery] string status = "all",
+        [FromQuery] string workStatus = "all", [FromQuery] bool todayOnly = false,
+        [FromQuery] string sort = "upcoming")
     {
         var authError = AuthorizeAdmin();
         if (authError != null) return authError;
-
         page = Math.Clamp(page, 1, 100000);
         pageSize = Math.Clamp(pageSize, 1, 100);
-        var query = _db.Bookings.AsNoTracking();
-        var total = await query.CountAsync();
-        var bookings = await query
-            .OrderByDescending(b => b.BookingDateTime)
-            .ThenBy(b => b.Id)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .Select(b => new
-            {
-                b.Id,
-                b.CustomerName,
-                b.PhoneNumber,
-                b.Email,
-                b.RegistrationNumber,
-                b.Address,
-                b.BookingDateTime,
-                b.Notes,
-                b.Price,
-                b.Status,
-                b.CreatedAtUtc
-            })
-            .ToListAsync();
+        search = (search ?? "").Trim();
+        if (search.Length > 150) return BadRequest(new { message = "Sökningen är för lång." });
+        if (status is not ("all" or "Confirmed" or "Cancelled") ||
+            workStatus is not ("all" or "Waiting" or "InProgress" or "Done") ||
+            sort is not ("upcoming" or "newest"))
+            return BadRequest(new { message = "Ogiltigt filter." });
 
+        var stockholmNow = TimeZoneInfo.ConvertTimeFromUtc(
+            DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Europe/Stockholm"));
+        var today = stockholmNow.Date;
+        var tomorrow = today.AddDays(1);
+
+        // Apply search and date filters before paging, across the entire database.
+        var query = _db.Bookings.AsNoTracking();
+        if (search.Length > 0)
+            query = query.Where(b => b.CustomerName.Contains(search) ||
+                b.PhoneNumber.Contains(search) || b.RegistrationNumber.Contains(search));
+        if (status != "all") query = query.Where(b => b.Status == status);
+        if (todayOnly) query = query.Where(b => b.Status != "Cancelled" &&
+            b.BookingDateTime >= today && b.BookingDateTime < tomorrow);
+
+        // Work states are stored in the existing separate SQLite table.
         var work = new Dictionary<string, (string Status, string Assignee, string Note)>();
         var connection = _db.Database.GetDbConnection();
         await connection.OpenAsync();
@@ -68,19 +70,57 @@ public class AdminBookingsController : ControllerBase
         }
         finally { await connection.CloseAsync(); }
 
-        var results = bookings.Select(b =>
+        // Counts always represent all active bookings today, not just one page.
+        var todaysBookings = await _db.Bookings.AsNoTracking()
+            .Where(b => b.Status != "Cancelled" && b.BookingDateTime >= today && b.BookingDateTime < tomorrow)
+            .Select(b => b.Id).ToListAsync();
+        var waiting = 0; var inProgress = 0; var done = 0;
+        foreach (var id in todaysBookings)
         {
-            work.TryGetValue(b.Id.ToString().ToUpperInvariant(), out var state);
-            return new {
+            work.TryGetValue(id.ToString().ToUpperInvariant(), out var w);
+            switch (w.Status ?? "Waiting")
+            {
+                case "InProgress": inProgress++; break;
+                case "Done": done++; break;
+                default: waiting++; break;
+            }
+        }
+        var overview = new { todayCount = todaysBookings.Count, waitingCount = waiting,
+            progressCount = inProgress, doneCount = done };
+
+        // Work filtering must happen before paging too.
+        // This materializes only the booking rows matching the text/date filters.
+        var matching = await query.ToListAsync();
+        var filtered = matching.Where(b =>
+        {
+            if (workStatus == "all") return true;
+            if (b.Status == "Cancelled") return false;
+            work.TryGetValue(b.Id.ToString().ToUpperInvariant(), out var w);
+            return (w.Status ?? "Waiting") == workStatus;
+        });
+        var ordered = sort == "newest"
+            ? filtered.OrderByDescending(b => b.BookingDateTime).ThenBy(b => b.Id)
+            : filtered.OrderBy(b => b.BookingDateTime >= stockholmNow ? 0 : 1)
+                .ThenBy(b => b.BookingDateTime >= stockholmNow ? b.BookingDateTime : DateTime.MaxValue)
+                .ThenByDescending(b => b.BookingDateTime < stockholmNow ? b.BookingDateTime : DateTime.MinValue)
+                .ThenBy(b => b.Id);
+        var resultsAll = ordered.ToList();
+        var total = resultsAll.Count;
+        var bookings = resultsAll.Skip((page - 1) * pageSize).Take(pageSize).Select(b =>
+        {
+            work.TryGetValue(b.Id.ToString().ToUpperInvariant(), out var w);
+            return new
+            {
                 b.Id, b.CustomerName, b.PhoneNumber, b.Email, b.RegistrationNumber,
                 b.Address, b.BookingDateTime, b.Notes, b.Price, b.Status, b.CreatedAtUtc,
-                WorkStatus = b.Status == "Cancelled" ? "Cancelled" : state.Status ?? "Waiting",
-                AssignedTo = state.Assignee ?? "",
-                InternalNote = state.Note ?? ""
+                WorkStatus = b.Status == "Cancelled" ? "Cancelled" : w.Status ?? "Waiting",
+                AssignedTo = w.Assignee ?? "",
+                InternalNote = w.Note ?? ""
             };
         }).ToList();
-        return Ok(new { total, page, pageSize, bookings = results });
+        return Ok(new { total, page, pageSize, overview, bookings });
     }
+
     public sealed class RescheduleRequest
     {
         [Required]
