@@ -47,7 +47,7 @@ function renderBookings(){
   box.appendChild(ul);
  }else{box.hidden=true;box.className='';}
  for(const b of filtered){
-  const tr=document.createElement('tr');
+  const tr=document.createElement('tr');tr.dataset.bookingId=b.id;
   if(b.status!=='Cancelled'&&(counts.get(b.bookingDateTime?.slice(0,16))||0)>1){tr.classList.add('conflict');tr.title='Flera aktiva bokningar på samma tid';}
   const timeCell=document.createElement('td');timeCell.textContent=b.bookingDateTime?.replace('T',' ').slice(0,16)||'';tr.appendChild(timeCell);
   for(const value of [b.status==='Cancelled'?'Avbokad':'Bekräftad',b.customerName,b.phoneNumber,b.email,b.registrationNumber,b.address,b.price+' kr',b.notes])addCell(tr,value);
@@ -80,12 +80,36 @@ function renderBookings(){
        body:JSON.stringify({bookingDateTime:time+':00'}),cache:'no-store'
       });
       const data=await response.json();if(!response.ok)throw Error(data.message||'Kunde inte ändra bokningen.');
+      // Use the time actually saved by the API; never re-sort the whole table here.
+      // Re-sorting moved otherwise identical-looking customer rows and made the
+      // updated booking appear to have the wrong time.
+      const savedTime=String(data.bookingDateTime||'').slice(0,16);
+      if(!/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$/.test(savedTime)){
+       hint.textContent='Tiden kan ha sparats, men svaret kunde inte läsas. Klicka Uppdatera och kontrollera bokningen.';
+       return;
+      }
       b.bookingDateTime=data.bookingDateTime;
-      timeCell.textContent=b.bookingDateTime.replace('T',' ').slice(0,16);
-      box.remove();el('message').textContent=data.message;
-      // Recalculate time conflicts and sorting without scrolling the page.
-      const scroll=el('rows').closest('.scroll'),scrollLeft=scroll.scrollLeft,scrollTop=window.scrollY;
-      renderBookings();scroll.scrollLeft=scrollLeft;window.scrollTo(window.scrollX,scrollTop);
+      timeCell.textContent=savedTime.replace('T',' ');
+      box.remove();
+      if(savedTime!==time){
+       el('message').textContent='Varning: servern sparade '+savedTime.replace('T',' ')+' men du valde '+time.replace('T',' ')+'. Kontrollera bokningen och kontakta kunden vid behov.';
+      }else{
+       el('message').textContent=data.message+' Ny tid: '+savedTime.replace('T',' ')+'.';
+      }
+      // Update collision markings on the visible rows without moving any booking.
+      const activeTimes=new Map();
+      for(const item of currentBookings){
+       if(item.status==='Cancelled')continue;
+       const value=String(item.bookingDateTime||'').slice(0,16);
+       activeTimes.set(value,(activeTimes.get(value)||0)+1);
+      }
+      for(const row of el('rows').rows){
+       const rowBooking=currentBookings.find(item=>item.id===row.dataset.bookingId);
+       if(!rowBooking)continue;
+       const conflict=rowBooking.status!=='Cancelled'&&(activeTimes.get(String(rowBooking.bookingDateTime||'').slice(0,16))||0)>1;
+       row.classList.toggle('conflict',conflict);
+       row.title=conflict?'Flera aktiva bokningar på samma tid':'';
+      }
      }catch(error){hint.textContent=error.message||'Ett fel uppstod.';}
      finally{save.disabled=false;close.disabled=false;dateInput.disabled=false;}
     });
