@@ -1,4 +1,5 @@
 using DackHem.Api.Data;
+using DackHem.Api.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace DackHem.Api
@@ -10,6 +11,7 @@ namespace DackHem.Api
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
+            builder.Services.AddScoped<BookingEmailService>();
             builder.Services.AddOpenApi();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
