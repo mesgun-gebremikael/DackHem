@@ -2,7 +2,7 @@
 <html lang="sv"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DäckHem – Däckbyte där du är</title>
 <style>
 :root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#eef4fb;background:#0c1726}*{box-sizing:border-box}body{margin:0}header{display:flex;justify-content:space-between;align-items:center;padding:22px max(5%,calc((100% - 1100px)/2));border-bottom:1px solid #28364b}.brand{font-size:25px;font-weight:800}.brand span,.gold{color:#f5b942}a{color:inherit;text-decoration:none}.btn{background:#f5b942;color:#152235;border:0;border-radius:10px;padding:14px 22px;font-weight:800;cursor:pointer;display:inline-block}.btn:disabled{opacity:.55;cursor:wait}main{max-width:1100px;margin:auto;padding:75px 5%}.hero{display:grid;grid-template-columns:1.2fr 1fr;gap:45px;align-items:center}h1{font-size:clamp(38px,6vw,66px);line-height:1.08;margin:0 0 20px}p{color:#bdc9d8;line-height:1.7}.price{font-size:42px;font-weight:850;color:#f5b942;margin:20px 0}.panel{background:#15263b;border:1px solid #30445b;border-radius:22px;padding:32px}.wheel{font-size:135px;text-align:center}section{margin-top:75px}h2{font-size:32px}.features{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.feature{background:#15263b;border-radius:14px;padding:22px}.feature strong{color:#f5b942}form{display:grid;grid-template-columns:1fr 1fr;gap:16px}label{display:block;font-size:14px;margin-bottom:6px;color:#d6e1ec}input,textarea{width:100%;padding:13px;background:#0e1b2c;border:1px solid #43566c;color:white;border-radius:8px;font:inherit}textarea{resize:vertical}.wide{grid-column:1/-1}.note{font-size:13px}footer{text-align:center;border-top:1px solid #28364b;padding:24px;color:#9daec1}#message,#cancel-message{overflow-wrap:anywhere}#message:not(:empty),#cancel-message:not(:empty){padding:12px;border:1px solid #43566c;border-radius:8px}@media(max-width:700px){.hero,.features,form{grid-template-columns:1fr}main{padding-top:40px}.wheel{font-size:90px}header{padding:18px 5%}}
-#addressResults{display:grid;gap:8px;margin-top:10px}#addressResults button{background:#20354c;color:#eef4fb;border:1px solid #f5b942;border-radius:8px;padding:10px;text-align:left;cursor:pointer}#addressResults button:hover{background:#304861}#checkAddress{margin-top:10px;padding:10px 14px}#addressStatus{margin:8px 0;color:#d6e1ec}#addressStatus.ok{color:#9ae6a4}</style></head><body>
+#addressResults{display:grid;gap:6px;margin-top:8px}#addressResults button{background:#20354c;color:#eef4fb;border:1px solid #f5b942;border-radius:8px;padding:10px;text-align:left;cursor:pointer}#addressResults button:hover{background:#304861}#addressStatus{margin:8px 0;color:#d6e1ec}#addressStatus.ok{color:#9ae6a4}</style></head><body>
 <header><div class="brand">◉ <span>Däck</span>Hem</div><a href="#boka" class="btn">Boka däckbyte</a></header>
 <main><div class="hero"><div><p class="gold">MOBILT DÄCKBYTE</p><h1>Vi kommer till dig.<br><span class="gold">Du sparar tid.</span></h1><p>Slipp köer och verkstadsbesök. Vi byter dina hjul där bilen står – hemma eller på jobbet.</p><div class="price">250 kr <small style="font-size:16px;color:#bdc9d8">för däckbyte</small></div><a class="btn" href="#boka">Boka din tid →</a><p class="note">Swish efter utfört däckbyte. Eventuell framkörningsavgift bestäms separat.</p></div><div class="panel"><div class="wheel">◉</div><h2 style="text-align:center">DäckHem</h2><p style="text-align:center">Enkelt • Smidigt • På din adress</p></div></div>
 <section><h2>Så fungerar det</h2><div class="features"><div class="feature"><strong>01 · Boka</strong><p>Välj önskat datum och klockslag och ange bilens uppgifter.</p></div><div class="feature"><strong>02 · Vi kommer</strong><p>Vi åker till adressen du anger. Vid behov kontaktar vi dig om tiden.</p></div><div class="feature"><strong>03 · Swisha</strong><p>Betala enkelt med Swish när däckbytet är klart.</p></div></div></section>
@@ -11,7 +11,7 @@
 <div><label for="phone">Telefonnummer</label><input id="phone" type="tel" required maxlength="30" placeholder="07X XXX XX XX"></div>
 <div><label for="email">E-postadress</label><input id="email" type="email" required maxlength="254" placeholder="namn@exempel.se"></div>
 <div><label for="plate">Registreringsnummer</label><input id="plate" required maxlength="20" placeholder="ABC123"></div>
-<div class="wide"><label for="address">Adress för däckbytet</label><input id="address" required maxlength="300" placeholder="Gata, nummer, postnummer och ort" autocomplete="street-address"><button type="button" id="checkAddress" class="btn">Kontrollera adress (gratis)</button><p id="addressStatus" class="note" role="status" aria-live="polite">Skriv gatunummer och ort, klicka sedan på Kontrollera adress.</p><div id="addressResults" aria-label="Adressförslag"></div><p class="note">Adresskontroll via <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" style="text-decoration:underline">© OpenStreetMap-bidragsgivare</a>. Alla adresser finns inte i kartan. Kontrollera att adressen är rätt innan bokning.</p></div>
+<div class="wide"><label for="address">Adress för däckbytet</label><input id="address" required maxlength="300" placeholder="Börja skriva gata och husnummer…" autocomplete="off" aria-autocomplete="list" aria-controls="addressResults"><p id="addressStatus" class="note" role="status" aria-live="polite">Skriv din adress så visas förslag automatiskt.</p><div id="addressResults" role="listbox" aria-label="Adressförslag"></div><p class="note">Adressförslag från Google. Kontrollera att husnummer och ort stämmer.</p></div>
 <div><label for="date">Önskat datum</label><input id="date" type="date" required></div>
 <div><label for="time">Önskad tid</label><input id="time" type="time" required></div>
 <div class="wide"><label for="notes">Övrig information (frivilligt)</label><textarea id="notes" rows="3" maxlength="1000" placeholder="Information om parkering eller bilen"></textarea></div>
@@ -33,37 +33,37 @@ async function api(path,payload){
  }
  return response.json();
 }
-// Explicit address check only: no autocomplete or background requests.
-let lastAddressCheck=0,verifiedAddress='',addressRequest=0;
+// Google Places (New) via our server. No Google key is exposed to the browser.
 const addressInput=$('address'),addressStatus=$('addressStatus'),addressResults=$('addressResults');
-addressInput.addEventListener('input',()=>{verifiedAddress='';addressResults.replaceChildren();addressStatus.classList.remove('ok');addressStatus.textContent='Adressen har ändrats. Kontrollera den igen om du vill.';});
-$('checkAddress').addEventListener('click',async()=>{
- const query=addressInput.value.trim();
- if(query.length<6){addressStatus.textContent='Skriv gata, husnummer och ort först.';return;}
- const button=$('checkAddress');
- if(button.disabled)return;
- const wait=Math.max(0,1100-(Date.now()-lastAddressCheck));
- button.disabled=true;addressResults.replaceChildren();
- addressStatus.classList.remove('ok');addressStatus.textContent='Söker efter adressen…';
- const request=++addressRequest;
- try{
-  if(wait)await new Promise(resolve=>setTimeout(resolve,wait));
-  lastAddressCheck=Date.now();
-  const url='https://nominatim.openstreetmap.org/search?'+new URLSearchParams({q:query,format:'jsonv2',addressdetails:'1',countrycodes:'se',limit:'5'});
-  const response=await fetch(url,{headers:{Accept:'application/json'}});
-  if(!response.ok)throw Error('Adresstjänsten är tillfälligt upptagen. Försök senare.');
-  const results=await response.json();
-  if(request!==addressRequest)return;
-  if(!Array.isArray(results)||!results.length){addressStatus.textContent='Ingen säker träff hittades. Kontrollera stavning, husnummer och ort. Du kan fortfarande boka med adressen du skrev.';return;}
-  addressStatus.textContent='Välj rätt adress nedan. Kontrollera särskilt husnumret.';
-  for(const item of results){
-   const name=item.display_name;
-   const option=document.createElement('button');option.type='button';option.textContent=name;
-   option.addEventListener('click',()=>{addressInput.value=name.slice(0,300);verifiedAddress=addressInput.value;addressResults.replaceChildren();addressStatus.textContent='Vald adress: '+verifiedAddress;addressStatus.classList.add('ok');});
-   addressResults.appendChild(option);
-  }
- }catch(error){addressStatus.textContent=error.message||'Adresskontrollen kunde inte genomföras. Du kan fortfarande boka.';}
- finally{button.disabled=false;}
+let addressTimer,requestNumber=0,selectedAddress='',addressSession=crypto.randomUUID();
+function clearAddressSuggestions(){addressResults.replaceChildren();}
+addressInput.addEventListener('input',()=>{
+ selectedAddress='';clearAddressSuggestions();clearTimeout(addressTimer);
+ const query=addressInput.value.trim(),current=++requestNumber;
+ addressStatus.classList.remove('ok');
+ if(query.length<4){addressStatus.textContent='Skriv gata och husnummer så visas förslag.';return;}
+ addressStatus.textContent='Söker adresser…';
+ addressTimer=setTimeout(async()=>{
+  try{
+   const response=await fetch('/api/address/suggest?'+new URLSearchParams({q:query,session:addressSession}));
+   if(!response.ok)throw Error('Adressförslagen är inte tillgängliga just nu.');
+   const items=await response.json();
+   if(current!==requestNumber||addressInput.value.trim()!==query)return;
+   clearAddressSuggestions();
+   if(!items.length){addressStatus.textContent='Inga förslag hittades. Du kan skriva adressen själv.';return;}
+   addressStatus.textContent='Välj rätt adress:';
+   for(const item of items){
+    const option=document.createElement('button');option.type='button';option.setAttribute('role','option');
+    option.textContent=item.label;
+    option.addEventListener('click',()=>{
+     addressInput.value=item.label.slice(0,300);selectedAddress=addressInput.value;
+     ++requestNumber;clearAddressSuggestions();addressStatus.textContent='✓ Adress vald: '+selectedAddress;
+     addressStatus.classList.add('ok');addressSession=crypto.randomUUID();
+    });
+    addressResults.appendChild(option);
+   }
+  }catch(err){if(current===requestNumber){clearAddressSuggestions();addressStatus.textContent='Adressförslagen kunde inte hämtas. Du kan skriva adressen själv.';}}
+ },450);
 });
 $('booking').addEventListener('submit',async e=>{
  e.preventDefault();
@@ -73,7 +73,7 @@ $('booking').addEventListener('submit',async e=>{
  button.disabled=true;msg.textContent='Skickar bokningen…';
  try{
   const result=await api('/api/bookings',{customerName:$('name').value.trim(),phoneNumber:$('phone').value.trim(),email:$('email').value.trim(),registrationNumber:$('plate').value.trim(),address:$('address').value.trim(),bookingDateTime:dateTime,notes:$('notes').value.trim()||null});
-  form.reset();verifiedAddress='';addressResults.replaceChildren();addressStatus.classList.remove('ok');addressStatus.textContent='Skriv gatunummer och ort, klicka sedan på Kontrollera adress.';
+  form.reset();selectedAddress='';clearAddressSuggestions();addressStatus.classList.remove('ok');addressStatus.textContent='Skriv din adress så visas förslag automatiskt.';
   msg.textContent=`Bokningen är registrerad! Bokningsnummer: ${result.id}. Pris: ${result.price} kr. ${result.emailSent ? 'En bekräftelse har skickats till din e-postadress.' : 'Ingen e-postbekräftelse skickades. Spara därför avbokningsnyckeln här:'} ${result.emailSent ? '' : result.cancellationToken} ${result.emailSent ? '' : 'Nyckeln visas bara här och ska inte delas med andra.'}`;
  }catch(err){msg.textContent=err instanceof TypeError?'Kunde inte nå servern. Öppna hemsidan via DäckHem.Api och försök igen.':err.message;}
  finally{button.disabled=false;}
