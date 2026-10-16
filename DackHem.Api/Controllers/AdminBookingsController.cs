@@ -55,7 +55,31 @@ public class AdminBookingsController : ControllerBase
             })
             .ToListAsync();
 
-        return Ok(new { total, page, pageSize, bookings });
+        var work = new Dictionary<string, (string Status, string Assignee, string Note)>();
+        var connection = _db.Database.GetDbConnection();
+        await connection.OpenAsync();
+        try
+        {
+            using var command = connection.CreateCommand();
+            command.CommandText = "SELECT BookingId, WorkStatus, AssignedTo, InternalNote FROM BookingWork";
+            using var reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+                work[reader.GetString(0)] = (reader.GetString(1), reader.GetString(2), reader.GetString(3));
+        }
+        finally { await connection.CloseAsync(); }
+
+        var results = bookings.Select(b =>
+        {
+            work.TryGetValue(b.Id.ToString().ToUpperInvariant(), out var state);
+            return new {
+                b.Id, b.CustomerName, b.PhoneNumber, b.Email, b.RegistrationNumber,
+                b.Address, b.BookingDateTime, b.Notes, b.Price, b.Status, b.CreatedAtUtc,
+                WorkStatus = b.Status == "Cancelled" ? "Cancelled" : state.Status ?? "Waiting",
+                AssignedTo = state.Assignee ?? "",
+                InternalNote = state.Note ?? ""
+            };
+        }).ToList();
+        return Ok(new { total, page, pageSize, bookings = results });
     }
     public sealed class RescheduleRequest
     {
@@ -93,6 +117,45 @@ public class AdminBookingsController : ControllerBase
             ? "Tiden har ändrats och kunden har fått mejl."
             : "Tiden har ändrats men mejlet kunde inte skickas. Kontakta kunden själv.",
             booking.Id, booking.BookingDateTime, emailSent });
+    }
+
+
+    public sealed class WorkUpdateRequest
+    {
+        [Required]
+        public string WorkStatus { get; set; } = "Waiting";
+        public string AssignedTo { get; set; } = "";
+        public string InternalNote { get; set; } = "";
+    }
+
+    [HttpPut("{id:guid}/work")]
+    public async Task<IActionResult> UpdateWork(Guid id, [FromBody] WorkUpdateRequest request)
+    {
+        var authError = AuthorizeAdmin();
+        if (authError != null) return authError;
+        if (request.WorkStatus is not ("Waiting" or "InProgress" or "Done"))
+            return BadRequest(new { message = "Ogiltig arbetsstatus." });
+        if (request.AssignedTo is not ("" or "Owner" or "Colleague"))
+            return BadRequest(new { message = "Välj dig själv, kollegan eller ingen." });
+        if ((request.InternalNote ?? "").Length > 1000)
+            return BadRequest(new { message = "Kommentaren får vara högst 1000 tecken." });
+
+        var booking = await _db.Bookings.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
+        if (booking == null) return NotFound(new { message = "Bokningen hittades inte." });
+        if (booking.Status == "Cancelled")
+            return BadRequest(new { message = "Avbokade bokningar kan inte ändras." });
+
+        var bookingId = id.ToString().ToUpperInvariant();
+        var note = (request.InternalNote ?? "").Trim();
+        await _db.Database.ExecuteSqlInterpolatedAsync($"""
+            INSERT INTO BookingWork (BookingId, WorkStatus, AssignedTo, InternalNote)
+            VALUES ({bookingId}, {request.WorkStatus}, {request.AssignedTo}, {note})
+            ON CONFLICT(BookingId) DO UPDATE SET
+                WorkStatus = excluded.WorkStatus,
+                AssignedTo = excluded.AssignedTo,
+                InternalNote = excluded.InternalNote
+            """);
+        return Ok(new { message = "Arbetsstatus sparad." });
     }
 
     private IActionResult? AuthorizeAdmin()
