@@ -34,6 +34,20 @@ namespace DackHem.Api
             app.UseAuthorization();
             app.MapControllers();
 
+            // Separate work-tracking table: does not change existing booking schema.
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                db.Database.ExecuteSqlRaw("""
+                    CREATE TABLE IF NOT EXISTS BookingWork (
+                        BookingId TEXT PRIMARY KEY NOT NULL,
+                        WorkStatus TEXT NOT NULL DEFAULT 'Waiting',
+                        AssignedTo TEXT NOT NULL DEFAULT '',
+                        InternalNote TEXT NOT NULL DEFAULT ''
+                    )
+                    """);
+            }
+
             app.Run();
         }
     }
