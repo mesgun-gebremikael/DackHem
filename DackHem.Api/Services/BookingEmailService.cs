@@ -41,10 +41,10 @@ public sealed class BookingEmailService
             Registreringsnummer: {booking.RegistrationNumber}
             Pris för däckbyte: {booking.Price} kr
 
-            Du kan avboka mer än 7 timmar före besöket via länken:
+            Du kan avboka mer än 3 timmar före besöket via länken:
             {cancelUrl}
 
-            Länken är personlig. Dela den inte med andra.
+            Behöver du avboka senare än 3 timmar före besöket eller har du frågor? Ring oss på 070-789 23 40.\n\n            Länken är personlig. Dela den inte med andra.
 
             Hälsningar,
             DäckHem
@@ -98,7 +98,7 @@ public sealed class BookingEmailService
             Registreringsnummer: {booking.RegistrationNumber}
             Pris: {booking.Price} kr
 
-            Din tidigare avbokningslänk gäller fortfarande. Avbokning måste ske mer än 7 timmar före besöket.
+            Din tidigare avbokningslänk gäller fortfarande. Du kan avboka via länken mer än 3 timmar före besöket.\n            Behöver du avboka senare eller har frågor? Ring oss på 070-789 23 40.
 
             Har du frågor eller stämmer inte tiden? Kontakta DäckHem.
 
