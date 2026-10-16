@@ -1,0 +1,27 @@
+/* Kundkort i adminpanelen */
+.scroll{overflow:visible}
+.scroll table,.scroll tbody,.scroll tr,.scroll td{display:block;width:100%;min-width:0;box-sizing:border-box}
+.scroll thead{display:none}
+.scroll tbody{display:grid;gap:16px}
+.scroll tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 18px;position:relative;background:#20354c;border:1px solid #43566c;border-radius:14px;padding:16px}
+.scroll tr.conflict{background:#49351c;border-color:#f5b942}
+.scroll td{display:block;padding:8px 0;border-bottom:1px solid #364b61;overflow-wrap:anywhere}
+.scroll td::before{content:attr(data-label);display:block;font-size:.78rem;color:#f5b942;font-weight:700;margin-bottom:4px}
+.scroll td[data-label="Tid"],.scroll td[data-label="Namn"]{font-size:1.1rem;font-weight:700}
+.scroll td[data-label="Åtgärd"]{grid-column:1/-1;border-bottom:0;padding-top:14px}
+.scroll .workActions{display:flex;position:relative;gap:10px;flex-wrap:wrap;min-width:0}
+.scroll .workActions>.edit{flex:0 1 auto;margin:0;padding:10px 14px;white-space:normal}
+.scroll .inlineWork{position:absolute;top:100%;right:auto;left:0;transform:none;z-index:20}
+@media(max-width:900px){
+ .scroll tr{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px;padding:12px}
+ .scroll td{display:block}
+ .scroll td::before{display:block}
+ .scroll .inlineWork{position:fixed;top:50%;left:50%;right:auto;transform:translate(-50%,-50%);width:min(340px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow-y:auto}
+}
+@media(max-width:540px){
+ .scroll tr{grid-template-columns:1fr}
+ .scroll td{display:grid;grid-template-columns:minmax(110px,36%) minmax(0,1fr);gap:8px;align-items:start}
+ .scroll td::before{margin:0}
+ .scroll td[data-label="Tid"],.scroll td[data-label="Namn"],.scroll td[data-label="Åtgärd"]{display:block}
+ .scroll .workActions>.edit{flex:1 1 130px}
+}
