@@ -79,9 +79,11 @@ public class AdminBookingsController : ControllerBase
         }
         finally { await connection.CloseAsync(); }
 
-        // Counts always represent all active bookings today, not just one page.
+        // Overview follows the selected calendar date, otherwise today's date.
+        var overviewDate = date?.Date ?? today;
+        var overviewNextDay = overviewDate.AddDays(1);
         var todaysBookings = await _db.Bookings.AsNoTracking()
-            .Where(b => b.Status != "Cancelled" && b.BookingDateTime >= today && b.BookingDateTime < tomorrow)
+            .Where(b => b.Status != "Cancelled" && b.BookingDateTime >= overviewDate && b.BookingDateTime < overviewNextDay)
             .Select(b => b.Id).ToListAsync();
         var waiting = 0; var inProgress = 0; var done = 0;
         foreach (var id in todaysBookings)
@@ -94,7 +96,7 @@ public class AdminBookingsController : ControllerBase
                 default: waiting++; break;
             }
         }
-        var overview = new { todayCount = todaysBookings.Count, waitingCount = waiting,
+        var overview = new { date = overviewDate.ToString("yyyy-MM-dd"), todayCount = todaysBookings.Count, waitingCount = waiting,
             progressCount = inProgress, doneCount = done };
 
         // Work filtering must happen before paging too.
