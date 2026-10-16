@@ -117,6 +117,18 @@ public class AdminBookingsController : ControllerBase
                 .ThenBy(b => b.Id);
         var resultsAll = ordered.ToList();
         var total = resultsAll.Count;
+        var customerCancelledIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var cancelConnection = _db.Database.GetDbConnection();
+        await cancelConnection.OpenAsync();
+        try
+        {
+            using var command = cancelConnection.CreateCommand();
+            command.CommandText = "SELECT BookingId FROM BookingCancellationEvents";
+            using var reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync()) customerCancelledIds.Add(reader.GetString(0));
+        }
+        finally { await cancelConnection.CloseAsync(); }
+
         var bookings = resultsAll.Skip((page - 1) * pageSize).Take(pageSize).Select(b =>
         {
             work.TryGetValue(b.Id.ToString().ToUpperInvariant(), out var w);
@@ -124,12 +136,50 @@ public class AdminBookingsController : ControllerBase
             {
                 b.Id, b.CustomerName, b.PhoneNumber, b.Email, b.RegistrationNumber,
                 b.Address, b.BookingDateTime, b.Notes, b.Price, b.Status, b.CreatedAtUtc,
+                CancelledByCustomer = customerCancelledIds.Contains(b.Id.ToString()),
                 WorkStatus = b.Status == "Cancelled" ? "Cancelled" : w.Status ?? "Waiting",
                 AssignedTo = w.Assignee ?? "",
                 InternalNote = w.Note ?? ""
             };
         }).ToList();
         return Ok(new { total, page, pageSize, overview, bookings });
+    }
+
+    [HttpGet("customer-cancellations")]
+    public async Task<IActionResult> CustomerCancellations([FromQuery] long after = 0)
+    {
+        var authError = AuthorizeAdmin();
+        if (authError != null) return authError;
+        after = Math.Max(0, after);
+        var events = new List<object>();
+        long latest = after;
+        var connection = _db.Database.GetDbConnection();
+        await connection.OpenAsync();
+        try
+        {
+            using var maxCommand = connection.CreateCommand();
+            maxCommand.CommandText = "SELECT COALESCE(MAX(Id), 0) FROM BookingCancellationEvents";
+            latest = Math.Max(after, Convert.ToInt64(await maxCommand.ExecuteScalarAsync()));
+            using var command = connection.CreateCommand();
+            command.CommandText = """
+                SELECT e.Id, b.CustomerName, b.BookingDateTime
+                FROM BookingCancellationEvents e
+                JOIN Bookings b ON UPPER(b.Id) = e.BookingId
+                WHERE e.Id > $after
+                ORDER BY e.Id
+                LIMIT 50
+                """;
+            var parameter = command.CreateParameter();
+            parameter.ParameterName = "$after";
+            parameter.Value = after;
+            command.Parameters.Add(parameter);
+            using var reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+                events.Add(new { id = reader.GetInt64(0), customerName = reader.GetString(1),
+                    bookingDateTime = reader.GetString(2) });
+        }
+        finally { await connection.CloseAsync(); }
+        return Ok(new { latest, events });
     }
 
     [HttpGet("calendar")]
