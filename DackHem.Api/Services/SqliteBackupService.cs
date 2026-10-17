@@ -61,7 +61,11 @@ public sealed class SqliteBackupService : BackgroundService
                 source.Open();
                 destination.Open();
                 source.BackupDatabase(destination);
+                // SQLite connection pooling may keep the temporary file handle open
+                // after Dispose. Clear the pools before renaming the snapshot.
+                SqliteConnection.ClearAllPools();
             }
+            SqliteConnection.ClearAllPools();
             File.Move(temporaryPath, finalPath);
             _logger.LogInformation("Local SQLite backup created.");
 
@@ -73,7 +77,13 @@ public sealed class SqliteBackupService : BackgroundService
         }
         finally
         {
-            if (File.Exists(temporaryPath)) File.Delete(temporaryPath);
+            // Never mask the original failure with a second IOException during cleanup.
+            SqliteConnection.ClearAllPools();
+            if (File.Exists(temporaryPath))
+            {
+                try { File.Delete(temporaryPath); }
+                catch (IOException ex) { _logger.LogWarning(ex, "Temporary SQLite backup file is still locked."); }
+            }
         }
     }
 }
