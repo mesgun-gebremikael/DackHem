@@ -1,3 +1,5 @@
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
 using DackHem.Api.Data;
 using DackHem.Api.Services;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +13,20 @@ namespace DackHem.Api
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
+            builder.Services.AddRateLimiter(options =>
+            {
+                options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+                options.AddPolicy("booking-write", context =>
+                    RateLimitPartition.GetFixedWindowLimiter(
+                        context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                        _ => new FixedWindowRateLimiterOptions
+                        {
+                            PermitLimit = 10,
+                            Window = TimeSpan.FromMinutes(1),
+                            QueueLimit = 0,
+                            AutoReplenishment = true
+                        }));
+            });
             builder.Services.AddScoped<BookingEmailService>();
             builder.Services.AddOpenApi();
             builder.Services.AddEndpointsApiExplorer();
@@ -31,6 +47,8 @@ namespace DackHem.Api
             app.UseHttpsRedirection();
             app.UseDefaultFiles();
             app.UseStaticFiles();
+            app.UseRouting();
+            app.UseRateLimiter();
             app.UseAuthorization();
             app.MapControllers();
 
