@@ -29,6 +29,8 @@ namespace DackHem.Api
                         }));
             });
             builder.Services.AddScoped<BookingEmailService>();
+            builder.Services.AddSingleton<BookingEmailQueue>();
+            builder.Services.AddHostedService(sp => sp.GetRequiredService<BookingEmailQueue>());
             builder.Services.AddOpenApi();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
