@@ -5,11 +5,13 @@ using DackHem.Api.Services;
 using DackHem.Api.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace DackHem.Api.Controllers;
 
 [ApiController]
 [Route("api/admin/bookings")]
+[EnableRateLimiting("admin-read-write")]
 [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
 public class AdminBookingsController : ControllerBase
 {
