@@ -3,6 +3,7 @@ using DackHem.Api.Data;
 using DackHem.Api.Models;
 using DackHem.Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
@@ -47,6 +48,7 @@ namespace DackHem.Api.Controllers
         }
 
         [HttpPost]
+        [EnableRateLimiting("booking-write")]
         public async Task<IActionResult> Create(
             [FromBody] CreateBookingRequest request)
         {
@@ -108,6 +110,7 @@ namespace DackHem.Api.Controllers
         }
 
         [HttpPost("cancel")]
+        [EnableRateLimiting("booking-write")]
         public async Task<IActionResult> Cancel(
             [FromBody] CancelBookingRequest request)
         {
