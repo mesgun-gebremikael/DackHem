@@ -76,8 +76,8 @@ public sealed class BookingEmailQueue : BackgroundService
                 // Retry failures with a delay. Each recipient is tracked separately.
                 await db.Database.ExecuteSqlInterpolatedAsync($"""
                     UPDATE BookingEmailOutbox SET
-                        CustomerSent = {customerSent ? 1 : 0},
-                        OwnerSent = {ownerSent ? 1 : 0},
+                        CustomerSent = {(customerSent ? 1 : 0)},
+                        OwnerSent = {(ownerSent ? 1 : 0)},
                         Attempts = Attempts + 1,
                         NextAttemptUtc = {DateTime.UtcNow.AddMinutes(2).ToString("O")}
                     WHERE BookingId = {job.Id}
