@@ -79,6 +79,31 @@ namespace DackHem.Api
             app.UseAuthorization();
             app.MapControllers();
 
+            // Bootstrap the main booking table for fresh Railway volumes. The auxiliary
+            // tables below are created independently, so EnsureCreated() alone would
+            // not initialize Bookings after those tables already exist.
+            // CREATE IF NOT EXISTS preserves all bookings in an existing database.
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                db.Database.ExecuteSqlRaw("""
+                    CREATE TABLE IF NOT EXISTS Bookings (
+                        Id TEXT NOT NULL CONSTRAINT PK_Bookings PRIMARY KEY,
+                        CustomerName TEXT NOT NULL,
+                        PhoneNumber TEXT NOT NULL,
+                        Email TEXT NOT NULL,
+                        RegistrationNumber TEXT NOT NULL,
+                        Address TEXT NOT NULL,
+                        BookingDateTime TEXT NOT NULL,
+                        Notes TEXT NULL,
+                        Price TEXT NOT NULL,
+                        Status TEXT NOT NULL,
+                        CancellationTokenHash TEXT NOT NULL,
+                        CreatedAtUtc TEXT NOT NULL
+                    )
+                    """);
+            }
+
             // Separate work-tracking table: does not change existing booking schema.
             using (var scope = app.Services.CreateScope())
             {
