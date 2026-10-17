@@ -369,3 +369,13 @@ FodyWeavers.xsd
 
 # Persisted Data Protection keys contain sensitive encryption material
 **/.dackhem-keys/
+
+# SQLite databases, write-ahead logs, and local backups
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db.bak
+*.db.backup
