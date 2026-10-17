@@ -379,3 +379,6 @@ FodyWeavers.xsd
 *.db-journal
 *.db.bak
 *.db.backup
+
+# Local database backup snapshots
+**/dackhem-backups/
