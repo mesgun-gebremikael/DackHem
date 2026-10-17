@@ -74,7 +74,7 @@ $('booking').addEventListener('submit',async e=>{
  try{
   const result=await api('/api/bookings',{customerName:$('name').value.trim(),phoneNumber:$('phone').value.trim(),email:$('email').value.trim(),registrationNumber:$('plate').value.trim(),address:$('address').value.trim(),bookingDateTime:dateTime,notes:$('notes').value.trim()||null});
   form.reset();selectedAddress='';clearAddressSuggestions();addressStatus.classList.remove('ok');addressStatus.textContent='Skriv din adress så visas förslag automatiskt.';
-  msg.className='success';msg.textContent=`✓ Bokningen är registrerad! Bokningsnummer: DH-${String(result.id).replace(/-/g,"").slice(0,8).toUpperCase()}. Pris: ${result.price} kr. ${result.emailSent ? 'En bekräftelse skickas till din e-postadress.' : 'Ingen e-postbekräftelse skickades. Spara därför avbokningsnyckeln här:'} ${result.emailSent ? '' : result.cancellationToken} ${result.emailSent ? '' : 'Nyckeln visas bara här och ska inte delas med andra.'}`;
+  msg.className='success';msg.textContent=`✓ Bokningen är registrerad! Bokningsnummer: DH-${String(result.id).replace(/-/g,"").slice(0,8).toUpperCase()}. Pris: ${result.price} kr. ${result.emailQueued ? 'E-postbekräftelsen skickas separat. Spara ditt bokningsnummer.' : 'E-postutskicket kunde inte köas. Spara avbokningsnyckeln här:'} ${result.emailQueued ? '' : result.cancellationToken} ${result.emailQueued ? '' : 'Nyckeln visas bara här och ska inte delas med andra.'}`;
  }catch(err){msg.className='error';msg.textContent=err instanceof TypeError?'Kunde inte nå servern. Öppna hemsidan via DäckHem.Api och försök igen.':err.message;}
  finally{button.disabled=false;}
 });
