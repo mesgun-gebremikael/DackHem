@@ -14,14 +14,21 @@ namespace DackHem.Api.Controllers
     [Route("api/bookings")]
     public class BookingsController : ControllerBase
     {
+
         private readonly AppDbContext _db;
         private readonly BookingEmailService _email;
+        private readonly BookingEmailQueue _emailQueue;
 
-        public BookingsController(AppDbContext db, BookingEmailService email)
+        public BookingsController(
+            AppDbContext db,
+            BookingEmailService email,
+            BookingEmailQueue emailQueue)
         {
             _db = db;
             _email = email;
+            _emailQueue = emailQueue;
         }
+
 
         public class CreateBookingRequest
         {
