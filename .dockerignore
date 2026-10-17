@@ -1,0 +1,17 @@
+**/bin/
+**/obj/
+**/.vs/
+.git/
+**/.dackhem-keys/
+**/dackhem-backups/
+**/*.db
+**/*.db-shm
+**/*.db-wal
+**/*.db-journal
+**/*.sqlite
+**/*.sqlite3
+**/*.db.bak
+**/*.db.backup
+**/secrets.json
+**/*.user
+**/*.pfx
