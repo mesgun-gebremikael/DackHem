@@ -28,6 +28,16 @@ namespace DackHem.Api
                             QueueLimit = 0,
                             AutoReplenishment = true
                         }));
+                options.AddPolicy("admin-read-write", context =>
+                    RateLimitPartition.GetFixedWindowLimiter(
+                        context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                        _ => new FixedWindowRateLimiterOptions
+                        {
+                            PermitLimit = 20,
+                            Window = TimeSpan.FromMinutes(1),
+                            QueueLimit = 0,
+                            AutoReplenishment = true
+                        }));
             });
             builder.Services.AddScoped<BookingEmailService>();
             builder.Services.AddSingleton<BookingEmailQueue>();
