@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.RateLimiting;
 using DackHem.Api.Data;
 using DackHem.Api.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.Sqlite;
 
 namespace DackHem.Api
 {
@@ -32,8 +33,15 @@ namespace DackHem.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // In production set Database:Path to a persistent storage volume.
+            // Keep the existing local database location as the default.
+            var databasePath = builder.Configuration["Database:Path"];
+            if (string.IsNullOrWhiteSpace(databasePath)) databasePath = "dackhem.db";
+            var databaseDirectory = Path.GetDirectoryName(Path.GetFullPath(databasePath));
+            if (!string.IsNullOrEmpty(databaseDirectory)) Directory.CreateDirectory(databaseDirectory);
+            var connectionString = new SqliteConnectionStringBuilder { DataSource = databasePath }.ToString();
             builder.Services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlite("Data Source=dackhem.db"));
+                options.UseSqlite(connectionString));
 
             var app = builder.Build();
 
