@@ -76,7 +76,7 @@ namespace DackHem.Api.Controllers
                 Address = request.Address.Trim(),
                 BookingDateTime = request.BookingDateTime,
                 Notes = request.Notes,
-                Price = 250,
+                Price = 345,
                 Status = "Confirmed"
             };
 
