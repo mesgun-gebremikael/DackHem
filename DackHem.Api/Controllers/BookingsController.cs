@@ -93,8 +93,11 @@ namespace DackHem.Api.Controllers
 
             _db.Bookings.Add(booking);
             await _db.SaveChangesAsync();
-            var emailSent = await _email.SendConfirmationAsync(booking, token);
-            await _email.SendOwnerNotificationAsync(booking, cancelled: false);
+            // Send independent emails concurrently instead of making the customer wait twice.
+            var customerEmailTask = _email.SendConfirmationAsync(booking, token);
+            var ownerEmailTask = _email.SendOwnerNotificationAsync(booking, cancelled: false);
+            await Task.WhenAll(customerEmailTask, ownerEmailTask);
+            var emailSent = await customerEmailTask;
 
             return Created(
                 $"/api/bookings/{booking.Id}",
