@@ -93,11 +93,8 @@ namespace DackHem.Api.Controllers
 
             _db.Bookings.Add(booking);
             await _db.SaveChangesAsync();
-            // Send independent emails concurrently instead of making the customer wait twice.
-            var customerEmailTask = _email.SendConfirmationAsync(booking, token);
-            var ownerEmailTask = _email.SendOwnerNotificationAsync(booking, cancelled: false);
-            await Task.WhenAll(customerEmailTask, ownerEmailTask);
-            var emailSent = await customerEmailTask;
+            // The booking is saved. Queue email delivery so the response is immediate.
+            var emailQueued = _emailQueue.TryEnqueue(booking, token);
 
             return Created(
                 $"/api/bookings/{booking.Id}",
@@ -108,7 +105,8 @@ namespace DackHem.Api.Controllers
                     booking.Price,
                     booking.Status,
                     CancellationToken = token,
-                    EmailSent = emailSent
+                    EmailSent = false,
+                    EmailQueued = emailQueued
                 });
         }
 
