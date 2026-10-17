@@ -366,3 +366,6 @@ FodyWeavers.xsd
 **/dackhem.db-shm
 **/dackhem.db-wal
 **/secrets.json
+
+# Persisted Data Protection keys contain sensitive encryption material
+**/.dackhem-keys/

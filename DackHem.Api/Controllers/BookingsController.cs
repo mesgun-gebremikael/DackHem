@@ -98,10 +98,23 @@ namespace DackHem.Api.Controllers
                     SHA256.HashData(
                         System.Text.Encoding.UTF8.GetBytes(token)));
 
-            _db.Bookings.Add(booking);
-            await _db.SaveChangesAsync();
-            // The booking is saved. Queue email delivery so the response is immediate.
-            var emailQueued = _emailQueue.TryEnqueue(booking, token);
+            // Save the booking and encrypted email job in one transaction.
+            await using (var transaction = await _db.Database.BeginTransactionAsync())
+            {
+                _db.Bookings.Add(booking);
+                await _db.SaveChangesAsync();
+                await _db.Database.ExecuteSqlInterpolatedAsync($"""
+                    INSERT INTO BookingEmailOutbox
+                        (BookingId, ProtectedToken, CreatedUtc, NextAttemptUtc)
+                    VALUES
+                        ({booking.Id.ToString().ToUpperInvariant()},
+                         {_emailQueue.ProtectToken(token)},
+                         {DateTime.UtcNow.ToString("O")},
+                         {DateTime.UtcNow.ToString("O")})
+                    """);
+                await transaction.CommitAsync();
+            }
+            var emailQueued = true;
 
             return Created(
                 $"/api/bookings/{booking.Id}",

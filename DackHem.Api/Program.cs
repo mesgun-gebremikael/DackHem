@@ -4,6 +4,7 @@ using DackHem.Api.Data;
 using DackHem.Api.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace DackHem.Api
 {
@@ -42,6 +43,11 @@ namespace DackHem.Api
             var databaseDirectory = Path.GetDirectoryName(Path.GetFullPath(databasePath));
             if (!string.IsNullOrEmpty(databaseDirectory)) Directory.CreateDirectory(databaseDirectory);
             var connectionString = new SqliteConnectionStringBuilder { DataSource = databasePath }.ToString();
+            // Encryption keys must survive deployment alongside the SQLite file.
+            var keyDirectory = Path.Combine(databaseDirectory!, ".dackhem-keys");
+            Directory.CreateDirectory(keyDirectory);
+            builder.Services.AddDataProtection().SetApplicationName("DackHem")
+                .PersistKeysToFileSystem(new DirectoryInfo(keyDirectory));
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlite(connectionString));
 
@@ -84,6 +90,22 @@ namespace DackHem.Api
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         BookingId TEXT NOT NULL UNIQUE,
                         CancelledAtUtc TEXT NOT NULL
+                    )
+                    """);
+            }
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                db.Database.ExecuteSqlRaw("""
+                    CREATE TABLE IF NOT EXISTS BookingEmailOutbox (
+                        BookingId TEXT PRIMARY KEY NOT NULL,
+                        ProtectedToken TEXT NOT NULL,
+                        CustomerSent INTEGER NOT NULL DEFAULT 0,
+                        OwnerSent INTEGER NOT NULL DEFAULT 0,
+                        Attempts INTEGER NOT NULL DEFAULT 0,
+                        CreatedUtc TEXT NOT NULL,
+                        NextAttemptUtc TEXT NOT NULL
                     )
                     """);
             }
