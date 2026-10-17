@@ -77,6 +77,54 @@ public sealed class BookingEmailService
         }
     }
 
+
+    public async Task<bool> SendOwnerNotificationAsync(Booking booking, bool cancelled)
+    {
+        var host = _configuration["Email:SmtpHost"];
+        var username = _configuration["Email:Username"];
+        var password = _configuration["Email:Password"];
+        var sender = _configuration["Email:From"];
+        var recipient = _configuration["Email:OwnerNotificationTo"] ?? username;
+        if (string.IsNullOrWhiteSpace(host) || string.IsNullOrWhiteSpace(username) ||
+            string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(sender) ||
+            string.IsNullOrWhiteSpace(recipient)) return false;
+
+        var body = $"""
+            {(cancelled ? "KUNDEN HAR AVBOKAT" : "NY BOKNING")} – DäckHem
+
+            Kund: {booking.CustomerName}
+            Telefonnummer: {booking.PhoneNumber}
+            E-post: {booking.Email}
+            Tid: {booking.BookingDateTime:yyyy-MM-dd HH:mm}
+            Adress: {booking.Address}
+            Registreringsnummer: {booking.RegistrationNumber}
+            Bokningsnummer: DH-{booking.Id.ToString("N")[..8].ToUpperInvariant()}
+            """;
+        try
+        {
+            using var message = new MailMessage(new MailAddress(sender, "DäckHem"), new MailAddress(recipient))
+            {
+                Subject = cancelled ? "DäckHem – kundavbokning" : "DäckHem – ny bokning",
+                Body = body,
+                IsBodyHtml = false
+            };
+            using var client = new SmtpClient(host, _configuration.GetValue<int?>("Email:SmtpPort") ?? 587)
+            {
+                EnableSsl = true,
+                Credentials = new NetworkCredential(username, password),
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                Timeout = 15000
+            };
+            await client.SendMailAsync(message);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning("Owner notification failed ({ErrorType}).", ex.GetType().Name);
+            return false;
+        }
+    }
+
     public async Task<bool> SendRescheduleAsync(Booking booking, DateTime previousTime)
     {
         var host = _configuration["Email:SmtpHost"];

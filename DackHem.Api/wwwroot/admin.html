@@ -42,25 +42,31 @@ body{font:16px system-ui;background:#0c1726;color:#eef4fb;margin:0;padding:32px}
 <script>
 const el=id=>document.getElementById(id);
 let key='',page=1,total=0,currentBookings=[],todayOnly=false,searchTimer=null,loadVersion=0,selectedDate='',calendarVersion=0;
-let cancellationCursor=null, cancellationCheckBusy=false;
+let cancellationCursor=null, cancellationCheckBusy=false, cancellationNoticeTimer=null;
+const cancellationStorageKey='dackhem-admin-last-seen-cancellation';
 async function checkCustomerCancellations(){
  if(!key||cancellationCheckBusy||document.hidden)return;
  cancellationCheckBusy=true;
  try{
-  const r=await fetch('/api/admin/bookings/customer-cancellations?after='+(cancellationCursor??0),{headers:{'X-Admin-Key':key},cache:'no-store'});
+  const previous=cancellationCursor===null?Number(localStorage.getItem(cancellationStorageKey)||0):cancellationCursor;
+  const r=await fetch('/api/admin/bookings/customer-cancellations?after='+previous,{headers:{'X-Admin-Key':key},cache:'no-store'});
   if(!r.ok)return;
   const data=await r.json();
-  if(cancellationCursor!==null&&data.events.length){
+  if(data.events.length){
    const notice=el('customerCancellationAlert');
-   const names=data.events.map(x=>x.customerName).join(', ');
-   notice.textContent='🔔 Avbokad av kund via länken: '+names+'. Bokningen är automatiskt avbokad.';
+   const details=data.events.map(x=>x.customerName+' · '+String(x.bookingDateTime).replace('T',' ').slice(0,16)+' · Regnr '+x.registrationNumber).join(' | ');
+   notice.textContent='🔔 Avbokad av kund via länken: '+details;
    notice.hidden=false;
+   clearTimeout(cancellationNoticeTimer);
+   cancellationNoticeTimer=setTimeout(()=>{notice.hidden=true;},15000);
    if(!editingId&&!workingId&&!document.querySelector('.inlineWork')){await load();await loadCalendar();}
   }
   cancellationCursor=data.latest;
+  localStorage.setItem(cancellationStorageKey,String(data.latest));
  }catch{}finally{cancellationCheckBusy=false;}
 }
 setInterval(checkCustomerCancellations,5000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkCustomerCancellations();});
 const initialMonth=stockholmDate().slice(0,7).split('-').map(Number);let calendarYear=initialMonth[0],calendarMonth=initialMonth[1];
 function stockholmDate(){return new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Stockholm',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());}
 function updateTodayButtons(){el('showToday').setAttribute('aria-pressed',String(todayOnly));el('showAll').setAttribute('aria-pressed',String(!todayOnly));}
@@ -331,5 +337,5 @@ el('loginForm').addEventListener('submit',async e=>{e.preventDefault();key=el('k
 el('refresh').addEventListener('click',()=>{load();loadCalendar();});
 el('prev').addEventListener('click',()=>{if(page>1){page--;load();}});
 el('next').addEventListener('click',()=>{if(page*30<total){page++;load();}});
-el('lock').addEventListener('click',()=>{++calendarVersion;++loadVersion;clearTimeout(searchTimer);key='';cancellationCursor=null;el('customerCancellationAlert').hidden=true;workingId=null;el('workPanel').hidden=true;editingId=null;el('editPanel').hidden=true;currentBookings=[];el('rows').replaceChildren();el('conflicts').hidden=true;el('result').hidden=true;el('login').hidden=false;el('message').textContent='Adminpanelen är låst.';});
+el('lock').addEventListener('click',()=>{++calendarVersion;++loadVersion;clearTimeout(searchTimer);key='';cancellationCursor=null;clearTimeout(cancellationNoticeTimer);el('customerCancellationAlert').hidden=true;workingId=null;el('workPanel').hidden=true;editingId=null;el('editPanel').hidden=true;currentBookings=[];el('rows').replaceChildren();el('conflicts').hidden=true;el('result').hidden=true;el('login').hidden=false;el('message').textContent='Adminpanelen är låst.';});
 </script></body></html>

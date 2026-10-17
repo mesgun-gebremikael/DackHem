@@ -92,6 +92,7 @@ namespace DackHem.Api.Controllers
             _db.Bookings.Add(booking);
             await _db.SaveChangesAsync();
             var emailSent = await _email.SendConfirmationAsync(booking, token);
+            await _email.SendOwnerNotificationAsync(booking, cancelled: false);
 
             return Created(
                 $"/api/bookings/{booking.Id}",
@@ -147,6 +148,7 @@ namespace DackHem.Api.Controllers
                 VALUES ({booking.Id.ToString().ToUpperInvariant()}, {DateTime.UtcNow.ToString("O")})
                 """);
             await transaction.CommitAsync();
+            await _email.SendOwnerNotificationAsync(booking, cancelled: true);
 
             return Ok(new
             {
