@@ -1,5 +1,7 @@
 using System.Net;
 using System.Net.Mail;
+using System.Text;
+using System.Text.Json;
 using DackHem.Api.Models;
 
 namespace DackHem.Api.Services;
@@ -21,10 +23,10 @@ public sealed class BookingEmailService
         var username = _configuration["Email:Username"];
         var password = _configuration["Email:Password"];
         var sender = _configuration["Email:From"];
-        if (string.IsNullOrWhiteSpace(host) || string.IsNullOrWhiteSpace(username) ||
-            string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(sender))
+        if (string.IsNullOrWhiteSpace(sender) || (string.IsNullOrWhiteSpace(_configuration["Resend:ApiKey"]) &&
+            (string.IsNullOrWhiteSpace(host) || string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))))
         {
-            _logger.LogWarning("Booking confirmation email skipped: missing required SMTP configuration.");
+            _logger.LogWarning("Booking confirmation email skipped: missing required email configuration.");
             return false;
         }
 
@@ -60,6 +62,9 @@ public sealed class BookingEmailService
 
         try
         {
+            if (!string.IsNullOrWhiteSpace(_configuration["Resend:ApiKey"]))
+                return await SendWithResendAsync(sender, booking.Email, "DäckHem – din bokningsbekräftelse", body);
+
             using var message = new MailMessage(new MailAddress(sender, "DäckHem"), new MailAddress(booking.Email))
             {
                 Subject = "DäckHem – din bokningsbekräftelse",
@@ -92,11 +97,11 @@ public sealed class BookingEmailService
         var password = _configuration["Email:Password"];
         var sender = _configuration["Email:From"];
         var recipient = _configuration["Email:OwnerNotificationTo"] ?? username;
-        if (string.IsNullOrWhiteSpace(host) || string.IsNullOrWhiteSpace(username) ||
-            string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(sender) ||
-            string.IsNullOrWhiteSpace(recipient))
+        if (string.IsNullOrWhiteSpace(sender) || string.IsNullOrWhiteSpace(recipient) ||
+            (string.IsNullOrWhiteSpace(_configuration["Resend:ApiKey"]) &&
+            (string.IsNullOrWhiteSpace(host) || string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))))
         {
-            _logger.LogWarning("Owner notification email skipped: missing required SMTP configuration.");
+            _logger.LogWarning("Owner notification email skipped: missing required email configuration.");
             return false;
         }
 
@@ -113,6 +118,9 @@ public sealed class BookingEmailService
             """;
         try
         {
+            if (!string.IsNullOrWhiteSpace(_configuration["Resend:ApiKey"]))
+                return await SendWithResendAsync(sender, recipient, cancelled ? "DäckHem – kundavbokning" : "DäckHem – ny bokning", body);
+
             using var message = new MailMessage(new MailAddress(sender, "DäckHem"), new MailAddress(recipient))
             {
                 Subject = cancelled ? "DäckHem – kundavbokning" : "DäckHem – ny bokning",
@@ -142,10 +150,10 @@ public sealed class BookingEmailService
         var username = _configuration["Email:Username"];
         var password = _configuration["Email:Password"];
         var sender = _configuration["Email:From"];
-        if (string.IsNullOrWhiteSpace(host) || string.IsNullOrWhiteSpace(username) ||
-            string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(sender))
+        if (string.IsNullOrWhiteSpace(sender) || (string.IsNullOrWhiteSpace(_configuration["Resend:ApiKey"]) &&
+            (string.IsNullOrWhiteSpace(host) || string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))))
         {
-            _logger.LogWarning("Booking reschedule email skipped: missing required SMTP configuration.");
+            _logger.LogWarning("Booking reschedule email skipped: missing required email configuration.");
             return false;
         }
 
@@ -170,6 +178,9 @@ public sealed class BookingEmailService
 
         try
         {
+            if (!string.IsNullOrWhiteSpace(_configuration["Resend:ApiKey"]))
+                return await SendWithResendAsync(sender, booking.Email, "DäckHem – din bokning har fått en ny tid", body);
+
             using var message = new MailMessage(new MailAddress(sender, "DäckHem"), new MailAddress(booking.Email))
             {
                 Subject = "DäckHem – din bokning har fått en ny tid",
@@ -189,6 +200,39 @@ public sealed class BookingEmailService
         catch (Exception ex)
         {
             _logger.LogWarning("Booking reschedule email failed ({ErrorType}, {SmtpStatus}).", ex.GetType().Name, ex is SmtpException smtp ? smtp.StatusCode.ToString() : "NotSmtp");
+            return false;
+        }
+    }
+
+    // HTTPS API avoids SMTP port restrictions on hosting platforms.
+    // Do not log recipient addresses, message bodies, API keys or cancellation tokens.
+    private static readonly HttpClient ResendClient = new() { Timeout = TimeSpan.FromSeconds(15) };
+
+    private async Task<bool> SendWithResendAsync(string sender, string recipient, string subject, string body)
+    {
+        var apiKey = _configuration["Resend:ApiKey"];
+        if (string.IsNullOrWhiteSpace(apiKey)) return false;
+
+        try
+        {
+            using var request = new HttpRequestMessage(HttpMethod.Post, "https://api.resend.com/emails");
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey);
+            request.Content = new StringContent(JsonSerializer.Serialize(new
+            {
+                from = $"DäckHem <{sender}>",
+                to = new[] { recipient },
+                subject,
+                text = body
+            }), Encoding.UTF8, "application/json");
+
+            using var response = await ResendClient.SendAsync(request);
+            if (response.IsSuccessStatusCode) return true;
+            _logger.LogWarning("Resend email delivery request failed (HTTP {StatusCode}).", (int)response.StatusCode);
+            return false;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning("Resend email delivery request failed ({ErrorType}).", ex.GetType().Name);
             return false;
         }
     }
