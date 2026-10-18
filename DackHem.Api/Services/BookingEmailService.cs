@@ -72,7 +72,7 @@ public sealed class BookingEmailService
         catch (Exception ex)
         {
             // Never log message body, cancellation token, credentials, or customer details.
-            _logger.LogWarning("Booking confirmation email failed ({ErrorType}).", ex.GetType().Name);
+            _logger.LogWarning("Booking confirmation email failed ({ErrorType}, {SmtpStatus}).", ex.GetType().Name, ex is SmtpException smtp ? smtp.StatusCode.ToString() : "NotSmtp");
             return false;
         }
     }
@@ -120,7 +120,7 @@ public sealed class BookingEmailService
         }
         catch (Exception ex)
         {
-            _logger.LogWarning("Owner notification failed ({ErrorType}).", ex.GetType().Name);
+            _logger.LogWarning("Owner notification failed ({ErrorType}, {SmtpStatus}).", ex.GetType().Name, ex is SmtpException smtp ? smtp.StatusCode.ToString() : "NotSmtp");
             return false;
         }
     }
@@ -174,7 +174,7 @@ public sealed class BookingEmailService
         }
         catch (Exception ex)
         {
-            _logger.LogWarning("Booking reschedule email failed ({ErrorType}).", ex.GetType().Name);
+            _logger.LogWarning("Booking reschedule email failed ({ErrorType}, {SmtpStatus}).", ex.GetType().Name, ex is SmtpException smtp ? smtp.StatusCode.ToString() : "NotSmtp");
             return false;
         }
     }
