@@ -23,11 +23,18 @@ public sealed class BookingEmailService
         var sender = _configuration["Email:From"];
         if (string.IsNullOrWhiteSpace(host) || string.IsNullOrWhiteSpace(username) ||
             string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(sender))
+        {
+            _logger.LogWarning("Booking confirmation email skipped: missing required SMTP configuration.");
             return false;
+        }
 
         var port = _configuration.GetValue<int?>("Email:SmtpPort") ?? 587;
         var baseUrl = _configuration["Email:PublicBaseUrl"]?.TrimEnd('/');
-        if (string.IsNullOrWhiteSpace(baseUrl)) return false;
+        if (string.IsNullOrWhiteSpace(baseUrl))
+        {
+            _logger.LogWarning("Booking confirmation email skipped: Email:PublicBaseUrl is missing.");
+            return false;
+        }
 
         var cancelUrl = $"{baseUrl}/cancel.html#token={Uri.EscapeDataString(cancellationToken)}";
         var body = $"""
@@ -87,7 +94,11 @@ public sealed class BookingEmailService
         var recipient = _configuration["Email:OwnerNotificationTo"] ?? username;
         if (string.IsNullOrWhiteSpace(host) || string.IsNullOrWhiteSpace(username) ||
             string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(sender) ||
-            string.IsNullOrWhiteSpace(recipient)) return false;
+            string.IsNullOrWhiteSpace(recipient))
+        {
+            _logger.LogWarning("Owner notification email skipped: missing required SMTP configuration.");
+            return false;
+        }
 
         var body = $"""
             {(cancelled ? "KUNDEN HAR AVBOKAT" : "NY BOKNING")} – DäckHem
@@ -133,7 +144,10 @@ public sealed class BookingEmailService
         var sender = _configuration["Email:From"];
         if (string.IsNullOrWhiteSpace(host) || string.IsNullOrWhiteSpace(username) ||
             string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(sender))
+        {
+            _logger.LogWarning("Booking reschedule email skipped: missing required SMTP configuration.");
             return false;
+        }
 
         var body = $"""
             Hej {booking.CustomerName}!
