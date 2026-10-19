@@ -1,15 +1,154 @@
 <!doctype html>
-<html lang="sv"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DäckHem – Däckbyte där du är</title><link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<html lang="sv"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="DäckHem erbjuder mobilt hjulbyte hemma eller på jobbet i Stockholmsområdet. Boka smidigt online – 345 kr inklusive framkörning.">
+<meta name="theme-color" content="#0d1a2b">
+<title>DäckHem – Mobilt hjulbyte hemma eller på jobbet i Stockholm</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <style>
-:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#eef4fb;background:#0c1726}*{box-sizing:border-box}body{margin:0}header{display:flex;justify-content:space-between;align-items:center;padding:22px max(5%,calc((100% - 1100px)/2));border-bottom:1px solid #28364b}.brand{font-size:25px;font-weight:800}.brand span,.gold{color:#f5b942}a{color:inherit;text-decoration:none}.btn{background:#f5b942;color:#152235;border:0;border-radius:10px;padding:14px 22px;font-weight:800;cursor:pointer;display:inline-block}.btn:disabled{opacity:.55;cursor:wait}main{max-width:1100px;margin:auto;padding:75px 5%}.hero{display:grid;grid-template-columns:1.2fr 1fr;gap:45px;align-items:center}h1{font-size:clamp(38px,6vw,66px);line-height:1.08;margin:0 0 20px}p{color:#bdc9d8;line-height:1.7}.price{font-size:42px;font-weight:850;color:#f5b942;margin:20px 0}.panel{background:#15263b;border:1px solid #30445b;border-radius:22px;padding:32px}.wheel{font-size:135px;text-align:center}section{margin-top:75px}h2{font-size:32px}.features{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.feature{background:#15263b;border-radius:14px;padding:22px}.feature strong{color:#f5b942}form{display:grid;grid-template-columns:1fr 1fr;gap:16px}label{display:block;font-size:14px;margin-bottom:6px;color:#d6e1ec}input,textarea,select{width:100%;padding:13px;background:#0e1b2c;border:1px solid #43566c;color:white;border-radius:8px;font:inherit}textarea{resize:vertical}.wide{grid-column:1/-1}.note{font-size:13px}footer{text-align:center;border-top:1px solid #28364b;padding:24px;color:#9daec1}#message,#cancel-message{overflow-wrap:anywhere}#message{transition:background-color .2s ease,border-color .2s ease,color .2s ease}#message.success{background:#123e2a;border:2px solid #38c983;color:#e2ffed;padding:18px;font-weight:650}#message.error{background:#42232b;border:1px solid #ef7d89;color:#ffe2e5}#message.pending{color:#d6e1ec}#message:not(:empty),#cancel-message:not(:empty){padding:12px;border:1px solid #43566c;border-radius:8px}@media(max-width:700px){.hero,.features,form{grid-template-columns:1fr}main{padding-top:40px}.wheel{font-size:90px}header{padding:18px 5%}}
-#addressResults{display:grid;gap:6px;margin-top:8px}#addressResults button{background:#20354c;color:#eef4fb;border:1px solid #f5b942;border-radius:8px;padding:10px;text-align:left;cursor:pointer}#addressResults button:hover{background:#304861}#addressStatus{margin:8px 0;color:#d6e1ec}#addressStatus.ok{color:#9ae6a4}#customBrandWrap[hidden]{display:none}</style></head><body>
-<header><div class="brand">◉ <span>Däck</span>Hem</div><a href="#boka" class="btn">Boka däckbyte</a></header>
-<main><div class="hero"><div><p class="gold">MOBILT HJULBYTE I STOCKHOLM · ÖPPNINGSERBJUDANDE</p><h1>Vi kommer till dig.<br><span class="gold">Du sparar tid.</span></h1><p>Slipp köer och verkstadsbesök. Vi byter dina hjul där bilen står – hemma eller på jobbet, i hela Stockholmsområdet.</p><div class="price">345 kr <small style="font-size:16px;color:#bdc9d8">totalt inkl. framkörning*</small></div><a class="btn" href="#boka">Boka din tid →</a><p class="note">Öppningserbjudande: 345 kr totalt för hjulbyte och framkörning i Stockholmsområdet. Betala efteråt med Swish eller Revolut-överföring. Vi bekräftar att adressen kan nås innan besöket.</p></div><div class="panel"><div class="wheel">◉</div><h2 style="text-align:center">DäckHem</h2><p style="text-align:center">Enkelt • Smidigt • På din adress</p></div></div>
-<section><h2>Så fungerar det</h2><div class="features"><div class="feature"><strong>01 · Boka</strong><p>Välj önskat datum och klockslag och ange bilens uppgifter.</p></div><div class="feature"><strong>02 · Vi kommer</strong><p>Vi åker till adressen du anger. Vid behov kontaktar vi dig om tiden.</p></div><div class="feature"><strong>03 · Betala på plats</strong><p>Betala med Swish eller Revolut-överföring när däckbytet är klart. Ingen förskottsbetalning.</p></div></div></section>
-<section id="boka"><h2>Boka däckbyte</h2><p>Fyll i formuläret för att registrera din bokning.</p><div class="panel"><form id="booking">
-<div><label for="name">Namn</label><input id="name" required maxlength="100" placeholder="För- och efternamn"></div>
-<div><label for="phone">Telefonnummer</label><input id="phone" type="tel" required maxlength="30" placeholder="07X XXX XX XX"></div>
-<div><label for="email">E-postadress</label><input id="email" type="email" required maxlength="254" placeholder="namn@exempel.se"></div>
+:root{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:#f4f6f8;color:#16253a}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+body{margin:0;line-height:1.6}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit}
+button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #dc9a11;outline-offset:3px}
+header{position:sticky;top:0;z-index:20;background:#0d1a2bf7;color:#fff;backdrop-filter:blur(14px);border-bottom:1px solid #ffffff1c}
+.nav{max-width:1180px;margin:auto;min-height:78px;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{font-size:27px;font-weight:850;letter-spacing:-1.2px;white-space:nowrap;display:flex;align-items:center;gap:10px}.brand span span{color:#f6b83e}
+.brand img{height:38px;width:38px;border-radius:9px}
+nav{display:flex;align-items:center;gap:25px;font-size:14px;font-weight:650}nav a:not(.btn):hover{color:#f6b83e}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:12px;background:#f6b83e;color:#132238;min-height:49px;padding:13px 23px;font-weight:800;cursor:pointer;box-shadow:0 7px 20px #b2761433;transition:transform .18s,background .18s}
+.btn:hover{background:#ffcc65;transform:translateY(-1px)}.btn:disabled{opacity:.6;cursor:wait;transform:none}
+.btn-outline{background:#fff;color:#172840;box-shadow:none;border:1px solid #cad3df}.btn-outline:hover{background:#eff3f8}
+.heroWrap{background:linear-gradient(125deg,#0c192a 0%,#172e49 100%);color:#f8fafc;overflow:hidden}
+.hero{max-width:1180px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:55px;align-items:center;padding:70px 24px 84px}
+.eyebrow{text-transform:uppercase;color:#f6b83e;font-size:12px;font-weight:850;letter-spacing:1.9px;margin:0 0 17px}
+.hero h1{font-size:clamp(39px,4.4vw,65px);line-height:1.07;letter-spacing:-2px;margin:0 0 23px;font-weight:850}
+.hero h1 em{font-style:normal;color:#f6b83e}
+.hero p.lead{font-size:18px;color:#d7e2ef;line-height:1.75;max-width:550px;margin:0 0 27px}
+.heroActions{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.heroPrice{display:flex;align-items:baseline;gap:12px;margin:0 0 25px}
+.heroPrice strong{font-size:41px;line-height:1;color:#f6b83e;letter-spacing:-1px}
+.heroPrice span{font-size:13px;color:#dbe4ee}
+.heroBadges{display:flex;gap:19px;flex-wrap:wrap;margin:28px 0 0;color:#dfebf5;font-size:13px}
+.heroBadges span:before{content:"✓";color:#f6b83e;font-weight:900;margin-right:7px}
+.heroPhoto{position:relative}
+.heroPhoto img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;border-radius:24px;box-shadow:0 24px 72px #0008;background:#304056}
+.heroPhoto .photoFallback{min-height:360px;border-radius:24px;background:linear-gradient(130deg,#21354e,#0d1b2f);display:none;align-items:center;justify-content:center;text-align:center;padding:30px;font-weight:750;color:#d4e2f0}
+.photoTag{position:absolute;left:-19px;bottom:24px;background:#fff;color:#16263d;border-radius:15px;padding:15px 20px;box-shadow:0 15px 35px #0003}
+.photoTag strong{display:block;font-size:17px}.photoTag small{color:#54647a;font-size:12px}
+.photoDisclosure{color:#afc0d3;font-size:11px;text-align:right;margin-top:7px}
+main{background:#f4f6f8}section{scroll-margin-top:94px}
+.container{max-width:1180px;margin:0 auto;padding:0 24px}
+.valueStrip{position:relative;z-index:3;margin-top:-34px}
+.valueGrid{background:#fff;border-radius:17px;box-shadow:0 12px 36px #112e4a16;display:grid;grid-template-columns:repeat(3,1fr);padding:23px;gap:15px}
+.valueItem{display:flex;align-items:center;gap:14px;padding:2px 17px}
+.valueItem+.valueItem{border-left:1px solid #dce3eb}
+.valueIcon{font-size:26px;background:#fff4dc;border-radius:13px;width:54px;height:54px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.valueItem strong{display:block;font-size:15px}.valueItem small{display:block;color:#5e6f82;font-size:12px}
+.block{padding:92px 0}.sectionLabel{color:#a87312;font-size:12px;letter-spacing:1.8px;text-transform:uppercase;font-weight:850;margin:0 0 8px}
+h2{font-size:clamp(30px,3.5vw,42px);letter-spacing:-1.25px;line-height:1.17;color:#15263d;margin:0 0 16px}
+.sectionLead{color:#627188;max-width:650px;margin:0 auto 36px}
+.center{text-align:center}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:19px}
+.step{background:#fff;border:1px solid #e0e6ee;box-shadow:0 8px 25px #16334b08;border-radius:18px;padding:30px}
+.stepNumber{width:43px;height:43px;border-radius:12px;background:#fdf1d7;color:#8d5e00;display:flex;align-items:center;justify-content:center;font-weight:850;margin-bottom:17px}
+.step h3{font-size:20px;letter-spacing:-.3px;margin:0 0 8px}.step p{color:#61718a;margin:0}
+.about{background:#eaf0f6}.aboutGrid{display:grid;grid-template-columns:1fr 1fr;gap:55px;align-items:center}
+.aboutText p{color:#53647b;font-size:16px}
+.aboutCard{padding:30px;border:1px solid #cad8e7;border-radius:20px;background:#fff}
+.aboutCard h3{font-size:23px;margin:0 0 13px}.aboutCard p{color:#55677c;margin:0 0 17px}
+.aboutCard a{font-weight:800;color:#214c75}.aboutCard a:hover{text-decoration:underline}
+.bookingSection{background:#fff}.bookingLayout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(260px,.75fr);gap:33px;align-items:start}
+.bookingPanel{background:#f7f9fc;border:1px solid #dce5ef;border-radius:21px;padding:32px;box-shadow:0 15px 38px #12253a0d}
+.bookingPanel h3{margin:0 0 9px;font-size:23px}.bookingPanel>p{margin:0 0 24px;color:#65758a}
+form#booking{display:grid;grid-template-columns:1fr 1fr;gap:17px}
+label{display:block;margin-bottom:7px;color:#253b52;font-size:13px;font-weight:750}
+input,textarea,select{width:100%;padding:13px 14px;background:#fff;border:1px solid #bdcbd9;color:#172a40;border-radius:10px;min-height:48px}
+input::placeholder,textarea::placeholder{color:#8a98a7}textarea{resize:vertical}.wide{grid-column:1/-1}
+.note{font-size:13px;color:#64758a;line-height:1.7}
+.priceCard{background:#12253b;border-radius:18px;padding:28px;color:#fff;position:sticky;top:105px}
+.priceCard .eyebrow{margin-bottom:10px}
+.priceCard strong.amount{display:block;color:#f6b83e;font-size:49px;letter-spacing:-1.6px;line-height:1.2}
+.priceCard p{color:#cad8e7}.priceCard ul{padding-left:19px;color:#d7e3ee}.priceCard li{margin-bottom:11px}
+.contactLink{display:block;color:#f6b83e;font-weight:750;margin-top:20px}
+.cancelSection{background:#eaf0f6}.cancelBox{max-width:760px;background:#fff;padding:30px;border:1px solid #d8e2ec;border-radius:19px;box-shadow:0 10px 25px #16334b0d}
+form#cancel-form{display:grid;gap:18px}
+#addressResults{display:grid;gap:6px;margin-top:8px}
+#addressResults button{background:#fff;color:#213448;border:1px solid #bbcad8;border-radius:9px;padding:11px;text-align:left;cursor:pointer}
+#addressResults button:hover{background:#fff4dd;border-color:#d0a241}
+#addressStatus{margin:8px 0;color:#61758a}#addressStatus.ok{color:#17774f}
+#customBrandWrap[hidden]{display:none}
+#message,#cancel-message{overflow-wrap:anywhere}
+#message:not(:empty),#cancel-message:not(:empty){padding:13px;border:1px solid #bfccda;border-radius:9px}
+#message.success{background:#e8faef;border:2px solid #27a56c;color:#155d3a;padding:18px;font-weight:750}
+#message.error{background:#fff0f1;border:1px solid #e3a3a8;color:#8d2431}
+#message.pending{color:#54677d}
+footer{background:#0d1a2b;color:#d0dce9;padding:38px 24px}
+.footerInner{max-width:1180px;margin:auto;display:flex;justify-content:space-between;gap:25px;align-items:center;flex-wrap:wrap}
+footer a{color:#f6b83e;font-weight:650}
+@media(max-width:900px){.hero{gap:28px}.bookingLayout{grid-template-columns:1fr}.priceCard{position:static}.aboutGrid{gap:25px}.heroPhoto .photoTag{left:10px}}
+@media(max-width:700px){.nav{min-height:70px;padding:10px 18px}.brand{font-size:23px}.brand img{width:31px;height:31px}nav a:not(.btn){display:none}nav .btn{font-size:13px;padding:11px 13px;min-height:42px}
+.hero{grid-template-columns:1fr;padding:48px 20px 69px;gap:33px}.hero h1{letter-spacing:-1.3px}.hero p.lead{font-size:16px}.heroPrice strong{font-size:35px}
+.heroPhoto img{aspect-ratio:1/1}.heroPhoto .photoTag{left:10px;bottom:15px;padding:11px 13px}
+.valueGrid{grid-template-columns:1fr;padding:16px}.valueItem{padding:11px 9px}.valueItem+.valueItem{border-left:0;border-top:1px solid #dce3eb}
+.container{padding:0 18px}.block{padding:68px 0}.steps,.aboutGrid{grid-template-columns:1fr}.bookingPanel,.cancelBox{padding:20px}
+form#booking{grid-template-columns:1fr}.wide{grid-column:auto}.bookingLayout{gap:18px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+</style></head><body>
+<header><div class="nav">
+<a href="/" class="brand" aria-label="DäckHem startsida"><img src="/favicon.svg" alt=""><span><span>Däck</span>Hem</span></a>
+<nav aria-label="Huvudmeny"><a href="#sa-funkar-det">Så fungerar det</a><a href="#om-oss">Om oss</a><a href="#boka" class="btn">Boka däckbyte →</a></nav>
+</div></header>
+<div class="heroWrap"><div class="hero">
+<div>
+<p class="eyebrow">Mobil däckservice i Stockholmsområdet</p>
+<h1>Hjulbyte där du är.<br><em>Enkelt från start.</em></h1>
+<p class="lead">Slipp köer och verkstadsbesök. Vi kommer till din bil och hjälper dig att byta hjul hemma eller på jobbet.</p>
+<div class="heroPrice"><strong>345 kr</strong><span>totalt inklusive framkörning*</span></div>
+<div class="heroActions"><a href="#boka" class="btn">Boka ditt hjulbyte →</a><a href="#sa-funkar-det" class="btn btn-outline">Så fungerar det</a></div>
+<div class="heroBadges"><span>Boka online</span><span>Betala efter utfört arbete</span><span>Hemma eller på jobbet</span></div>
+</div>
+<div class="heroPhoto">
+<img src="/dackhem-hero.jpg" alt="Illustration av mobilt hjulbyte utanför en bostad" width="1254" height="1254" fetchpriority="high" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+<div class="photoFallback">Mobilt hjulbyte på din adress</div>
+<div class="photoTag"><strong>Vi kommer till din bil</strong><small>Hemma eller på jobbet</small></div>
+<div class="photoDisclosure">Illustrationsbild</div>
+</div>
+</div></div>
+<main>
+<div class="container valueStrip"><div class="valueGrid">
+<div class="valueItem"><span class="valueIcon" aria-hidden="true">⌁</span><div><strong>Vi kommer till dig</strong><small>På din adress i Stockholmsområdet</small></div></div>
+<div class="valueItem"><span class="valueIcon" aria-hidden="true">✓</span><div><strong>Smidig onlinebokning</strong><small>Välj datum och önskat klockslag</small></div></div>
+<div class="valueItem"><span class="valueIcon" aria-hidden="true">↗</span><div><strong>Betala efteråt</strong><small>Swish eller Revolut-överföring</small></div></div>
+</div></div>
+<section class="block" id="sa-funkar-det"><div class="container">
+<div class="center"><p class="sectionLabel">Enkel bokning</p><h2>Så fungerar DäckHem</h2><p class="sectionLead">Tre enkla steg till bytta hjul. Du bokar och vi kommer till platsen där bilen står.</p></div>
+<div class="steps">
+<div class="step"><div class="stepNumber">01</div><h3>Välj tid och plats</h3><p>Ange dina kontaktuppgifter, registreringsnummer, bilmärke, adress och önskat klockslag.</p></div>
+<div class="step"><div class="stepNumber">02</div><h3>Vi kommer till bilen</h3><p>Vi utför hjulbytet på plats. Om vi behöver justera tiden kontaktar vi dig i förväg.</p></div>
+<div class="step"><div class="stepNumber">03</div><h3>Betala efter besöket</h3><p>Betala när jobbet är klart med Swish eller Revolut-överföring. Ingen förskottsbetalning.</p></div>
+</div></div></section>
+<section class="block about" id="om-oss"><div class="container aboutGrid">
+<div class="aboutText"><p class="sectionLabel">Om DäckHem</p><h2>Däckbyte som passar din vardag.</h2>
+<p>DäckHem är en mobil tjänst för hjulbyte i Stockholmsområdet. I stället för att köra till verkstaden kommer vi till din parkerade bil.</p>
+<p>Vi vill göra säsongens hjulbyte enkelt att boka, med tydligt pris, personlig kontakt och betalning först efter genomfört arbete.</p>
+<p>Har du en fråga om platsen eller bokningen? Kontakta oss så hjälper vi dig.</p></div>
+<div class="aboutCard"><h3>Det här behöver du veta</h3>
+<p><strong>345 kr</strong> totalt för hjulbyte inklusive framkörning inom Stockholmsområdet enligt öppningserbjudandet. Vi bekräftar att adressen är möjlig att nå.</p>
+<p>Du behöver ha hjulen tillgängliga vid bilen. Om du är osäker på förutsättningarna kan du kontakta oss före besöket.</p>
+<p><strong>Frågor eller sen avbokning?</strong></p><a href="tel:0707892340">Ring 070-789 23 40 →</a></div>
+</div></section>
+<section class="block bookingSection" id="boka"><div class="container">
+<p class="sectionLabel">Boka online</p><h2>Boka ditt hjulbyte</h2><p class="sectionLead" style="margin:0 0 32px">Fyll i uppgifterna nedan. Du får en bokningsbekräftelse via mejl.</p>
+<div class="bookingLayout">
+<div class="bookingPanel"><h3>Dina bokningsuppgifter</h3><p>Välj en tid som passar dig. Vi kan kontakta dig om en justering behövs.</p>
+<form id="booking">
+<div><label for="name">Namn</label><input id="name" required maxlength="100" autocomplete="name" placeholder="För- och efternamn"></div>
+<div><label for="phone">Telefonnummer</label><input id="phone" type="tel" required maxlength="30" autocomplete="tel" placeholder="07X XXX XX XX"></div>
+<div><label for="email">E-postadress</label><input id="email" type="email" required maxlength="254" autocomplete="email" placeholder="namn@exempel.se"></div>
 <div><label for="plate">Registreringsnummer</label><input id="plate" required maxlength="20" placeholder="ABC123"></div>
 <div><label for="carBrand">Bilmärke</label><select id="carBrand" required><option value="">Välj bilmärke</option><option value="Audi">Audi</option><option value="BMW">BMW</option><option value="BYD">BYD</option><option value="Citroën">Citroën</option><option value="Cupra">Cupra</option><option value="Dacia">Dacia</option><option value="Fiat">Fiat</option><option value="Ford">Ford</option><option value="Honda">Honda</option><option value="Hyundai">Hyundai</option><option value="Kia">Kia</option><option value="Land Rover">Land Rover</option><option value="Lexus">Lexus</option><option value="Mazda">Mazda</option><option value="Mercedes-Benz">Mercedes-Benz</option><option value="MG">MG</option><option value="Mini">Mini</option><option value="Mitsubishi">Mitsubishi</option><option value="Nissan">Nissan</option><option value="Opel">Opel</option><option value="Peugeot">Peugeot</option><option value="Polestar">Polestar</option><option value="Porsche">Porsche</option><option value="Renault">Renault</option><option value="Saab">Saab</option><option value="Seat">Seat</option><option value="Skoda">Skoda</option><option value="Subaru">Subaru</option><option value="Suzuki">Suzuki</option><option value="Tesla">Tesla</option><option value="Toyota">Toyota</option><option value="Volkswagen">Volkswagen</option><option value="Volvo">Volvo</option><option value="Övrigt">Övrigt – skriv själv</option></select></div>
 <div id="customBrandWrap" hidden><label for="customBrand">Skriv bilmärke</label><input id="customBrand" maxlength="40" autocomplete="off" placeholder="Ange bilens bilmärke"></div>
@@ -17,9 +156,18 @@
 <div><label for="date">Önskat datum</label><input id="date" type="date" required></div>
 <div><label for="time">Önskad tid</label><input id="time" type="time" required></div>
 <div class="wide"><label for="notes">Övrig information (frivilligt)</label><textarea id="notes" rows="3" maxlength="1000" placeholder="Information om parkering eller bilen"></textarea></div>
-<div class="wide"><p class="note">Bokningarna kan överlappa. Vi kan kontakta dig för att anpassa ankomsttiden. Du kan avboka kostnadsfritt via hemsidan mer än 3 timmar före besöket. Vid senare avbokning, ring 070-789 23 40.</p><button class="btn" type="submit">Bekräfta bokning</button><p id="message" role="status" aria-live="polite"></p></div></form></div></section>
-<section id="avboka"><h2>Avboka din tid</h2><p>Avboka via hemsidan mer än 3 timmar före besöket. Behöver du avboka senare? Ring <a href="tel:0707892340">070-789 23 40</a>.</p><p>Ange avbokningsnyckeln som du fick när du bokade. Spara nyckeln på ett säkert ställe.</p><div class="panel"><form id="cancel-form"><div class="wide"><label for="cancel-token">Avbokningsnyckel</label><input id="cancel-token" required autocomplete="off"></div><div class="wide"><button class="btn" type="submit">Avboka</button><p id="cancel-message" role="status" aria-live="polite"></p></div></form></div></section>
-</main><footer>© DäckHem · Mobil däckservice · Betalning med Swish eller Revolut efter däckbytet</footer>
+<div class="wide"><p class="note">Bokningarna kan överlappa. Vi kan kontakta dig för att anpassa ankomsttiden. Du kan avboka kostnadsfritt via hemsidan mer än 3 timmar före besöket. Vid senare avbokning, ring 070-789 23 40.</p><button class="btn" type="submit">Bekräfta bokning →</button><p id="message" role="status" aria-live="polite"></p></div>
+</form></div>
+<aside class="priceCard"><p class="eyebrow">Öppningserbjudande</p><strong class="amount">345 kr</strong><p>Hjulbyte på din adress, inklusive framkörning inom Stockholmsområdet.*</p><ul><li>Boka önskat datum och klockslag online</li><li>Vi kontaktar dig vid behov</li><li>Betala med Swish eller Revolut efteråt</li></ul><p class="note" style="color:#b8c7d7">* Vi bekräftar att adressen kan nås före besöket.</p><a class="contactLink" href="tel:0707892340">Frågor? 070-789 23 40 →</a></aside>
+</div></div></section>
+<section class="block cancelSection" id="avboka"><div class="container">
+<p class="sectionLabel">Ändrade planer?</p><h2>Avboka din tid</h2>
+<p class="sectionLead" style="margin:0 0 22px">Du kan avboka mer än 3 timmar före besöket. Vid senare avbokning, ring <a href="tel:0707892340" style="font-weight:750;text-decoration:underline">070-789 23 40</a>.</p>
+<div class="cancelBox"><p>Ange avbokningsnyckeln från din bokning. Förvara den säkert och dela den inte med andra.</p>
+<form id="cancel-form"><div class="wide"><label for="cancel-token">Avbokningsnyckel</label><input id="cancel-token" required autocomplete="off"></div><div class="wide"><button class="btn" type="submit">Avboka bokning</button><p id="cancel-message" role="status" aria-live="polite"></p></div></form>
+</div></div></section>
+</main>
+<footer><div class="footerInner"><div><strong>DäckHem</strong><div>Mobilt hjulbyte i Stockholmsområdet</div></div><div><a href="tel:0707892340">070-789 23 40</a><div>Betala efter utfört arbete</div></div></div></footer>
 <script>
 const $=id=>document.getElementById(id);
 const pad=n=>String(n).padStart(2,'0');
