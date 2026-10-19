@@ -22,7 +22,7 @@ nav{display:flex;align-items:center;gap:25px;font-size:14px;font-weight:650}nav 
 .btn:hover{background:#ffcc65;transform:translateY(-1px)}.btn:disabled{opacity:.6;cursor:wait;transform:none}
 .btn-outline{background:#fff;color:#172840;box-shadow:none;border:1px solid #cad3df}.btn-outline:hover{background:#eff3f8}
 .heroWrap{background:linear-gradient(125deg,#0c192a 0%,#172e49 100%);color:#f8fafc;overflow:hidden}
-.hero{max-width:1180px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:55px;align-items:center;padding:70px 24px 84px}
+.hero{max-width:1180px;margin:auto;display:grid;grid-template-columns:minmax(0,790px);gap:30px;align-items:center;padding:70px 24px 84px}
 .eyebrow{text-transform:uppercase;color:#f6b83e;font-size:12px;font-weight:850;letter-spacing:1.9px;margin:0 0 17px}
 .hero h1{font-size:clamp(39px,4.4vw,65px);line-height:1.07;letter-spacing:-2px;margin:0 0 23px;font-weight:850}
 .hero h1 em{font-style:normal;color:#f6b83e}
@@ -88,7 +88,7 @@ form#cancel-form{display:grid;gap:18px}
 footer{background:#0d1a2b;color:#d0dce9;padding:38px 24px}
 .footerInner{max-width:1180px;margin:auto;display:flex;justify-content:space-between;gap:25px;align-items:center;flex-wrap:wrap}
 footer a{color:#f6b83e;font-weight:650}
-@media(max-width:900px){.hero{gap:28px}.bookingLayout{grid-template-columns:1fr}.priceCard{position:static}.aboutGrid{gap:25px}.heroPhoto .photoTag{left:10px}}
+@media(max-width:900px){.hero{gap:28px}.bookingLayout{grid-template-columns:1fr}.priceCard{position:static;order:-1}.aboutGrid{gap:25px}.heroPhoto .photoTag{left:10px}}
 @media(max-width:700px){.nav{min-height:70px;padding:10px 18px}.brand{font-size:23px}.brand img{width:31px;height:31px}nav a:not(.btn){display:none}nav .btn{font-size:13px;padding:11px 13px;min-height:42px}
 .hero{grid-template-columns:1fr;padding:48px 20px 69px;gap:33px}.hero h1{letter-spacing:-1.3px}.hero p.lead{font-size:16px}.heroPrice strong{font-size:35px}
 .heroPhoto img{aspect-ratio:1/1}.heroPhoto .photoTag{left:10px;bottom:15px;padding:11px 13px}
@@ -111,12 +111,7 @@ form#booking{grid-template-columns:1fr}.wide{grid-column:auto}.bookingLayout{gap
 <div class="heroActions"><a href="#boka" class="btn">Boka ditt hjulbyte →</a><a href="#sa-funkar-det" class="btn btn-outline">Så fungerar det</a></div>
 <div class="heroBadges"><span>Boka online</span><span>Betala efter utfört arbete</span><span>Hemma eller på jobbet</span></div>
 </div>
-<div class="heroPhoto">
-<img src="/dackhem-hero.jpg" alt="Illustration av mobilt hjulbyte utanför en bostad" width="1254" height="1254" fetchpriority="high" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-<div class="photoFallback">Mobilt hjulbyte på din adress</div>
-<div class="photoTag"><strong>Vi kommer till din bil</strong><small>Hemma eller på jobbet</small></div>
-<div class="photoDisclosure">Illustrationsbild</div>
-</div>
+
 </div></div>
 <main>
 <div class="container valueStrip"><div class="valueGrid">

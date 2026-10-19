@@ -19,6 +19,9 @@ public class AddressController : ControllerBase
     {
         q = (q ?? "").Trim();
         if (q.Length < 4 || q.Length > 120) return BadRequest("Skriv en giltig adress.");
+        // Interpret glued street and house numbers, e.g. "Holmvägen21" as "Holmvägen 21".
+        // This is used only for suggestions, not to change the customer's saved address.
+        q = System.Text.RegularExpressions.Regex.Replace(q, @"(?<=[\p{L}])(?=\d)", " ");
         // Use Google Places if configured; fall back to Photon/OpenStreetMap if unavailable.
         // The free public Photon service is best-effort and may have rate limits.
         var key = _config["GoogleMaps:ApiKey"];
