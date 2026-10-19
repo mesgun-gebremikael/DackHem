@@ -55,7 +55,7 @@ h2{font-size:clamp(30px,3.5vw,42px);letter-spacing:-1.25px;line-height:1.17;colo
 .step{background:#fff;border:1px solid #e0e6ee;box-shadow:0 8px 25px #16334b08;border-radius:18px;padding:30px}
 .stepNumber{width:43px;height:43px;border-radius:12px;background:#fdf1d7;color:#8d5e00;display:flex;align-items:center;justify-content:center;font-weight:850;margin-bottom:17px}
 .step h3{font-size:20px;letter-spacing:-.3px;margin:0 0 8px}.step p{color:#61718a;margin:0}
-.about{background:#eaf0f6}.aboutGrid{display:grid;grid-template-columns:1fr 1fr;gap:55px;align-items:center}
+.about{background:#eaf0f6}.aboutGrid{display:grid;grid-template-columns:1fr;gap:30px;align-items:center}.aboutText{max-width:850px}
 .aboutText p{color:#53647b;font-size:16px}
 .aboutCard{padding:30px;border:1px solid #cad8e7;border-radius:20px;background:#fff}
 .aboutCard h3{font-size:23px;margin:0 0 13px}.aboutCard p{color:#55677c;margin:0 0 17px}
@@ -131,10 +131,7 @@ form#booking{grid-template-columns:1fr}.wide{grid-column:auto}.bookingLayout{gap
 <p>DäckHem är en mobil tjänst för hjulbyte i Stockholmsområdet. I stället för att köra till verkstaden kommer vi till din parkerade bil.</p>
 <p>Vi vill göra säsongens hjulbyte enkelt att boka, med tydligt pris, personlig kontakt och betalning först efter genomfört arbete.</p>
 <p>Har du en fråga om platsen eller bokningen? Kontakta oss så hjälper vi dig.</p></div>
-<div class="aboutCard"><h3>Det här behöver du veta</h3>
-<p><strong>345 kr</strong> totalt för hjulbyte inklusive framkörning inom Stockholmsområdet enligt öppningserbjudandet. Vi bekräftar att adressen är möjlig att nå.</p>
-<p>Du behöver ha hjulen tillgängliga vid bilen. Om du är osäker på förutsättningarna kan du kontakta oss före besöket.</p>
-<p><strong>Frågor eller sen avbokning?</strong></p><a href="tel:0707892340">Ring 070-789 23 40 →</a></div>
+
 </div></section>
 <section class="block bookingSection" id="boka"><div class="container">
 <p class="sectionLabel">Boka online</p><h2>Boka ditt hjulbyte</h2><p class="sectionLead" style="margin:0 0 32px">Fyll i uppgifterna nedan. Du får en bokningsbekräftelse via mejl.</p>
@@ -153,7 +150,7 @@ form#booking{grid-template-columns:1fr}.wide{grid-column:auto}.bookingLayout{gap
 <div class="wide"><label for="notes">Övrig information (frivilligt)</label><textarea id="notes" rows="3" maxlength="1000" placeholder="Information om parkering eller bilen"></textarea></div>
 <div class="wide"><p class="note">Bokningarna kan överlappa. Vi kan kontakta dig för att anpassa ankomsttiden. Du kan avboka kostnadsfritt via hemsidan mer än 3 timmar före besöket. Vid senare avbokning, ring 070-789 23 40.</p><button class="btn" type="submit">Bekräfta bokning →</button><p id="message" role="status" aria-live="polite"></p></div>
 </form></div>
-<aside class="priceCard"><p class="eyebrow">Öppningserbjudande</p><strong class="amount">345 kr</strong><p>Hjulbyte på din adress, inklusive framkörning inom Stockholmsområdet.*</p><ul><li>Boka önskat datum och klockslag online</li><li>Vi kontaktar dig vid behov</li><li>Betala med Swish eller Revolut efteråt</li></ul><p class="note" style="color:#b8c7d7">* Vi bekräftar att adressen kan nås före besöket.</p><a class="contactLink" href="tel:0707892340">Frågor? 070-789 23 40 →</a></aside>
+<aside class="priceCard"><p class="eyebrow">Öppningserbjudande</p><strong class="amount">345 kr</strong><p>Hjulbyte på din adress, inklusive framkörning inom Stockholmsområdet.*</p><ul><li>Boka önskat datum och klockslag online</li><li>Ha hjulen tillgängliga vid bilen</li><li>Vi kontaktar dig vid behov</li><li>Betala med Swish eller Revolut efteråt</li></ul><p class="note" style="color:#b8c7d7">* Vi bekräftar att adressen kan nås före besöket.</p><a class="contactLink" href="tel:0707892340">Frågor? 070-789 23 40 →</a></aside>
 </div></div></section>
 <section class="block cancelSection" id="avboka"><div class="container">
 <p class="sectionLabel">Ändrade planer?</p><h2>Avboka din tid</h2>
