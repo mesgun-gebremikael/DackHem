@@ -79,13 +79,11 @@ namespace DackHem.Api.Controllers
             }
 
             // Preserve the existing database schema; display the brand in booking notes.
-            var supportedBrands = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-            {
-                "Volvo", "Volkswagen", "BMW", "Mercedes-Benz", "Audi", "Toyota", "Kia", "Skoda", "Ford", "Peugeot", "Renault", "Hyundai", "Nissan", "Tesla", "Mazda", "Honda", "Seat", "Cupra", "Opel", "Saab", "Citroën", "Fiat", "Mini", "Mitsubishi", "Suzuki", "Subaru", "Dacia", "Polestar", "Porsche", "Land Rover", "Lexus", "BYD", "MG", "Övrigt"
-            };
             var brand = request.CarBrand?.Trim();
-            if (!string.IsNullOrWhiteSpace(brand) && !supportedBrands.Contains(brand))
-                return BadRequest("Välj ett giltigt bilmärke.");
+            // Custom brands are allowed when customers choose "Övrigt".
+            // Prevent multiline or control-character input in the stored note.
+            if (!string.IsNullOrWhiteSpace(brand) && brand.Any(char.IsControl))
+                return BadRequest("Bilmärket innehåller ogiltiga tecken.");
             var notes = request.Notes?.Trim();
             var combinedNotes = string.IsNullOrWhiteSpace(brand)
                 ? notes

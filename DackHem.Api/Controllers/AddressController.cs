@@ -19,10 +19,9 @@ public class AddressController : ControllerBase
     {
         q = (q ?? "").Trim();
         if (q.Length < 4 || q.Length > 120) return BadRequest("Skriv en giltig adress.");
+        // Use Google Places if configured; fall back to Photon/OpenStreetMap if unavailable.
+        // The free public Photon service is best-effort and may have rate limits.
         var key = _config["GoogleMaps:ApiKey"];
-        if (string.IsNullOrWhiteSpace(key)) return StatusCode(503, "Adressökning är inte konfigurerad.");
-
-        // Limit repeated requests per client. No key is sent to the browser.
         var client = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
         var now = DateTimeOffset.UtcNow;
         if (LastRequests.TryGetValue(client, out var last) && (now - last).TotalMilliseconds < 400)
@@ -32,34 +31,97 @@ public class AddressController : ControllerBase
             foreach (var entry in LastRequests.Where(x => now - x.Value > TimeSpan.FromMinutes(5)))
                 LastRequests.TryRemove(entry.Key, out _);
 
-        using var request = new HttpRequestMessage(HttpMethod.Post, "https://places.googleapis.com/v1/places:autocomplete");
-        request.Headers.Add("X-Goog-Api-Key", key);
-        request.Content = JsonContent.Create(new {
-            input = q,
-            includedRegionCodes = new[] { "se" },
-            languageCode = "sv",
-            sessionToken = Guid.TryParse(session, out _) ? session : null
-        });
+        if (!string.IsNullOrWhiteSpace(key))
+        {
+            try
+            {
+                using var request = new HttpRequestMessage(HttpMethod.Post, "https://places.googleapis.com/v1/places:autocomplete");
+                request.Headers.Add("X-Goog-Api-Key", key);
+                request.Content = JsonContent.Create(new
+                {
+                    input = q,
+                    includedRegionCodes = new[] { "se" },
+                    languageCode = "sv",
+                    sessionToken = Guid.TryParse(session, out _) ? session : null
+                });
+                using var response = await Http.SendAsync(request, HttpContext.RequestAborted);
+                if (response.IsSuccessStatusCode)
+                {
+                    using var json = await JsonDocument.ParseAsync(
+                        await response.Content.ReadAsStreamAsync(HttpContext.RequestAborted),
+                        cancellationToken: HttpContext.RequestAborted);
+                    var results = new List<object>();
+                    if (json.RootElement.TryGetProperty("suggestions", out var suggestions))
+                        foreach (var suggestion in suggestions.EnumerateArray())
+                        {
+                            if (!suggestion.TryGetProperty("placePrediction", out var prediction) ||
+                                !prediction.TryGetProperty("text", out var text) ||
+                                !text.TryGetProperty("text", out var label)) continue;
+                            var value = label.GetString();
+                            if (!string.IsNullOrWhiteSpace(value)) results.Add(new { label = value });
+                            if (results.Count >= 5) break;
+                        }
+                    if (results.Count > 0) return Ok(results);
+                }
+                else
+                {
+                    // Never log API keys or raw customer address strings.
+                    HttpContext.RequestServices.GetRequiredService<ILogger<AddressController>>()
+                        .LogWarning("Google Places autocomplete unavailable (HTTP {StatusCode}); trying fallback.", (int)response.StatusCode);
+                }
+            }
+            catch (OperationCanceledException) when (HttpContext.RequestAborted.IsCancellationRequested) { return new EmptyResult(); }
+            catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException)
+            {
+                HttpContext.RequestServices.GetRequiredService<ILogger<AddressController>>()
+                    .LogWarning("Google Places autocomplete error ({ErrorType}); trying fallback.", ex.GetType().Name);
+            }
+        }
+
         try
         {
+            var uri = "https://photon.komoot.io/api/?" +
+                "q=" + Uri.EscapeDataString(q) + "&limit=6&lat=59.50&lon=17.90";
+            using var request = new HttpRequestMessage(HttpMethod.Get, uri);
+            request.Headers.UserAgent.ParseAdd("DackHem/1.0 (address autocomplete)");
             using var response = await Http.SendAsync(request, HttpContext.RequestAborted);
-            if (!response.IsSuccessStatusCode) return StatusCode(502, "Google kunde inte hämta adresser.");
-            using var json = await JsonDocument.ParseAsync(await response.Content.ReadAsStreamAsync(), cancellationToken: HttpContext.RequestAborted);
-            if (!json.RootElement.TryGetProperty("suggestions", out var suggestions))
-                return Ok(Array.Empty<object>());
-            var result = new List<object>();
-            foreach (var suggestion in suggestions.EnumerateArray())
+            if (!response.IsSuccessStatusCode)
+                return StatusCode(502, "Adressökningen är tillfälligt otillgänglig. Skriv adressen manuellt.");
+            using var json = await JsonDocument.ParseAsync(
+                await response.Content.ReadAsStreamAsync(HttpContext.RequestAborted),
+                cancellationToken: HttpContext.RequestAborted);
+            var results = new List<object>();
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            if (json.RootElement.TryGetProperty("features", out var features))
+            foreach (var feature in features.EnumerateArray())
             {
-                if (!suggestion.TryGetProperty("placePrediction", out var prediction)) continue;
-                if (!prediction.TryGetProperty("text", out var text) || !text.TryGetProperty("text", out var label)) continue;
-                var value = label.GetString();
-                if (!string.IsNullOrWhiteSpace(value)) result.Add(new { label = value });
-                if (result.Count == 5) break;
+                if (!feature.TryGetProperty("properties", out var properties)) continue;
+                static string Get(JsonElement obj, string property) =>
+                    obj.TryGetProperty(property, out var x) && x.ValueKind == JsonValueKind.String ? x.GetString() ?? "" : "";
+                var country = Get(properties, "countrycode");
+                if (!string.IsNullOrEmpty(country) && !country.Equals("SE", StringComparison.OrdinalIgnoreCase)) continue;
+                var street = Get(properties, "street");
+                var house = Get(properties, "housenumber");
+                var name = Get(properties, "name");
+                var city = Get(properties, "city");
+                if (string.IsNullOrWhiteSpace(city)) city = Get(properties, "district");
+                if (string.IsNullOrWhiteSpace(city)) city = Get(properties, "county");
+                var postal = Get(properties, "postcode");
+                var line = string.IsNullOrWhiteSpace(street) ? name : street + (string.IsNullOrWhiteSpace(house) ? "" : " " + house);
+                if (string.IsNullOrWhiteSpace(line)) continue;
+                var parts = new[] { line, postal, city }.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToArray();
+                var label = string.Join(", ", parts) + ", Sverige";
+                if (seen.Add(label)) results.Add(new { label });
+                if (results.Count >= 5) break;
             }
-            return Ok(result);
+            return Ok(results);
         }
         catch (OperationCanceledException) when (HttpContext.RequestAborted.IsCancellationRequested) { return new EmptyResult(); }
-        catch (HttpRequestException) { return StatusCode(502, "Adresstjänsten är inte tillgänglig."); }
-        catch (TaskCanceledException) { return StatusCode(504, "Adresstjänsten svarade inte i tid."); }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException)
+        {
+            HttpContext.RequestServices.GetRequiredService<ILogger<AddressController>>()
+                .LogWarning("OpenStreetMap address fallback unavailable ({ErrorType}).", ex.GetType().Name);
+            return StatusCode(502, "Adressökningen är tillfälligt otillgänglig. Skriv adressen manuellt.");
+        }
     }
 }
