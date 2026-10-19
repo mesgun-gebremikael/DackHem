@@ -50,6 +50,9 @@ namespace DackHem.Api.Controllers
             [Required]
             public DateTime BookingDateTime { get; set; }
 
+            [StringLength(40)]
+            public string? CarBrand { get; set; }
+
             [StringLength(1000)]
             public string? Notes { get; set; }
         }
@@ -75,6 +78,21 @@ namespace DackHem.Api.Controllers
                     "Du måste välja en framtida tid.");
             }
 
+            // Preserve the existing database schema; display the brand in booking notes.
+            var supportedBrands = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "Volvo", "Volkswagen", "BMW", "Mercedes-Benz", "Audi", "Toyota", "Kia", "Skoda", "Ford", "Peugeot", "Renault", "Hyundai", "Nissan", "Tesla", "Mazda", "Honda", "Seat", "Cupra", "Opel", "Saab", "Citroën", "Fiat", "Mini", "Mitsubishi", "Suzuki", "Subaru", "Dacia", "Polestar", "Porsche", "Land Rover", "Lexus", "BYD", "MG", "Övrigt"
+            };
+            var brand = request.CarBrand?.Trim();
+            if (!string.IsNullOrWhiteSpace(brand) && !supportedBrands.Contains(brand))
+                return BadRequest("Välj ett giltigt bilmärke.");
+            var notes = request.Notes?.Trim();
+            var combinedNotes = string.IsNullOrWhiteSpace(brand)
+                ? notes
+                : $"Bilmärke: {brand}" + (string.IsNullOrWhiteSpace(notes) ? "" : $"\n{notes}");
+            if (combinedNotes?.Length > 1100)
+                return BadRequest("Informationen om bilen är för lång.");
+
             var booking = new Booking
             {
                 CustomerName = request.CustomerName.Trim(),
@@ -84,7 +102,7 @@ namespace DackHem.Api.Controllers
                     request.RegistrationNumber.Trim().ToUpperInvariant(),
                 Address = request.Address.Trim(),
                 BookingDateTime = request.BookingDateTime,
-                Notes = request.Notes,
+                Notes = combinedNotes,
                 Price = 345,
                 Status = "Confirmed"
             };
