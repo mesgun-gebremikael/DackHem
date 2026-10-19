@@ -5,6 +5,7 @@ using DackHem.Api.Services;
 using DackHem.Api.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.Sqlite;
 using Microsoft.AspNetCore.RateLimiting;
 
 namespace DackHem.Api.Controllers;
@@ -201,6 +202,95 @@ public class AdminBookingsController : ControllerBase
             .Select(g => new { date = g.Key, count = g.Count() })
             .ToListAsync();
         return Ok(new { year, month, days });
+    }
+
+
+    public sealed class ClearAllBookingsRequest
+    {
+        [Required]
+        public string Confirmation { get; set; } = "";
+    }
+
+    // Temporary administrator-only maintenance endpoint.
+    // It creates a durable SQLite snapshot before deleting any booking data.
+    [HttpPost("clear-all")]
+    public async Task<IActionResult> ClearAllBookings([FromBody] ClearAllBookingsRequest request)
+    {
+        var authError = AuthorizeAdmin();
+        if (authError != null) return authError;
+        if (request.Confirmation != "RADERA ALLA BOKNINGAR")
+            return BadRequest(new { message = "Bekräftelsen stämmer inte. Ingen bokning har raderats." });
+
+        var configuredPath = _configuration["Database:Path"];
+        var dbPath = Path.GetFullPath(
+            string.IsNullOrWhiteSpace(configuredPath) ? "dackhem.db" : configuredPath);
+        if (!System.IO.File.Exists(dbPath))
+            return StatusCode(503, new { message = "Databasen hittades inte. Ingen radering har utförts." });
+
+        var backupDir = Path.Combine(Path.GetDirectoryName(dbPath)!, "dackhem-backups");
+        Directory.CreateDirectory(backupDir);
+        var backupPath = Path.Combine(backupDir, "before-clear-" +
+            DateTime.UtcNow.ToString("yyyyMMdd-HHmmss-fffffff") + ".db");
+        var tempPath = backupPath + ".tmp";
+
+        // Do not delete anything if a consistent backup cannot be created and verified.
+        try
+        {
+            var sourceString = new SqliteConnectionStringBuilder
+            {
+                DataSource = dbPath, Mode = SqliteOpenMode.ReadOnly, Pooling = false
+            }.ToString();
+            var destString = new SqliteConnectionStringBuilder
+            {
+                DataSource = tempPath, Pooling = false
+            }.ToString();
+            using (var source = new SqliteConnection(sourceString))
+            using (var dest = new SqliteConnection(destString))
+            {
+                source.Open();
+                dest.Open();
+                source.BackupDatabase(dest);
+                using var check = dest.CreateCommand();
+                check.CommandText = "PRAGMA integrity_check";
+                if (!string.Equals(check.ExecuteScalar()?.ToString(), "ok", StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidOperationException("SQLite backup integrity check failed");
+            }
+            System.IO.File.Move(tempPath, backupPath);
+        }
+        catch (Exception)
+        {
+            if (System.IO.File.Exists(tempPath))
+            {
+                try { System.IO.File.Delete(tempPath); } catch (IOException) { }
+            }
+            return StatusCode(503, new { message = "Säkerhetskopian kunde inte skapas. Inga bokningar har raderats." });
+        }
+
+        // All four tables are cleared atomically. Do not delete the volume,
+        // protection keys, or the database schema.
+        try
+        {
+            await using var transaction = await _db.Database.BeginTransactionAsync();
+            var removed = await _db.Bookings.CountAsync();
+            await _db.Database.ExecuteSqlRawAsync("DELETE FROM BookingEmailOutbox");
+            await _db.Database.ExecuteSqlRawAsync("DELETE FROM BookingCancellationEvents");
+            await _db.Database.ExecuteSqlRawAsync("DELETE FROM BookingWork");
+            await _db.Database.ExecuteSqlRawAsync("DELETE FROM Bookings");
+            await transaction.CommitAsync();
+            return Ok(new
+            {
+                message = "Alla bokningar och tillhörande testuppgifter har raderats.",
+                removed,
+                backupCreated = true
+            });
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, new
+            {
+                message = "Rensningen kunde inte slutföras. Ändringarna har rullats tillbaka. En säkerhetskopia har skapats."
+            });
+        }
     }
 
     public sealed class RescheduleRequest
