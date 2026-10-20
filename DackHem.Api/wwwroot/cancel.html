@@ -1,6 +1,104 @@
-<!doctype html><html lang="sv"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DäckHem – Avboka</title><style>body{font:16px system-ui;background:#0c1726;color:#eef4fb;margin:0;padding:32px}main{max-width:650px;margin:40px auto;background:#15263b;padding:30px;border-radius:16px}a{color:#f5b942}button{background:#f5b942;color:#152235;border:0;border-radius:9px;padding:14px;font-weight:700;cursor:pointer}input{width:100%;box-sizing:border-box;background:#0e1b2c;color:white;border:1px solid #43566c;padding:12px;margin:10px 0 20px}p{line-height:1.6}</style></head><body><main><a href="/">← DäckHem</a><h1>Avboka din bokning</h1><p>Du kan avboka mer än 3 timmar före besöket. Vid senare avbokning, ring 070-789 23 40. Avbokningslänken är personlig.</p><form id="form"><label for="token">Avbokningsnyckel</label><input id="token" required autocomplete="off"><button type="submit">Bekräfta avbokning</button></form><p id="status" role="status" aria-live="polite"></p></main><script>
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Avboka ditt hjulbyte hos DäckHem med din personliga avbokningslänk eller avbokningsnyckel.">
+<meta name="theme-color" content="#0d1a2b">
+<title>Avboka din tid – DäckHem</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+:root{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:#f4f6f8;color:#16253a}
+*{box-sizing:border-box}
+body{margin:0;line-height:1.6}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #dc9a11;outline-offset:3px}
+header{background:#0d1a2b;color:#fff;border-bottom:1px solid #ffffff1c}
+.nav{max-width:1180px;min-height:78px;margin:auto;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{font-size:27px;font-weight:850;letter-spacing:-1.2px;white-space:nowrap;display:flex;align-items:center;gap:10px}.brand span span{color:#f6b83e}.brand img{height:38px;width:38px;border-radius:9px}
+nav{display:flex;align-items:center;gap:25px;font-size:14px;font-weight:650}
+nav a:not(.btn):hover{color:#f6b83e}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:12px;background:#f6b83e;color:#132238;min-height:49px;padding:13px 23px;font-weight:800;cursor:pointer;box-shadow:0 7px 20px #b2761433}
+.btn:hover{background:#ffcc65}.btn:disabled{opacity:.6;cursor:wait}
+.btn-outline{background:#fff;color:#172840;box-shadow:none;border:1px solid #cad3df}.btn-outline:hover{background:#eff3f8}
+.subnav{background:#eaf0f6;padding:14px 24px}.container{max-width:1180px;margin:0 auto;padding:0 24px}.subnav a{font-weight:750;color:#234c75}
+main{min-height:calc(100vh - 260px);padding:70px 24px 90px}
+.content{max-width:700px;margin:0 auto}
+.sectionLabel{color:#a87312;font-size:12px;letter-spacing:1.8px;text-transform:uppercase;font-weight:850;margin:0 0 8px}
+h1{font-size:clamp(32px,4vw,43px);letter-spacing:-1.2px;line-height:1.16;color:#15263d;margin:0 0 14px}
+.lead{color:#627188;margin:0 0 27px}
+.panel{background:#fff;border:1px solid #dce5ef;border-radius:21px;padding:34px;box-shadow:0 15px 38px #12253a0d}
+label{display:block;margin:0 0 9px;color:#253b52;font-size:14px;font-weight:750}
+input{width:100%;padding:13px 14px;background:#fff;border:1px solid #bdcbd9;border-radius:10px;min-height:48px;color:#172a40}
+form button{margin-top:20px}
+.note{font-size:13px;color:#64758a;line-height:1.7;margin:16px 0 0}
+.note a{color:#214c75;font-weight:750;text-decoration:underline}
+#status{color:#8d2431;overflow-wrap:anywhere;margin:15px 0 0}
+#status:not(:empty){padding:13px;border:1px solid #e3a3a8;border-radius:9px;background:#fff0f1}
+#status.pending{color:#54677d;background:#f1f4f8;border-color:#dce5ef}
+[hidden]{display:none!important}
+.success{text-align:center;padding:42px 25px;scroll-margin-top:25px}
+.successIcon{width:70px;height:70px;border-radius:50%;display:grid;place-items:center;background:#e4f8ee;color:#187a4a;font-size:38px;font-weight:850;margin:0 auto 18px}
+.success h2{font-size:clamp(28px,4vw,37px);line-height:1.2;margin:0 0 12px;color:#15263d}
+.success p{color:#54677d;max-width:490px;margin:0 auto 24px}
+footer{background:#0d1a2b;color:#d0dce9;padding:38px 24px}
+.footerInner{max-width:1180px;margin:auto;display:flex;justify-content:space-between;gap:25px;align-items:center;flex-wrap:wrap}
+footer a{color:#f6b83e;font-weight:650}
+@media(max-width:700px){.nav{min-height:70px;padding:10px 18px}.brand{font-size:23px}.brand img{width:31px;height:31px}nav{gap:10px}nav a:not(.btn){display:none}nav .btn{font-size:13px;padding:11px 13px;min-height:42px}.container{padding:0 18px}main{padding:45px 18px 65px}.panel{padding:23px 18px}.success{padding:38px 18px}.success .btn{width:100%}}
+</style>
+</head>
+<body>
+<header><div class="nav">
+<a href="/" class="brand" aria-label="DäckHem startsida"><img src="/favicon.svg" alt=""><span><span>Däck</span>Hem</span></a>
+<nav aria-label="Huvudmeny"><a href="/">Startsida</a><a href="/boka.html" class="btn">Boka däckbyte →</a></nav>
+</div></header>
+<div class="subnav"><div class="container"><a href="/">← Tillbaka till startsidan</a></div></div>
+<main><div class="content">
+<div id="cancelView">
+<p class="sectionLabel">Ändrade planer?</p>
+<h1>Avboka din tid</h1>
+<p class="lead">Använd den personliga länken i ditt bekräftelsemejl eller skriv din avbokningsnyckel nedan.</p>
+<div class="panel">
+<form id="form">
+<label for="token">Avbokningsnyckel</label>
+<input id="token" required autocomplete="off" spellcheck="false" placeholder="Din personliga avbokningsnyckel">
+<button class="btn" type="submit">Bekräfta avbokning</button>
+</form>
+<p id="status" role="status" aria-live="polite"></p>
+<p class="note">Du kan avboka via hemsidan mer än 3 timmar före besöket. Behöver du avboka senare? Ring <a href="tel:0707892340">070-789 23 40</a>.</p>
+<p class="note">Avbokningslänken är personlig. Dela inte din nyckel med andra.</p>
+</div></div>
+<div id="cancelSuccess" class="panel success" hidden role="status" aria-live="polite">
+<div class="successIcon" aria-hidden="true">✓</div>
+<h2>Din bokning är avbokad!</h2>
+<p>Avbokningen är registrerad hos DäckHem. Du är välkommen att boka en ny tid när det passar dig.</p>
+<a class="btn" href="/">Tillbaka till startsidan →</a>
+</div>
+</div></main>
+<footer><div class="footerInner"><div><strong>DäckHem</strong><div>Mobilt hjulbyte i Stockholmsområdet</div></div><div><a href="tel:0707892340">070-789 23 40</a></div></div></footer>
+<script>
 const input=document.getElementById('token'),form=document.getElementById('form'),status=document.getElementById('status');
 const params=new URLSearchParams(location.hash.slice(1));
 if(params.has('token')){input.value=params.get('token');history.replaceState(null,'',location.pathname);}
-form.addEventListener('submit',async e=>{e.preventDefault();const token=input.value.trim();if(!token)return;const button=form.querySelector('button');button.disabled=true;status.textContent='Avbokar…';try{const r=await fetch('/api/bookings/cancel',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token})});if(r.ok){status.textContent='Din bokning är avbokad.';input.value='';}else{const msg=await r.text();status.textContent=msg.replace(/^"|"$/g,'')||'Avbokningen misslyckades.';}}catch{status.textContent='Kunde inte kontakta servern.';}finally{button.disabled=false;}});
-</script></body></html>
+form.addEventListener('submit',async e=>{
+ e.preventDefault();const token=input.value.trim();if(!token)return;
+ const button=form.querySelector('button');button.disabled=true;
+ status.className='pending';status.textContent='Avbokar…';
+ try{
+  const r=await fetch('/api/bookings/cancel',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token})});
+  if(r.ok){
+   input.value='';
+   status.textContent='';status.className='';
+   document.getElementById('cancelView').hidden=true;
+   document.getElementById('cancelSuccess').hidden=false;
+   document.getElementById('cancelSuccess').scrollIntoView({behavior:'smooth',block:'start'});
+  }else{
+   const msg=await r.text();status.className='error';
+   status.textContent=msg.replace(/^"|"$/g,'')||'Avbokningen misslyckades.';
+  }
+ }catch{status.className='error';status.textContent='Kunde inte kontakta servern.';}
+ finally{button.disabled=false;}
+});
+</script>
+</body></html>
