@@ -100,7 +100,7 @@ form#booking{grid-template-columns:1fr}.wide{grid-column:auto}.bookingLayout{gap
 </style></head><body>
 <header><div class="nav">
 <a href="/" class="brand" aria-label="DäckHem startsida"><img src="/favicon.svg" alt=""><span><span>Däck</span>Hem</span></a>
-<nav aria-label="Huvudmeny"><a href="#sa-funkar-det">Så fungerar det</a><a href="#om-oss">Om oss</a><a href="#boka" class="btn">Boka däckbyte →</a></nav>
+<nav aria-label="Huvudmeny"><a href="#sa-funkar-det">Så fungerar det</a><a href="#om-oss">Om oss</a><a href="/cancel.html">Avboka tid</a><a href="/boka.html" class="btn">Boka däckbyte →</a></nav>
 </div></header>
 <div class="heroWrap"><div class="hero">
 <div>
@@ -108,7 +108,7 @@ form#booking{grid-template-columns:1fr}.wide{grid-column:auto}.bookingLayout{gap
 <h1>Hjulbyte där du är.<br><em>Enkelt från start.</em></h1>
 <p class="lead">Slipp köer och verkstadsbesök. Vi kommer till din bil och hjälper dig att byta hjul hemma eller på jobbet.</p>
 <div class="heroPrice"><strong>345 kr</strong><span>totalt inklusive framkörning*</span></div>
-<div class="heroActions"><a href="#boka" class="btn">Boka ditt hjulbyte →</a><a href="#sa-funkar-det" class="btn btn-outline">Så fungerar det</a></div>
+<div class="heroActions"><a href="/boka.html" class="btn">Boka ditt hjulbyte →</a><a href="#sa-funkar-det" class="btn btn-outline">Så fungerar det</a></div>
 <div class="heroBadges"><span>Boka online</span><span>Betala efter utfört arbete</span><span>Hemma eller på jobbet</span></div>
 </div>
 
@@ -133,101 +133,9 @@ form#booking{grid-template-columns:1fr}.wide{grid-column:auto}.bookingLayout{gap
 <p>Har du en fråga om platsen eller bokningen? Kontakta oss så hjälper vi dig.</p></div>
 
 </div></section>
-<section class="block bookingSection" id="boka"><div class="container">
-<p class="sectionLabel">Boka online</p><h2>Boka ditt hjulbyte</h2><p class="sectionLead" style="margin:0 0 32px">Fyll i uppgifterna nedan. Du får en bokningsbekräftelse via mejl.</p>
-<div class="bookingLayout">
-<div class="bookingPanel"><h3>Dina bokningsuppgifter</h3><p>Välj en tid som passar dig. Vi kan kontakta dig om en justering behövs.</p>
-<form id="booking">
-<div><label for="name">Namn</label><input id="name" required maxlength="100" autocomplete="name" placeholder="För- och efternamn"></div>
-<div><label for="phone">Telefonnummer</label><input id="phone" type="tel" required maxlength="30" autocomplete="tel" placeholder="07X XXX XX XX"></div>
-<div><label for="email">E-postadress</label><input id="email" type="email" required maxlength="254" autocomplete="email" placeholder="namn@exempel.se"></div>
-<div><label for="plate">Registreringsnummer</label><input id="plate" required maxlength="20" placeholder="ABC123"></div>
-<div><label for="carBrand">Bilmärke</label><select id="carBrand" required><option value="">Välj bilmärke</option><option value="Audi">Audi</option><option value="BMW">BMW</option><option value="BYD">BYD</option><option value="Citroën">Citroën</option><option value="Cupra">Cupra</option><option value="Dacia">Dacia</option><option value="Fiat">Fiat</option><option value="Ford">Ford</option><option value="Honda">Honda</option><option value="Hyundai">Hyundai</option><option value="Kia">Kia</option><option value="Land Rover">Land Rover</option><option value="Lexus">Lexus</option><option value="Mazda">Mazda</option><option value="Mercedes-Benz">Mercedes-Benz</option><option value="MG">MG</option><option value="Mini">Mini</option><option value="Mitsubishi">Mitsubishi</option><option value="Nissan">Nissan</option><option value="Opel">Opel</option><option value="Peugeot">Peugeot</option><option value="Polestar">Polestar</option><option value="Porsche">Porsche</option><option value="Renault">Renault</option><option value="Saab">Saab</option><option value="Seat">Seat</option><option value="Skoda">Skoda</option><option value="Subaru">Subaru</option><option value="Suzuki">Suzuki</option><option value="Tesla">Tesla</option><option value="Toyota">Toyota</option><option value="Volkswagen">Volkswagen</option><option value="Volvo">Volvo</option><option value="Övrigt">Övrigt – skriv själv</option></select></div>
-<div id="customBrandWrap" hidden><label for="customBrand">Skriv bilmärke</label><input id="customBrand" maxlength="40" autocomplete="off" placeholder="Ange bilens bilmärke"></div>
-<div class="wide"><label for="address">Adress för däckbytet</label><input id="address" required maxlength="300" placeholder="Börja skriva gata och husnummer…" autocomplete="off" aria-autocomplete="list" aria-controls="addressResults"><p id="addressStatus" class="note" role="status" aria-live="polite">Skriv din adress så visas förslag automatiskt.</p><div id="addressResults" role="listbox" aria-label="Adressförslag"></div><p class="note">Adressförslag från Google eller OpenStreetMap (via Photon). Kontrollera alltid husnummer och ort.</p></div>
-<div><label for="date">Önskat datum</label><input id="date" type="date" required></div>
-<div><label for="time">Önskad tid</label><input id="time" type="time" required></div>
-<div class="wide"><label for="notes">Övrig information (frivilligt)</label><textarea id="notes" rows="3" maxlength="1000" placeholder="Information om parkering eller bilen"></textarea></div>
-<div class="wide"><p class="note">Bokningarna kan överlappa. Vi kan kontakta dig för att anpassa ankomsttiden. Du kan avboka kostnadsfritt via hemsidan mer än 3 timmar före besöket. Vid senare avbokning, ring 070-789 23 40.</p><button class="btn" type="submit">Bekräfta bokning →</button><p id="message" role="status" aria-live="polite"></p></div>
-</form></div>
-<aside class="priceCard"><p class="eyebrow">Öppningserbjudande</p><strong class="amount">345 kr</strong><p>Hjulbyte på din adress, inklusive framkörning inom Stockholmsområdet.*</p><ul><li>Boka önskat datum och klockslag online</li><li>Ha hjulen tillgängliga vid bilen</li><li>Vi kontaktar dig vid behov</li><li>Betala med Swish eller Revolut efteråt</li></ul><p class="note" style="color:#b8c7d7">* Vi bekräftar att adressen kan nås före besöket.</p><a class="contactLink" href="tel:0707892340">Frågor? 070-789 23 40 →</a></aside>
-</div></div></section>
-<section class="block cancelSection" id="avboka"><div class="container">
-<p class="sectionLabel">Ändrade planer?</p><h2>Avboka din tid</h2>
-<p class="sectionLead" style="margin:0 0 22px">Du kan avboka mer än 3 timmar före besöket. Vid senare avbokning, ring <a href="tel:0707892340" style="font-weight:750;text-decoration:underline">070-789 23 40</a>.</p>
-<div class="cancelBox"><p>Ange avbokningsnyckeln från din bokning. Förvara den säkert och dela den inte med andra.</p>
-<form id="cancel-form"><div class="wide"><label for="cancel-token">Avbokningsnyckel</label><input id="cancel-token" required autocomplete="off"></div><div class="wide"><button class="btn" type="submit">Avboka bokning</button><p id="cancel-message" role="status" aria-live="polite"></p></div></form>
-</div></div></section>
-</main>
-<footer><div class="footerInner"><div><strong>DäckHem</strong><div>Mobilt hjulbyte i Stockholmsområdet</div></div><div><a href="tel:0707892340">070-789 23 40</a><div>Betala efter utfört arbete</div></div></div></footer>
+<section class="block" style="background:#fff"><div class="container center"><p class="sectionLabel">Redo att boka?</p><h2>Vi kommer till din bil.</h2><p class="sectionLead">Boka ditt hjulbyte online för 345 kr inklusive framkörning.</p><a href="/boka.html" class="btn">Boka däckbyte →</a></div></section></main>
+<footer><div class="footerInner"><div><strong>DäckHem</strong><div>Mobilt hjulbyte i Stockholmsområdet</div></div><div><a href="tel:0707892340">070-789 23 40</a><div><a href="/cancel.html">Avboka tid</a> · Betala efter utfört arbete</div></div></div></footer>
 <script>
-const $=id=>document.getElementById(id);
-const pad=n=>String(n).padStart(2,'0');
-const brandSelect=$('carBrand'),customBrand=$('customBrand'),customBrandWrap=$('customBrandWrap');
-function updateBrandInput(){const other=brandSelect.value==='Övrigt';customBrandWrap.hidden=!other;customBrand.required=other;if(!other)customBrand.value='';}
-brandSelect.addEventListener('change',updateBrandInput);updateBrandInput();
-const now=new Date();
-$('date').min=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
-async function api(path,payload){
- const response=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
- if(!response.ok){
-  const body=await response.text();
-  let detail='Något gick fel. Försök igen.';
-  try{const error=JSON.parse(body);if(typeof error==='string')detail=error;else if(error.errors)detail=Object.values(error.errors).flat().join(' ');else if(error.detail)detail=error.detail;}catch{if(body&&!body.trim().startsWith('<'))detail=body;}
-  throw new Error(detail);
- }
- return response.json();
-}
-// Google Places (New) via our server. No Google key is exposed to the browser.
-const addressInput=$('address'),addressStatus=$('addressStatus'),addressResults=$('addressResults');
-let addressTimer,requestNumber=0,selectedAddress='',addressSession=crypto.randomUUID();
-function clearAddressSuggestions(){addressResults.replaceChildren();}
-addressInput.addEventListener('input',()=>{
- selectedAddress='';clearAddressSuggestions();clearTimeout(addressTimer);
- const query=addressInput.value.trim(),current=++requestNumber;
- addressStatus.classList.remove('ok');
- if(query.length<4){addressStatus.textContent='Skriv gata och husnummer så visas förslag.';return;}
- addressStatus.textContent='Söker adresser…';
- addressTimer=setTimeout(async()=>{
-  try{
-   const response=await fetch('/api/address/suggest?'+new URLSearchParams({q:query,session:addressSession}));
-   if(!response.ok)throw Error('Adresstjänsten kunde inte svara just nu.');
-   const items=await response.json();
-   if(current!==requestNumber||addressInput.value.trim()!==query)return;
-   clearAddressSuggestions();
-   if(!items.length){addressStatus.textContent='Inga adressförslag hittades. Lägg till orten, till exempel Upplands Väsby, eller skriv hela adressen själv.';return;}
-   addressStatus.textContent='Välj rätt adress:';
-   for(const item of items){
-    const option=document.createElement('button');option.type='button';option.setAttribute('role','option');
-    option.textContent=item.label;
-    option.addEventListener('click',()=>{
-     addressInput.value=item.label.slice(0,300);selectedAddress=addressInput.value;
-     ++requestNumber;clearAddressSuggestions();addressStatus.textContent='✓ Adress vald: '+selectedAddress;
-     addressStatus.classList.add('ok');addressSession=crypto.randomUUID();
-    });
-    addressResults.appendChild(option);
-   }
-  }catch(err){if(current===requestNumber){clearAddressSuggestions();addressStatus.textContent='Adressförslagen kunde inte hämtas. Skriv fullständig gata, nummer, postnummer och ort manuellt.';}}
- },450);
-});
-$('booking').addEventListener('submit',async e=>{
- e.preventDefault();
- const form=e.currentTarget,msg=$('message'),button=form.querySelector('button');
- const dateTime=`${$('date').value}T${$('time').value}:00`;
- if(new Date(dateTime)<=new Date()){msg.textContent='Välj en tid i framtiden.';return;}
- button.disabled=true;msg.className='pending';msg.textContent='Registrerar din bokning…';
- try{
-  const result=await api('/api/bookings',{customerName:$('name').value.trim(),phoneNumber:$('phone').value.trim(),email:$('email').value.trim(),registrationNumber:$('plate').value.trim(),carBrand:$('carBrand').value==='Övrigt' ? $('customBrand').value.trim() : $('carBrand').value,address:$('address').value.trim(),bookingDateTime:dateTime,notes:$('notes').value.trim()||null});
-  form.reset();updateBrandInput();selectedAddress='';clearAddressSuggestions();addressStatus.classList.remove('ok');addressStatus.textContent='Skriv din adress så visas förslag automatiskt.';
-  msg.className='success';msg.textContent=`✓ Bokningen är registrerad! Bokningsnummer: DH-${String(result.id).replace(/-/g,"").slice(0,8).toUpperCase()}. Pris: ${result.price} kr. ${result.emailQueued ? 'E-postbekräftelsen skickas separat. Spara ditt bokningsnummer.' : 'E-postutskicket kunde inte köas. Spara avbokningsnyckeln här:'} ${result.emailQueued ? '' : result.cancellationToken} ${result.emailQueued ? '' : 'Nyckeln visas bara här och ska inte delas med andra.'}`;
- }catch(err){msg.className='error';msg.textContent=err instanceof TypeError?'Kunde inte nå servern. Öppna hemsidan via DäckHem.Api och försök igen.':err.message;}
- finally{button.disabled=false;}
-});
-$('cancel-form').addEventListener('submit',async e=>{
- e.preventDefault();const form=e.currentTarget,msg=$('cancel-message'),button=form.querySelector('button');
- button.disabled=true;msg.textContent='Avbokar…';
- try{const result=await api('/api/bookings/cancel',{token:$('cancel-token').value.trim()});msg.textContent=result.message||'Din bokning är avbokad.';form.reset();}
- catch(err){msg.textContent=err instanceof TypeError?'Kunde inte nå servern. Försök igen.':err.message;}
- finally{button.disabled=false;}
-});
+if(location.hash==='#boka')location.replace('/boka.html');
+if(location.hash==='#avboka')location.replace('/cancel.html');
 </script></body></html>
