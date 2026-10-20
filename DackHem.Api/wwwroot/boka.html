@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="sv"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Boka mobilt hjulbyte hemma eller på jobbet hos DäckHem – 345 kr inklusive framkörning.">
+<meta name="theme-color" content="#0d1a2b">
+<title>Boka hjulbyte – DäckHem</title><link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+:root{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:#f4f6f8;color:#16253a}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+body{margin:0;line-height:1.6}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit}
+button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #dc9a11;outline-offset:3px}
+header{position:sticky;top:0;z-index:20;background:#0d1a2bf7;color:#fff;backdrop-filter:blur(14px);border-bottom:1px solid #ffffff1c}
+.nav{max-width:1180px;margin:auto;min-height:78px;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{font-size:27px;font-weight:850;letter-spacing:-1.2px;white-space:nowrap;display:flex;align-items:center;gap:10px}.brand span span{color:#f6b83e}
+.brand img{height:38px;width:38px;border-radius:9px}
+nav{display:flex;align-items:center;gap:25px;font-size:14px;font-weight:650}nav a:not(.btn):hover{color:#f6b83e}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:12px;background:#f6b83e;color:#132238;min-height:49px;padding:13px 23px;font-weight:800;cursor:pointer;box-shadow:0 7px 20px #b2761433;transition:transform .18s,background .18s}
+.btn:hover{background:#ffcc65;transform:translateY(-1px)}.btn:disabled{opacity:.6;cursor:wait;transform:none}
+.btn-outline{background:#fff;color:#172840;box-shadow:none;border:1px solid #cad3df}.btn-outline:hover{background:#eff3f8}
+.heroWrap{background:linear-gradient(125deg,#0c192a 0%,#172e49 100%);color:#f8fafc;overflow:hidden}
+.hero{max-width:1180px;margin:auto;display:grid;grid-template-columns:minmax(0,790px);gap:30px;align-items:center;padding:70px 24px 84px}
+.eyebrow{text-transform:uppercase;color:#f6b83e;font-size:12px;font-weight:850;letter-spacing:1.9px;margin:0 0 17px}
+.hero h1{font-size:clamp(39px,4.4vw,65px);line-height:1.07;letter-spacing:-2px;margin:0 0 23px;font-weight:850}
+.hero h1 em{font-style:normal;color:#f6b83e}
+.hero p.lead{font-size:18px;color:#d7e2ef;line-height:1.75;max-width:550px;margin:0 0 27px}
+.heroActions{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.heroPrice{display:flex;align-items:baseline;gap:12px;margin:0 0 25px}
+.heroPrice strong{font-size:41px;line-height:1;color:#f6b83e;letter-spacing:-1px}
+.heroPrice span{font-size:13px;color:#dbe4ee}
+.heroBadges{display:flex;gap:19px;flex-wrap:wrap;margin:28px 0 0;color:#dfebf5;font-size:13px}
+.heroBadges span:before{content:"✓";color:#f6b83e;font-weight:900;margin-right:7px}
+.heroPhoto{position:relative}
+.heroPhoto img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;border-radius:24px;box-shadow:0 24px 72px #0008;background:#304056}
+.heroPhoto .photoFallback{min-height:360px;border-radius:24px;background:linear-gradient(130deg,#21354e,#0d1b2f);display:none;align-items:center;justify-content:center;text-align:center;padding:30px;font-weight:750;color:#d4e2f0}
+.photoTag{position:absolute;left:-19px;bottom:24px;background:#fff;color:#16263d;border-radius:15px;padding:15px 20px;box-shadow:0 15px 35px #0003}
+.photoTag strong{display:block;font-size:17px}.photoTag small{color:#54647a;font-size:12px}
+.photoDisclosure{color:#afc0d3;font-size:11px;text-align:right;margin-top:7px}
+main{background:#f4f6f8}section{scroll-margin-top:94px}
+.container{max-width:1180px;margin:0 auto;padding:0 24px}
+.valueStrip{position:relative;z-index:3;margin-top:-34px}
+.valueGrid{background:#fff;border-radius:17px;box-shadow:0 12px 36px #112e4a16;display:grid;grid-template-columns:repeat(3,1fr);padding:23px;gap:15px}
+.valueItem{display:flex;align-items:center;gap:14px;padding:2px 17px}
+.valueItem+.valueItem{border-left:1px solid #dce3eb}
+.valueIcon{font-size:26px;background:#fff4dc;border-radius:13px;width:54px;height:54px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.valueItem strong{display:block;font-size:15px}.valueItem small{display:block;color:#5e6f82;font-size:12px}
+.block{padding:92px 0}.sectionLabel{color:#a87312;font-size:12px;letter-spacing:1.8px;text-transform:uppercase;font-weight:850;margin:0 0 8px}
+h2{font-size:clamp(30px,3.5vw,42px);letter-spacing:-1.25px;line-height:1.17;color:#15263d;margin:0 0 16px}
+.sectionLead{color:#627188;max-width:650px;margin:0 auto 36px}
+.center{text-align:center}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:19px}
+.step{background:#fff;border:1px solid #e0e6ee;box-shadow:0 8px 25px #16334b08;border-radius:18px;padding:30px}
+.stepNumber{width:43px;height:43px;border-radius:12px;background:#fdf1d7;color:#8d5e00;display:flex;align-items:center;justify-content:center;font-weight:850;margin-bottom:17px}
+.step h3{font-size:20px;letter-spacing:-.3px;margin:0 0 8px}.step p{color:#61718a;margin:0}
+.about{background:#eaf0f6}.aboutGrid{display:grid;grid-template-columns:1fr;gap:30px;align-items:center}.aboutText{max-width:850px}
+.aboutText p{color:#53647b;font-size:16px}
+.aboutCard{padding:30px;border:1px solid #cad8e7;border-radius:20px;background:#fff}
+.aboutCard h3{font-size:23px;margin:0 0 13px}.aboutCard p{color:#55677c;margin:0 0 17px}
+.aboutCard a{font-weight:800;color:#214c75}.aboutCard a:hover{text-decoration:underline}
+.bookingSection{background:#fff}.bookingLayout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(260px,.75fr);gap:33px;align-items:start}
+.bookingPanel{background:#f7f9fc;border:1px solid #dce5ef;border-radius:21px;padding:32px;box-shadow:0 15px 38px #12253a0d}
+.bookingPanel h3{margin:0 0 9px;font-size:23px}.bookingPanel>p{margin:0 0 24px;color:#65758a}
+form#booking{display:grid;grid-template-columns:1fr 1fr;gap:17px}
+label{display:block;margin-bottom:7px;color:#253b52;font-size:13px;font-weight:750}
+input,textarea,select{width:100%;padding:13px 14px;background:#fff;border:1px solid #bdcbd9;color:#172a40;border-radius:10px;min-height:48px}
+input::placeholder,textarea::placeholder{color:#8a98a7}textarea{resize:vertical}.wide{grid-column:1/-1}
+.note{font-size:13px;color:#64758a;line-height:1.7}
+.priceCard{background:#12253b;border-radius:18px;padding:28px;color:#fff;position:sticky;top:105px}
+.priceCard .eyebrow{margin-bottom:10px}
+.priceCard strong.amount{display:block;color:#f6b83e;font-size:49px;letter-spacing:-1.6px;line-height:1.2}
+.priceCard p{color:#cad8e7}.priceCard ul{padding-left:19px;color:#d7e3ee}.priceCard li{margin-bottom:11px}
+.contactLink{display:block;color:#f6b83e;font-weight:750;margin-top:20px}
+.cancelSection{background:#eaf0f6}.cancelBox{max-width:760px;background:#fff;padding:30px;border:1px solid #d8e2ec;border-radius:19px;box-shadow:0 10px 25px #16334b0d}
+form#cancel-form{display:grid;gap:18px}
+#addressResults{display:grid;gap:6px;margin-top:8px}
+#addressResults button{background:#fff;color:#213448;border:1px solid #bbcad8;border-radius:9px;padding:11px;text-align:left;cursor:pointer}
+#addressResults button:hover{background:#fff4dd;border-color:#d0a241}
+#addressStatus{margin:8px 0;color:#61758a}#addressStatus.ok{color:#17774f}
+#customBrandWrap[hidden]{display:none}
+#message,#cancel-message{overflow-wrap:anywhere}
+#message:not(:empty),#cancel-message:not(:empty){padding:13px;border:1px solid #bfccda;border-radius:9px}
+#message.success{background:#e8faef;border:2px solid #27a56c;color:#155d3a;padding:18px;font-weight:750}
+#message.error{background:#fff0f1;border:1px solid #e3a3a8;color:#8d2431}
+#message.pending{color:#54677d}
+footer{background:#0d1a2b;color:#d0dce9;padding:38px 24px}
+.footerInner{max-width:1180px;margin:auto;display:flex;justify-content:space-between;gap:25px;align-items:center;flex-wrap:wrap}
+footer a{color:#f6b83e;font-weight:650}
+@media(max-width:900px){.hero{gap:28px}.bookingLayout{grid-template-columns:1fr}.priceCard{position:static;order:-1}.aboutGrid{gap:25px}.heroPhoto .photoTag{left:10px}}
+@media(max-width:700px){.nav{min-height:70px;padding:10px 18px}.brand{font-size:23px}.brand img{width:31px;height:31px}nav a:not(.btn){display:none}nav .btn{font-size:13px;padding:11px 13px;min-height:42px}
+.hero{grid-template-columns:1fr;padding:48px 20px 69px;gap:33px}.hero h1{letter-spacing:-1.3px}.hero p.lead{font-size:16px}.heroPrice strong{font-size:35px}
+.heroPhoto img{aspect-ratio:1/1}.heroPhoto .photoTag{left:10px;bottom:15px;padding:11px 13px}
+.valueGrid{grid-template-columns:1fr;padding:16px}.valueItem{padding:11px 9px}.valueItem+.valueItem{border-left:0;border-top:1px solid #dce3eb}
+.container{padding:0 18px}.block{padding:68px 0}.steps,.aboutGrid{grid-template-columns:1fr}.bookingPanel,.cancelBox{padding:20px}
+form#booking{grid-template-columns:1fr}.wide{grid-column:auto}.bookingLayout{gap:18px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+
+[hidden]{display:none!important}
+.bookingSuccess{max-width:680px;margin:10px auto 0;padding:44px 30px;background:#fff;border:1px solid #dce5ef;border-radius:20px;text-align:center;box-shadow:0 16px 42px #12253a16;scroll-margin-top:110px}
+.successIcon{width:70px;height:70px;border-radius:50%;display:grid;place-items:center;background:#e4f8ee;color:#187a4a;font-size:38px;font-weight:850;margin:0 auto 19px}
+.bookingSuccess h2{margin-bottom:9px}.bookingSuccess>p{color:#54677d}
+.confirmationRows{margin:26px auto;max-width:450px;border-top:1px solid #dce5ef;border-bottom:1px solid #dce5ef}
+.confirmationRows div{display:flex;justify-content:space-between;gap:15px;padding:15px 0;align-items:center;text-align:left}
+.confirmationRows div+div{border-top:1px solid #e4eaf0}
+.confirmationRows span{color:#63748a}.confirmationRows strong{color:#15263d;overflow-wrap:anywhere}
+.successActions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.subnav{background:#eaf0f6;padding:14px 24px}.subnav a{font-weight:750;color:#234c75}
+@media(max-width:700px){.bookingSuccess{padding:30px 18px}.successActions .btn{width:100%}}
+</style></head><body>
+<header><div class="nav">
+<a href="/" class="brand" aria-label="DäckHem startsida"><img src="/favicon.svg" alt=""><span><span>Däck</span>Hem</span></a>
+<nav aria-label="Huvudmeny"><a href="/">Startsida</a><a href="/cancel.html">Avboka tid</a><a href="/boka.html" class="btn">Boka däckbyte →</a></nav>
+</div></header>
+<div class="subnav"><div class="container"><a href="/">← Tillbaka till startsidan</a></div></div>
+<main><section class="block bookingSection" id="boka"><div class="container">
+<p class="sectionLabel">Boka online</p><h2>Boka ditt hjulbyte</h2><p class="sectionLead" style="margin:0 0 32px">Fyll i uppgifterna nedan. Du får en bokningsbekräftelse via mejl.</p>
+<div class="bookingLayout" id="bookingLayout">
+<div class="bookingPanel"><h3>Dina bokningsuppgifter</h3><p>Välj en tid som passar dig. Vi kan kontakta dig om en justering behövs.</p>
+<form id="booking">
+<div><label for="name">Namn</label><input id="name" required maxlength="100" autocomplete="name" placeholder="För- och efternamn"></div>
+<div><label for="phone">Telefonnummer</label><input id="phone" type="tel" required maxlength="30" autocomplete="tel" placeholder="07X XXX XX XX"></div>
+<div><label for="email">E-postadress</label><input id="email" type="email" required maxlength="254" autocomplete="email" placeholder="namn@exempel.se"></div>
+<div><label for="plate">Registreringsnummer</label><input id="plate" required maxlength="20" placeholder="ABC123"></div>
+<div><label for="carBrand">Bilmärke</label><select id="carBrand" required><option value="">Välj bilmärke</option><option value="Audi">Audi</option><option value="BMW">BMW</option><option value="BYD">BYD</option><option value="Citroën">Citroën</option><option value="Cupra">Cupra</option><option value="Dacia">Dacia</option><option value="Fiat">Fiat</option><option value="Ford">Ford</option><option value="Honda">Honda</option><option value="Hyundai">Hyundai</option><option value="Kia">Kia</option><option value="Land Rover">Land Rover</option><option value="Lexus">Lexus</option><option value="Mazda">Mazda</option><option value="Mercedes-Benz">Mercedes-Benz</option><option value="MG">MG</option><option value="Mini">Mini</option><option value="Mitsubishi">Mitsubishi</option><option value="Nissan">Nissan</option><option value="Opel">Opel</option><option value="Peugeot">Peugeot</option><option value="Polestar">Polestar</option><option value="Porsche">Porsche</option><option value="Renault">Renault</option><option value="Saab">Saab</option><option value="Seat">Seat</option><option value="Skoda">Skoda</option><option value="Subaru">Subaru</option><option value="Suzuki">Suzuki</option><option value="Tesla">Tesla</option><option value="Toyota">Toyota</option><option value="Volkswagen">Volkswagen</option><option value="Volvo">Volvo</option><option value="Övrigt">Övrigt – skriv själv</option></select></div>
+<div id="customBrandWrap" hidden><label for="customBrand">Skriv bilmärke</label><input id="customBrand" maxlength="40" autocomplete="off" placeholder="Ange bilens bilmärke"></div>
+<div class="wide"><label for="address">Adress för däckbytet</label><input id="address" required maxlength="300" placeholder="Börja skriva gata och husnummer…" autocomplete="off" aria-autocomplete="list" aria-controls="addressResults"><p id="addressStatus" class="note" role="status" aria-live="polite">Skriv din adress så visas förslag automatiskt.</p><div id="addressResults" role="listbox" aria-label="Adressförslag"></div><p class="note">Adressförslag från Google eller OpenStreetMap (via Photon). Kontrollera alltid husnummer och ort.</p></div>
+<div><label for="date">Önskat datum</label><input id="date" type="date" required></div>
+<div><label for="time">Önskad tid</label><input id="time" type="time" required></div>
+<div class="wide"><label for="notes">Övrig information (frivilligt)</label><textarea id="notes" rows="3" maxlength="1000" placeholder="Information om parkering eller bilen"></textarea></div>
+<div class="wide"><p class="note">Bokningarna kan överlappa. Vi kan kontakta dig för att anpassa ankomsttiden. Du kan avboka kostnadsfritt via hemsidan mer än 3 timmar före besöket. Vid senare avbokning, ring 070-789 23 40.</p><button class="btn" type="submit">Bekräfta bokning →</button><p id="message" role="status" aria-live="polite"></p></div>
+</form></div>
+<aside class="priceCard"><p class="eyebrow">Öppningserbjudande</p><strong class="amount">345 kr</strong><p>Hjulbyte på din adress, inklusive framkörning inom Stockholmsområdet.*</p><ul><li>Boka önskat datum och klockslag online</li><li>Ha hjulen tillgängliga vid bilen</li><li>Vi kontaktar dig vid behov</li><li>Betala med Swish eller Revolut efteråt</li></ul><p class="note" style="color:#b8c7d7">* Vi bekräftar att adressen kan nås före besöket.</p><a class="contactLink" href="tel:0707892340">Frågor? 070-789 23 40 →</a></aside>
+</div>
+<div id="bookingSuccess" class="bookingSuccess" hidden role="status" aria-live="polite">
+ <div class="successIcon" aria-hidden="true">✓</div>
+ <h2>Tack för din bokning!</h2>
+ <p>Din bokning hos DäckHem är registrerad.</p>
+ <div class="confirmationRows"><div><span>Bokningsnummer</span><strong id="successBookingNumber"></strong></div><div><span>Pris</span><strong id="successPrice"></strong></div></div>
+ <p id="successEmail"></p>
+ <p class="note">Vi kan kontakta dig om ankomsttiden behöver justeras.</p>
+ <div class="successActions"><button type="button" class="btn" id="bookAnother">Boka en till bil →</button><a href="/" class="btn btn-outline">Tillbaka till startsidan</a></div>
+</div>
+</div></section>
+</main>
+<footer><div class="footerInner"><div><strong>DäckHem</strong><div>Mobilt hjulbyte i Stockholmsområdet</div></div><div><a href="/cancel.html">Avboka tid</a> · <a href="tel:0707892340">070-789 23 40</a></div></div></footer>
+<script>
+
+const $=id=>document.getElementById(id);
+const pad=n=>String(n).padStart(2,'0');
+const brandSelect=$('carBrand'),customBrand=$('customBrand'),customBrandWrap=$('customBrandWrap');
+function updateBrandInput(){const other=brandSelect.value==='Övrigt';customBrandWrap.hidden=!other;customBrand.required=other;if(!other)customBrand.value='';}
+brandSelect.addEventListener('change',updateBrandInput);updateBrandInput();
+const now=new Date();
+$('date').min=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+async function api(path,payload){
+ const response=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+ if(!response.ok){
+  const body=await response.text();
+  let detail='Något gick fel. Försök igen.';
+  try{const error=JSON.parse(body);if(typeof error==='string')detail=error;else if(error.errors)detail=Object.values(error.errors).flat().join(' ');else if(error.detail)detail=error.detail;}catch{if(body&&!body.trim().startsWith('<'))detail=body;}
+  throw new Error(detail);
+ }
+ return response.json();
+}
+// Google Places (New) via our server. No Google key is exposed to the browser.
+const addressInput=$('address'),addressStatus=$('addressStatus'),addressResults=$('addressResults');
+let addressTimer,requestNumber=0,selectedAddress='',addressSession=crypto.randomUUID();
+function clearAddressSuggestions(){addressResults.replaceChildren();}
+addressInput.addEventListener('input',()=>{
+ selectedAddress='';clearAddressSuggestions();clearTimeout(addressTimer);
+ const query=addressInput.value.trim(),current=++requestNumber;
+ addressStatus.classList.remove('ok');
+ if(query.length<4){addressStatus.textContent='Skriv gata och husnummer så visas förslag.';return;}
+ addressStatus.textContent='Söker adresser…';
+ addressTimer=setTimeout(async()=>{
+  try{
+   const response=await fetch('/api/address/suggest?'+new URLSearchParams({q:query,session:addressSession}));
+   if(!response.ok)throw Error('Adresstjänsten kunde inte svara just nu.');
+   const items=await response.json();
+   if(current!==requestNumber||addressInput.value.trim()!==query)return;
+   clearAddressSuggestions();
+   if(!items.length){addressStatus.textContent='Inga adressförslag hittades. Lägg till orten, till exempel Upplands Väsby, eller skriv hela adressen själv.';return;}
+   addressStatus.textContent='Välj rätt adress:';
+   for(const item of items){
+    const option=document.createElement('button');option.type='button';option.setAttribute('role','option');
+    option.textContent=item.label;
+    option.addEventListener('click',()=>{
+     addressInput.value=item.label.slice(0,300);selectedAddress=addressInput.value;
+     ++requestNumber;clearAddressSuggestions();addressStatus.textContent='✓ Adress vald: '+selectedAddress;
+     addressStatus.classList.add('ok');addressSession=crypto.randomUUID();
+    });
+    addressResults.appendChild(option);
+   }
+  }catch(err){if(current===requestNumber){clearAddressSuggestions();addressStatus.textContent='Adressförslagen kunde inte hämtas. Skriv fullständig gata, nummer, postnummer och ort manuellt.';}}
+ },450);
+});
+$('booking').addEventListener('submit',async e=>{
+ e.preventDefault();
+ const form=e.currentTarget,msg=$('message'),button=form.querySelector('button');
+ const dateTime=`${$('date').value}T${$('time').value}:00`;
+ if(new Date(dateTime)<=new Date()){msg.textContent='Välj en tid i framtiden.';return;}
+ button.disabled=true;msg.className='pending';msg.textContent='Registrerar din bokning…';
+ try{
+  const result=await api('/api/bookings',{customerName:$('name').value.trim(),phoneNumber:$('phone').value.trim(),email:$('email').value.trim(),registrationNumber:$('plate').value.trim(),carBrand:$('carBrand').value==='Övrigt' ? $('customBrand').value.trim() : $('carBrand').value,address:$('address').value.trim(),bookingDateTime:dateTime,notes:$('notes').value.trim()||null});
+  form.reset();updateBrandInput();selectedAddress='';clearAddressSuggestions();addressStatus.classList.remove('ok');addressStatus.textContent='Skriv din adress så visas förslag automatiskt.';
+  const code='DH-'+String(result.id).replace(/-/g,'').slice(0,8).toUpperCase();
+  $('successBookingNumber').textContent=code;
+  $('successPrice').textContent=result.price+' kr';
+  $('successEmail').textContent=result.emailQueued
+   ? 'Din bokningsbekräftelse skickas via mejl. Spara mejlet om du behöver avboka.'
+   : 'Mejlet kunde inte köas. Spara din avbokningsnyckel här: '+result.cancellationToken;
+  $('bookingLayout').hidden=true;
+  $('bookingSuccess').hidden=false;
+  msg.textContent='';msg.className='';
+  $('bookingSuccess').scrollIntoView({behavior:'smooth',block:'start'});
+ }catch(err){msg.className='error';msg.textContent=err instanceof TypeError?'Kunde inte nå servern. Öppna hemsidan via DäckHem.Api och försök igen.':err.message;}
+ finally{button.disabled=false;}
+});
+
+$('bookAnother').addEventListener('click',()=>{
+ $('bookingSuccess').hidden=true;
+ $('bookingLayout').hidden=false;
+ $('message').textContent='';$('message').className='';
+ window.scrollTo({top:0,behavior:'smooth'});
+});
+
+</script></body></html>
