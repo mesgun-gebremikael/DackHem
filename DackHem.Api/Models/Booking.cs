@@ -19,7 +19,7 @@ namespace DackHem.Api.Models
 
         public string? Notes { get; set; }
 
-        public decimal Price { get; set; } = 250;
+        public decimal Price { get; set; } = 350;
 
         public string Status { get; set; } = "Confirmed";
         public string CancellationTokenHash { get; set; } = string.Empty;
