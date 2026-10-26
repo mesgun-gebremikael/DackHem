@@ -125,7 +125,7 @@ form#booking{grid-template-columns:1fr}.wide{grid-column:auto}.bookingLayout{gap
 <div><label for="plate">Registreringsnummer</label><input id="plate" required maxlength="20" placeholder="ABC123"></div>
 <div><label for="carBrand">Bilmärke</label><select id="carBrand" required><option value="">Välj bilmärke</option><option value="Audi">Audi</option><option value="BMW">BMW</option><option value="BYD">BYD</option><option value="Citroën">Citroën</option><option value="Cupra">Cupra</option><option value="Dacia">Dacia</option><option value="Fiat">Fiat</option><option value="Ford">Ford</option><option value="Honda">Honda</option><option value="Hyundai">Hyundai</option><option value="Kia">Kia</option><option value="Land Rover">Land Rover</option><option value="Lexus">Lexus</option><option value="Mazda">Mazda</option><option value="Mercedes-Benz">Mercedes-Benz</option><option value="MG">MG</option><option value="Mini">Mini</option><option value="Mitsubishi">Mitsubishi</option><option value="Nissan">Nissan</option><option value="Opel">Opel</option><option value="Peugeot">Peugeot</option><option value="Polestar">Polestar</option><option value="Porsche">Porsche</option><option value="Renault">Renault</option><option value="Saab">Saab</option><option value="Seat">Seat</option><option value="Skoda">Skoda</option><option value="Subaru">Subaru</option><option value="Suzuki">Suzuki</option><option value="Tesla">Tesla</option><option value="Toyota">Toyota</option><option value="Volkswagen">Volkswagen</option><option value="Volvo">Volvo</option><option value="Övrigt">Övrigt – skriv själv</option></select></div>
 <div id="customBrandWrap" hidden><label for="customBrand">Skriv bilmärke</label><input id="customBrand" maxlength="40" autocomplete="off" placeholder="Ange bilens bilmärke"></div>
-<div class="wide"><label for="address">Adress för däckbytet</label><input id="address" required maxlength="300" placeholder="Börja skriva gata och husnummer…" autocomplete="off" aria-autocomplete="list" aria-controls="addressResults"><p id="addressStatus" class="note" role="status" aria-live="polite">Skriv din adress så visas förslag automatiskt.</p><div id="addressResults" role="listbox" aria-label="Adressförslag"></div><p class="note">Adressförslag från Google eller OpenStreetMap (via Photon). Kontrollera alltid husnummer och ort.</p></div>
+<div class="wide"><label for="address">Adress för däckbytet</label><input id="address" required maxlength="300" placeholder="Börja skriva gata och husnummer…" autocomplete="off" aria-autocomplete="list" aria-controls="addressResults"><p id="addressStatus" class="note" role="status" aria-live="polite">Skriv din adress så visas förslag automatiskt.</p><div id="addressResults" role="listbox" aria-label="Adressförslag"></div><button type="button" id="manualQuote" class="btn btn-outline" style="margin-top:10px;min-height:40px;padding:8px 14px">Beräkna pris för adressen</button><p class="note">Adressförslag från Google eller OpenStreetMap (via Photon). Kontrollera alltid husnummer och ort.</p></div>
 <div><label for="date">Önskat datum</label><input id="date" type="date" required></div>
 <div><label for="time">Önskad tid</label><input id="time" type="time" required></div>
 <div class="wide"><label for="notes">Övrig information (frivilligt)</label><textarea id="notes" rows="3" maxlength="1000" placeholder="Information om parkering eller bilen"></textarea></div>
@@ -196,6 +196,14 @@ async function loadPrice(address){
   confirmBooking.disabled=true;
  }
 }
+$('manualQuote').addEventListener('click',()=>{
+ const address=addressInput.value.trim();
+ if(address.length<7){addressStatus.textContent='Ange fullständig gata, husnummer och ort.';return;}
+ selectedAddress=address;
+ ++requestNumber;clearTimeout(addressTimer);clearAddressSuggestions();
+ addressStatus.textContent='Beräknar pris för angiven adress…';
+ loadPrice(address);
+});
 function clearAddressSuggestions(){addressResults.replaceChildren();}
 addressInput.addEventListener('input',()=>{
  selectedAddress='';resetPrice();clearAddressSuggestions();clearTimeout(addressTimer);
@@ -210,7 +218,7 @@ addressInput.addEventListener('input',()=>{
    const items=await response.json();
    if(current!==requestNumber||addressInput.value.trim()!==query)return;
    clearAddressSuggestions();
-   if(!items.length){addressStatus.textContent='Inga adressförslag hittades. Lägg till orten, till exempel Upplands Väsby, eller skriv hela adressen själv.';return;}
+   if(!items.length){addressStatus.textContent='Inga adressförslag hittades. Lägg till ort och husnummer, eller skriv hela adressen själv.';return;}
    addressStatus.textContent='Välj rätt adress:';
    for(const item of items){
     const option=document.createElement('button');option.type='button';option.setAttribute('role','option');
@@ -223,7 +231,7 @@ addressInput.addEventListener('input',()=>{
     });
     addressResults.appendChild(option);
    }
-  }catch(err){if(current===requestNumber){clearAddressSuggestions();addressStatus.textContent='Adressförslagen kunde inte hämtas. Skriv fullständig gata, nummer, postnummer och ort manuellt.';}}
+  }catch(err){if(current===requestNumber){clearAddressSuggestions();addressStatus.textContent='Adressförslagen kunde inte hämtas. Skriv fullständig gata, nummer, postnummer och ort och klicka på Beräkna pris.';}}
  },450);
 });
 $('booking').addEventListener('submit',async e=>{
