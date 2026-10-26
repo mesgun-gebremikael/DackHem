@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="sv"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Boka mobilt hjulbyte hemma eller på jobbet hos DäckHem – 350 kr inklusive framkörning.">
+<meta name="description" content="Boka mobilt hjulbyte hemma eller på jobbet hos DäckHem – från 350 kr inklusive framkörning. Totalpriset visas innan bokning.">
 <meta name="theme-color" content="#0d1a2b">
 <title>Boka hjulbyte – DäckHem</title><link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <style>
@@ -129,9 +129,9 @@ form#booking{grid-template-columns:1fr}.wide{grid-column:auto}.bookingLayout{gap
 <div><label for="date">Önskat datum</label><input id="date" type="date" required></div>
 <div><label for="time">Önskad tid</label><input id="time" type="time" required></div>
 <div class="wide"><label for="notes">Övrig information (frivilligt)</label><textarea id="notes" rows="3" maxlength="1000" placeholder="Information om parkering eller bilen"></textarea></div>
-<div class="wide"><p class="note">Bokningarna kan överlappa. Vi kan kontakta dig för att anpassa ankomsttiden. Du kan avboka kostnadsfritt via hemsidan mer än 3 timmar före besöket. Vid senare avbokning, ring 070-789 23 40.</p><button class="btn" type="submit">Bekräfta bokning →</button><p id="message" role="status" aria-live="polite"></p></div>
+<div class="wide"><p class="note">Bokningarna kan överlappa. Vi kan kontakta dig för att anpassa ankomsttiden. Du kan avboka kostnadsfritt via hemsidan mer än 3 timmar före besöket. Vid senare avbokning, ring 070-789 23 40.</p><div id="quoteBox" role="status" aria-live="polite" style="background:#f0f5fa;border:1px solid #d0deec;border-radius:12px;padding:15px;margin:16px 0"><strong id="quoteTitle">Totalpris inklusive framkörning</strong><div id="quoteValue" style="font-size:29px;font-weight:850;color:#14283e">Välj adress för att se pris</div><small id="quoteInfo">Du ser alltid totalpriset innan du bekräftar bokningen.</small></div><button class="btn" id="confirmBooking" type="submit" disabled>Bekräfta bokning →</button><p id="message" role="status" aria-live="polite"></p></div>
 </form></div>
-<aside class="priceCard"><p class="eyebrow">Öppningserbjudande</p><strong class="amount">350 kr</strong><p>Hjulbyte på din adress, inklusive framkörning inom Stockholmsområdet.*</p><ul><li>Boka önskat datum och klockslag online</li><li>Ha hjulen tillgängliga vid bilen</li><li>Vi kontaktar dig vid behov</li><li>Betala med Swish eller Revolut efteråt</li></ul><p class="note" style="color:#b8c7d7">* Vi bekräftar att adressen kan nås före besöket.</p><a class="contactLink" href="tel:0707892340">Frågor? 070-789 23 40 →</a></aside>
+<aside class="priceCard"><p class="eyebrow">Tydligt totalpris</p><strong class="amount">Från 350 kr</strong><p>Hjulbyte inklusive framkörning. Totalpriset beror på adressen och visas innan du bokar.*</p><ul><li>Boka önskat datum och klockslag online</li><li>Ha hjulen tillgängliga vid bilen</li><li>Vi kontaktar dig vid behov</li><li>Betala med Swish eller Revolut efteråt</li></ul><p class="note" style="color:#b8c7d7">* Vi bekräftar att adressen kan nås före besöket.</p><a class="contactLink" href="tel:0707892340">Frågor? 070-789 23 40 →</a></aside>
 </div>
 <div id="bookingSuccess" class="bookingSuccess" hidden role="status" aria-live="polite">
  <div class="successIcon" aria-hidden="true">✓</div>
@@ -167,9 +167,38 @@ async function api(path,payload){
 // Google Places (New) via our server. No Google key is exposed to the browser.
 const addressInput=$('address'),addressStatus=$('addressStatus'),addressResults=$('addressResults');
 let addressTimer,requestNumber=0,selectedAddress='',addressSession=crypto.randomUUID();
+let currentQuote=null,quoteRequestNumber=0;
+const confirmBooking=$('confirmBooking');
+function resetPrice(){
+ ++quoteRequestNumber;currentQuote=null;confirmBooking.disabled=true;
+ $('quoteValue').textContent='Välj adress för att se pris';
+ $('quoteInfo').textContent='Du ser alltid totalpriset innan du bekräftar bokningen.';
+}
+async function loadPrice(address){
+ const sequence=++quoteRequestNumber;
+ currentQuote=null;confirmBooking.disabled=true;
+ $('quoteValue').textContent='Beräknar ditt totalpris…';
+ $('quoteInfo').textContent='Inklusive framkörning.';
+ try{
+  const response=await fetch('/api/pricing/quote',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({address})});
+  const result=await response.json();
+  if(sequence!==quoteRequestNumber||addressInput.value.trim()!==address)return;
+  if(!response.ok)throw Error(result.message||'Kunde inte beräkna priset.');
+  currentQuote={address,price:result.price};
+  $('quoteValue').textContent=result.price+' kr';
+  $('quoteInfo').textContent='Totalt inklusive framkörning. Inga extra framkörningsavgifter.';
+  confirmBooking.disabled=false;
+ }catch(err){
+  if(sequence!==quoteRequestNumber)return;
+  currentQuote=null;
+  $('quoteValue').textContent='Priset kunde inte beräknas';
+  $('quoteInfo').textContent=err.message||'Försök igen eller kontakta oss.';
+  confirmBooking.disabled=true;
+ }
+}
 function clearAddressSuggestions(){addressResults.replaceChildren();}
 addressInput.addEventListener('input',()=>{
- selectedAddress='';clearAddressSuggestions();clearTimeout(addressTimer);
+ selectedAddress='';resetPrice();clearAddressSuggestions();clearTimeout(addressTimer);
  const query=addressInput.value.trim(),current=++requestNumber;
  addressStatus.classList.remove('ok');
  if(query.length<4){addressStatus.textContent='Skriv gata och husnummer så visas förslag.';return;}
@@ -190,6 +219,7 @@ addressInput.addEventListener('input',()=>{
      addressInput.value=item.label.slice(0,300);selectedAddress=addressInput.value;
      ++requestNumber;clearAddressSuggestions();addressStatus.textContent='✓ Adress vald: '+selectedAddress;
      addressStatus.classList.add('ok');addressSession=crypto.randomUUID();
+     loadPrice(selectedAddress);
     });
     addressResults.appendChild(option);
    }
@@ -201,10 +231,11 @@ $('booking').addEventListener('submit',async e=>{
  const form=e.currentTarget,msg=$('message'),button=form.querySelector('button');
  const dateTime=`${$('date').value}T${$('time').value}:00`;
  if(new Date(dateTime)<=new Date()){msg.textContent='Välj en tid i framtiden.';return;}
+ if(!currentQuote||currentQuote.address!==$('address').value.trim()){msg.textContent='Välj adress och invänta totalpriset innan du bokar.';return;}
  button.disabled=true;msg.className='pending';msg.textContent='Registrerar din bokning…';
  try{
-  const result=await api('/api/bookings',{customerName:$('name').value.trim(),phoneNumber:$('phone').value.trim(),email:$('email').value.trim(),registrationNumber:$('plate').value.trim(),carBrand:$('carBrand').value==='Övrigt' ? $('customBrand').value.trim() : $('carBrand').value,address:$('address').value.trim(),bookingDateTime:dateTime,notes:$('notes').value.trim()||null});
-  form.reset();updateBrandInput();selectedAddress='';clearAddressSuggestions();addressStatus.classList.remove('ok');addressStatus.textContent='Skriv din adress så visas förslag automatiskt.';
+  const result=await api('/api/bookings',{customerName:$('name').value.trim(),phoneNumber:$('phone').value.trim(),email:$('email').value.trim(),registrationNumber:$('plate').value.trim(),carBrand:$('carBrand').value==='Övrigt' ? $('customBrand').value.trim() : $('carBrand').value,address:$('address').value.trim(),bookingDateTime:dateTime,notes:$('notes').value.trim()||null,quotedPrice:currentQuote.price});
+  form.reset();updateBrandInput();selectedAddress='';resetPrice();clearAddressSuggestions();addressStatus.classList.remove('ok');addressStatus.textContent='Skriv din adress så visas förslag automatiskt.';
   const code='DH-'+String(result.id).replace(/-/g,'').slice(0,8).toUpperCase();
   $('successBookingNumber').textContent=code;
   $('successPrice').textContent=result.price+' kr';
