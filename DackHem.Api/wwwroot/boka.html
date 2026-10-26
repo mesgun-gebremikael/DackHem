@@ -228,7 +228,7 @@ addressInput.addEventListener('input',()=>{
 });
 $('booking').addEventListener('submit',async e=>{
  e.preventDefault();
- const form=e.currentTarget,msg=$('message'),button=form.querySelector('button');
+ const form=e.currentTarget,msg=$('message'),button=confirmBooking;
  const dateTime=`${$('date').value}T${$('time').value}:00`;
  if(new Date(dateTime)<=new Date()){msg.textContent='Välj en tid i framtiden.';return;}
  if(!currentQuote||currentQuote.address!==$('address').value.trim()){msg.textContent='Välj adress och invänta totalpriset innan du bokar.';return;}
@@ -247,7 +247,7 @@ $('booking').addEventListener('submit',async e=>{
   msg.textContent='';msg.className='';
   $('bookingSuccess').scrollIntoView({behavior:'smooth',block:'start'});
  }catch(err){msg.className='error';msg.textContent=err instanceof TypeError?'Kunde inte nå servern. Öppna hemsidan via DäckHem.Api och försök igen.':err.message;}
- finally{button.disabled=false;}
+ finally{button.disabled=!currentQuote;}
 });
 
 $('bookAnother').addEventListener('click',()=>{
