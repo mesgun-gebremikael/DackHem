@@ -39,6 +39,7 @@ namespace DackHem.Api
                             AutoReplenishment = true
                         }));
             });
+            builder.Services.AddSingleton<DistancePricingService>();
             builder.Services.AddScoped<BookingEmailService>();
             builder.Services.AddHostedService<SqliteBackupService>();
             builder.Services.AddSingleton<BookingEmailQueue>();

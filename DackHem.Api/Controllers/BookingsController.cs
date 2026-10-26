@@ -18,15 +18,18 @@ namespace DackHem.Api.Controllers
         private readonly AppDbContext _db;
         private readonly BookingEmailService _email;
         private readonly BookingEmailQueue _emailQueue;
+        private readonly DistancePricingService _pricing;
 
         public BookingsController(
             AppDbContext db,
             BookingEmailService email,
-            BookingEmailQueue emailQueue)
+            BookingEmailQueue emailQueue,
+            DistancePricingService pricing)
         {
             _db = db;
             _email = email;
             _emailQueue = emailQueue;
+            _pricing = pricing;
         }
 
 
@@ -55,6 +58,9 @@ namespace DackHem.Api.Controllers
 
             [StringLength(1000)]
             public string? Notes { get; set; }
+
+            // Quoted price shown and accepted by the customer.
+            public decimal? QuotedPrice { get; set; }
         }
 
         [HttpPost]
@@ -91,6 +97,19 @@ namespace DackHem.Api.Controllers
             if (combinedNotes?.Length > 1100)
                 return BadRequest("Informationen om bilen är för lång.");
 
+            // Recompute the actual road distance server-side to prevent client price tampering.
+            // Existing bookings in SQLite are never touched.
+            decimal newPrice;
+            try
+            {
+                var quote = await _pricing.QuoteAsync(request.Address, HttpContext.RequestAborted);
+                newPrice = quote.Price;
+                if (quote.Enabled && request.QuotedPrice != newPrice)
+                    return Conflict(new { message = "Priset för adressen har ändrats. Kontrollera totalpriset och försök igen." });
+            }
+            catch (ArgumentException ex) { return BadRequest(new { message = ex.Message }); }
+            catch (InvalidOperationException ex) { return StatusCode(503, new { message = ex.Message }); }
+
             var booking = new Booking
             {
                 CustomerName = request.CustomerName.Trim(),
@@ -101,7 +120,7 @@ namespace DackHem.Api.Controllers
                 Address = request.Address.Trim(),
                 BookingDateTime = request.BookingDateTime,
                 Notes = combinedNotes,
-                Price = 350,
+                Price = newPrice,
                 Status = "Confirmed"
             };
 
