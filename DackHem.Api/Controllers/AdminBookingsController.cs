@@ -131,13 +131,29 @@ public class AdminBookingsController : ControllerBase
         }
         finally { await cancelConnection.CloseAsync(); }
 
+        // Load saved driving distances without calling Google again or changing any bookings.
+        var distances = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        var distanceConnection = _db.Database.GetDbConnection();
+        await distanceConnection.OpenAsync();
+        try
+        {
+            using var command = distanceConnection.CreateCommand();
+            command.CommandText = "SELECT BookingId, DistanceMeters FROM BookingRouteDistance";
+            using var reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+                distances[reader.GetString(0)] = reader.GetInt32(1);
+        }
+        finally { await distanceConnection.CloseAsync(); }
+
         var bookings = resultsAll.Skip((page - 1) * pageSize).Take(pageSize).Select(b =>
         {
             work.TryGetValue(b.Id.ToString().ToUpperInvariant(), out var w);
+            var hasDistance = distances.TryGetValue(b.Id.ToString().ToUpperInvariant(), out var distanceMeters);
             return new
             {
                 b.Id, b.CustomerName, b.PhoneNumber, b.Email, b.RegistrationNumber,
                 b.Address, b.BookingDateTime, b.Notes, b.Price, b.Status, b.CreatedAtUtc,
+                DistanceMeters = hasDistance ? (int?)distanceMeters : null,
                 CancelledByCustomer = customerCancelledIds.Contains(b.Id.ToString()),
                 WorkStatus = b.Status == "Cancelled" ? "Cancelled" : w.Status ?? "Waiting",
                 AssignedTo = w.Assignee ?? "",
