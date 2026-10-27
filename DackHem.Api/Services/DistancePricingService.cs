@@ -17,7 +17,7 @@ public sealed class DistancePricingService
 
     public bool Enabled => _config.GetValue<bool>("Pricing:Enabled");
 
-    public sealed record Quote(decimal Price, int? DistanceKm, bool Enabled);
+    public sealed record Quote(decimal Price, int? DistanceMeters, bool Enabled);
 
     public async Task<Quote> QuoteAsync(string address, CancellationToken cancellationToken)
     {
@@ -70,7 +70,7 @@ public sealed class DistancePricingService
             var km = (int)Math.Ceiling(meters / 1000.0);
             decimal price = km <= 15 ? 350 : km <= 25 ? 450 : km <= 40 ? 550 :
                 550 + 100 * (int)Math.Ceiling((km - 40) / 10.0);
-            return new Quote(price, km, true);
+            return new Quote(price, meters, true);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { throw; }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException)
