@@ -200,7 +200,7 @@ function renderBookings(){
   }else{addressCell.textContent='–';}
   tr.appendChild(addressCell);
   const bookingInfo=separateBookingInfo(b.notes);
-  for(const value of [b.price+' kr',b.distanceMeters==null?'–':(b.distanceMeters/1000).toLocaleString('sv-SE',{minimumFractionDigits:1,maximumFractionDigits:1})+' km',bookingInfo.brand,bookingInfo.other])addCell(tr,value);
+  for(const value of [b.price+' kr',b.distanceMeters==null?'–':(b.distanceMeters/1000).toLocaleString('sv-SE',{minimumFractionDigits:2,maximumFractionDigits:2})+' km',bookingInfo.brand,bookingInfo.other])addCell(tr,value);
   const workCell=document.createElement('td');workCell.textContent=b.status==='Cancelled'?'Avbokad':({Waiting:'Väntar',InProgress:'Pågår',Done:'Klar'}[b.workStatus]||'Väntar');tr.appendChild(workCell);
   const assigneeCell=document.createElement('td');assigneeCell.textContent=({Owner:'Mesgun',Colleague:'Semere'}[b.assignedTo]||'–');tr.appendChild(assigneeCell);
   const noteCell=document.createElement('td');noteCell.textContent=b.internalNote||'';tr.appendChild(noteCell);
