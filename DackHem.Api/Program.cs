@@ -147,6 +147,18 @@ namespace DackHem.Api
                     """);
             }
 
+            // Optional distance metadata for new bookings only; leaves existing Bookings rows intact.
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                db.Database.ExecuteSqlRaw("""
+                    CREATE TABLE IF NOT EXISTS BookingRouteDistance (
+                        BookingId TEXT PRIMARY KEY NOT NULL,
+                        DistanceMeters INTEGER NOT NULL
+                    )
+                    """);
+            }
+
             app.Run();
         }
     }
