@@ -100,10 +100,12 @@ namespace DackHem.Api.Controllers
             // Recompute the actual road distance server-side to prevent client price tampering.
             // Existing bookings in SQLite are never touched.
             decimal newPrice;
+            int? drivingDistanceMeters = null;
             try
             {
                 var quote = await _pricing.QuoteAsync(request.Address, HttpContext.RequestAborted);
                 newPrice = quote.Price;
+                drivingDistanceMeters = quote.DistanceMeters;
                 if (quote.Enabled && request.QuotedPrice != newPrice)
                     return Conflict(new { message = "Priset för adressen har ändrats. Kontrollera totalpriset och försök igen." });
             }
@@ -147,6 +149,12 @@ namespace DackHem.Api.Controllers
                          {DateTime.UtcNow.ToString("O")},
                          {DateTime.UtcNow.ToString("O")})
                     """);
+                // Persist calculated route distance only for new bookings. Never update existing rows.
+                if (drivingDistanceMeters.HasValue)
+                    await _db.Database.ExecuteSqlInterpolatedAsync($"""
+                        INSERT INTO BookingRouteDistance (BookingId, DistanceMeters)
+                        VALUES ({booking.Id.ToString().ToUpperInvariant()}, {drivingDistanceMeters.Value})
+                        """);
                 await transaction.CommitAsync();
             }
             var emailQueued = true;
