@@ -247,7 +247,7 @@ public sealed class BookingEmailService
             var b = v.Booking;
             text.AppendLine($"Bil {i + 1} – DH-{b.Id.ToString("N")[..8].ToUpperInvariant()}");
             text.AppendLine($"Registreringsnummer: {b.RegistrationNumber}");
-            text.AppendLine($"Bilmärke: {b.Notes?.Split('\\n')[0].Replace("Bilmärke: ", "") ?? "Ej angivet"}");
+            text.AppendLine($"Bilmärke: {b.Notes?.Split('\n')[0].Replace("Bilmärke: ", "") ?? "Ej angivet"}");
             text.AppendLine($"Adress: {b.Address}");
             text.AppendLine($"Tid: {b.BookingDateTime:yyyy-MM-dd HH:mm} (svensk tid)");
             text.AppendLine($"Pris inklusive framkörning: {b.Price} kr");
