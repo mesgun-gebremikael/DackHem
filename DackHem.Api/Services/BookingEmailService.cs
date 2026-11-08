@@ -204,6 +204,91 @@ public sealed class BookingEmailService
         }
     }
 
+    // Consolidated email for a single multi-vehicle order. Each car retains its own cancellation link.
+    public async Task<bool> SendMultiBookingEmailAsync(
+        IReadOnlyList<(Booking Booking, string Token)> vehicles, bool owner)
+    {
+        if (vehicles.Count == 0) return false;
+        var sender = _configuration["Email:From"];
+        var recipient = owner ? _configuration["Email:OwnerNotificationTo"] : vehicles[0].Booking.Email;
+        var apiKey = _configuration["Resend:ApiKey"];
+        var host = _configuration["Email:SmtpHost"];
+        var username = _configuration["Email:Username"];
+        var password = _configuration["Email:Password"];
+        if (owner && string.IsNullOrWhiteSpace(recipient)) recipient = username;
+        if (string.IsNullOrWhiteSpace(sender) || string.IsNullOrWhiteSpace(recipient) ||
+            (string.IsNullOrWhiteSpace(apiKey) &&
+             (string.IsNullOrWhiteSpace(host) || string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))))
+            return false;
+
+        var baseUrl = _configuration["Email:PublicBaseUrl"]?.TrimEnd('/');
+        if (!owner && string.IsNullOrWhiteSpace(baseUrl)) return false;
+
+        var total = vehicles.Sum(v => v.Booking.Price);
+        var first = vehicles[0].Booking;
+        var text = new StringBuilder();
+        if (owner)
+        {
+            text.AppendLine("NY FLERBILSBOKNING – DäckHem");
+            text.AppendLine($"Kund: {first.CustomerName}");
+            text.AppendLine($"Telefon: {first.PhoneNumber}");
+            text.AppendLine($"E-post: {first.Email}");
+        }
+        else
+        {
+            text.AppendLine($"Hej {first.CustomerName}!");
+            text.AppendLine("Din bokning hos DäckHem är registrerad.");
+        }
+        text.AppendLine($"Antal personbilar: {vehicles.Count}");
+        text.AppendLine();
+        for (var i = 0; i < vehicles.Count; i++)
+        {
+            var v = vehicles[i];
+            var b = v.Booking;
+            text.AppendLine($"Bil {i + 1} – DH-{b.Id.ToString("N")[..8].ToUpperInvariant()}");
+            text.AppendLine($"Registreringsnummer: {b.RegistrationNumber}");
+            text.AppendLine($"Bilmärke: {b.Notes?.Split('\n')[0].Replace("Bilmärke: ", "") ?? "Ej angivet"}");
+            text.AppendLine($"Adress: {b.Address}");
+            text.AppendLine($"Tid: {b.BookingDateTime:yyyy-MM-dd HH:mm} (svensk tid)");
+            text.AppendLine($"Pris inklusive framkörning: {b.Price} kr");
+            if (!owner)
+            {
+                text.AppendLine($"Avboka denna bil: {baseUrl}/cancel.html#token={Uri.EscapeDataString(v.Token)}");
+            }
+            text.AppendLine();
+        }
+        text.AppendLine($"TOTALT: {total} kr inklusive framkörning");
+        if (!owner)
+        {
+            text.AppendLine("Du kan avboka en bil via dess egen länk mer än 3 timmar före besöket.");
+            text.AppendLine("Varje länk gäller bara den aktuella bilen. Övriga bokningar finns kvar.");
+            text.AppendLine("Vid senare avbokning eller frågor, ring 070-789 23 40.");
+        }
+        text.AppendLine("Hälsningar, DäckHem");
+        var subject = owner ? "DäckHem – ny flerbilsbokning" : "DäckHem – din bokningsbekräftelse";
+        try
+        {
+            if (!string.IsNullOrWhiteSpace(apiKey))
+                return await SendWithResendAsync(sender, recipient, subject, text.ToString());
+            using var message = new MailMessage(new MailAddress(sender, "DäckHem"), new MailAddress(recipient))
+            { Subject = subject, Body = text.ToString(), IsBodyHtml = false };
+            using var client = new SmtpClient(host, _configuration.GetValue<int?>("Email:SmtpPort") ?? 587)
+            {
+                EnableSsl = true,
+                Credentials = new NetworkCredential(username, password),
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                Timeout = 15000
+            };
+            await client.SendMailAsync(message);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning("Multi-vehicle booking email failed ({ErrorType}).", ex.GetType().Name);
+            return false;
+        }
+    }
+
     // HTTPS API avoids SMTP port restrictions on hosting platforms.
     // Do not log recipient addresses, message bodies, API keys or cancellation tokens.
     private static readonly HttpClient ResendClient = new() { Timeout = TimeSpan.FromSeconds(15) };

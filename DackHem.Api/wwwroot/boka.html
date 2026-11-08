@@ -1,268 +1,241 @@
 <!doctype html>
-<html lang="sv"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Boka mobilt hjulbyte hemma eller på jobbet hos DäckHem – från 350 kr totalt inklusive framkörning. Exakt totalpris visas innan bokning.">
-<meta name="theme-color" content="#0d1a2b">
-<title>Boka hjulbyte – DäckHem</title><link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0c192b">
+<meta name="description" content="Boka mobilt hjulbyte för en eller flera personbilar med olika adresser och tider. Se ditt exakta totalpris inklusive framkörning innan du bokar.">
+<title>Boka hjulbyte – DäckHem</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <style>
-:root{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:#f4f6f8;color:#16253a}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:88px}
-body{margin:0;line-height:1.6}
-a{color:inherit;text-decoration:none}
-button,input,select,textarea{font:inherit}
-button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
-button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #dc9a11;outline-offset:3px}
-header{position:sticky;top:0;z-index:20;background:#0d1a2bf7;color:#fff;backdrop-filter:blur(14px);border-bottom:1px solid #ffffff1c}
-.nav{max-width:1180px;margin:auto;min-height:78px;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:24px}
-.brand{font-size:27px;font-weight:850;letter-spacing:-1.2px;white-space:nowrap;display:flex;align-items:center;gap:10px}.brand span span{color:#f6b83e}
-.brand img{height:38px;width:38px;border-radius:9px}
-nav{display:flex;align-items:center;gap:25px;font-size:14px;font-weight:650}nav a:not(.btn):hover{color:#f6b83e}
-.btn{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:12px;background:#f6b83e;color:#132238;min-height:49px;padding:13px 23px;font-weight:800;cursor:pointer;box-shadow:0 7px 20px #b2761433;transition:transform .18s,background .18s}
-.btn:hover{background:#ffcc65;transform:translateY(-1px)}.btn:disabled{opacity:.6;cursor:wait;transform:none}
-.btn-outline{background:#fff;color:#172840;box-shadow:none;border:1px solid #cad3df}.btn-outline:hover{background:#eff3f8}
-.heroWrap{background:linear-gradient(125deg,#0c192a 0%,#172e49 100%);color:#f8fafc;overflow:hidden}
-.hero{max-width:1180px;margin:auto;display:grid;grid-template-columns:minmax(0,790px);gap:30px;align-items:center;padding:70px 24px 84px}
-.eyebrow{text-transform:uppercase;color:#f6b83e;font-size:12px;font-weight:850;letter-spacing:1.9px;margin:0 0 17px}
-.hero h1{font-size:clamp(39px,4.4vw,65px);line-height:1.07;letter-spacing:-2px;margin:0 0 23px;font-weight:850}
-.hero h1 em{font-style:normal;color:#f6b83e}
-.hero p.lead{font-size:18px;color:#d7e2ef;line-height:1.75;max-width:550px;margin:0 0 27px}
-.heroActions{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
-.heroPrice{display:flex;align-items:baseline;gap:12px;margin:0 0 25px}
-.heroPrice strong{font-size:41px;line-height:1;color:#f6b83e;letter-spacing:-1px}
-.heroPrice span{font-size:13px;color:#dbe4ee}
-.heroBadges{display:flex;gap:19px;flex-wrap:wrap;margin:28px 0 0;color:#dfebf5;font-size:13px}
-.heroBadges span:before{content:"✓";color:#f6b83e;font-weight:900;margin-right:7px}
-.heroPhoto{position:relative}
-.heroPhoto img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;border-radius:24px;box-shadow:0 24px 72px #0008;background:#304056}
-.heroPhoto .photoFallback{min-height:360px;border-radius:24px;background:linear-gradient(130deg,#21354e,#0d1b2f);display:none;align-items:center;justify-content:center;text-align:center;padding:30px;font-weight:750;color:#d4e2f0}
-.photoTag{position:absolute;left:-19px;bottom:24px;background:#fff;color:#16263d;border-radius:15px;padding:15px 20px;box-shadow:0 15px 35px #0003}
-.photoTag strong{display:block;font-size:17px}.photoTag small{color:#54647a;font-size:12px}
-.photoDisclosure{color:#afc0d3;font-size:11px;text-align:right;margin-top:7px}
-main{background:#f4f6f8}section{scroll-margin-top:94px}
-.container{max-width:1180px;margin:0 auto;padding:0 24px}
-.valueStrip{position:relative;z-index:3;margin-top:-34px}
-.valueGrid{background:#fff;border-radius:17px;box-shadow:0 12px 36px #112e4a16;display:grid;grid-template-columns:repeat(3,1fr);padding:23px;gap:15px}
-.valueItem{display:flex;align-items:center;gap:14px;padding:2px 17px}
-.valueItem+.valueItem{border-left:1px solid #dce3eb}
-.valueIcon{font-size:26px;background:#fff4dc;border-radius:13px;width:54px;height:54px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.valueItem strong{display:block;font-size:15px}.valueItem small{display:block;color:#5e6f82;font-size:12px}
-.block{padding:92px 0}.sectionLabel{color:#a87312;font-size:12px;letter-spacing:1.8px;text-transform:uppercase;font-weight:850;margin:0 0 8px}
-h2{font-size:clamp(30px,3.5vw,42px);letter-spacing:-1.25px;line-height:1.17;color:#15263d;margin:0 0 16px}
-.sectionLead{color:#627188;max-width:650px;margin:0 auto 36px}
-.center{text-align:center}
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:19px}
-.step{background:#fff;border:1px solid #e0e6ee;box-shadow:0 8px 25px #16334b08;border-radius:18px;padding:30px}
-.stepNumber{width:43px;height:43px;border-radius:12px;background:#fdf1d7;color:#8d5e00;display:flex;align-items:center;justify-content:center;font-weight:850;margin-bottom:17px}
-.step h3{font-size:20px;letter-spacing:-.3px;margin:0 0 8px}.step p{color:#61718a;margin:0}
-.about{background:#eaf0f6}.aboutGrid{display:grid;grid-template-columns:1fr;gap:30px;align-items:center}.aboutText{max-width:850px}
-.aboutText p{color:#53647b;font-size:16px}
-.aboutCard{padding:30px;border:1px solid #cad8e7;border-radius:20px;background:#fff}
-.aboutCard h3{font-size:23px;margin:0 0 13px}.aboutCard p{color:#55677c;margin:0 0 17px}
-.aboutCard a{font-weight:800;color:#214c75}.aboutCard a:hover{text-decoration:underline}
-.bookingSection{background:#fff}.bookingLayout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(260px,.75fr);gap:33px;align-items:start}
-.bookingPanel{background:#f7f9fc;border:1px solid #dce5ef;border-radius:21px;padding:32px;box-shadow:0 15px 38px #12253a0d}
-.bookingPanel h3{margin:0 0 9px;font-size:23px}.bookingPanel>p{margin:0 0 24px;color:#65758a}
-form#booking{display:grid;grid-template-columns:1fr 1fr;gap:17px}
-label{display:block;margin-bottom:7px;color:#253b52;font-size:13px;font-weight:750}
-input,textarea,select{width:100%;padding:13px 14px;background:#fff;border:1px solid #bdcbd9;color:#172a40;border-radius:10px;min-height:48px}
-input::placeholder,textarea::placeholder{color:#8a98a7}textarea{resize:vertical}.wide{grid-column:1/-1}
-.note{font-size:13px;color:#64758a;line-height:1.7}
-.priceCard{background:#12253b;border-radius:18px;padding:28px;color:#fff;position:sticky;top:105px}
-.priceCard .eyebrow{margin-bottom:10px}
-.priceCard strong.amount{display:block;color:#f6b83e;font-size:49px;letter-spacing:-1.6px;line-height:1.2}
-.priceCard p{color:#cad8e7}.priceCard ul{padding-left:19px;color:#d7e3ee}.priceCard li{margin-bottom:11px}
-.contactLink{display:block;color:#f6b83e;font-weight:750;margin-top:20px}
-.cancelSection{background:#eaf0f6}.cancelBox{max-width:760px;background:#fff;padding:30px;border:1px solid #d8e2ec;border-radius:19px;box-shadow:0 10px 25px #16334b0d}
-form#cancel-form{display:grid;gap:18px}
-#addressResults{display:grid;gap:6px;margin-top:8px}
-#addressResults button{background:#fff;color:#213448;border:1px solid #bbcad8;border-radius:9px;padding:11px;text-align:left;cursor:pointer}
-#addressResults button:hover{background:#fff4dd;border-color:#d0a241}
-#addressStatus{margin:8px 0;color:#61758a}#addressStatus.ok{color:#17774f}
-#customBrandWrap[hidden]{display:none}
-#message,#cancel-message{overflow-wrap:anywhere}
-#message:not(:empty),#cancel-message:not(:empty){padding:13px;border:1px solid #bfccda;border-radius:9px}
-#message.success{background:#e8faef;border:2px solid #27a56c;color:#155d3a;padding:18px;font-weight:750}
-#message.error{background:#fff0f1;border:1px solid #e3a3a8;color:#8d2431}
-#message.pending{color:#54677d}
-footer{background:#0d1a2b;color:#d0dce9;padding:38px 24px}
-.footerInner{max-width:1180px;margin:auto;display:flex;justify-content:space-between;gap:25px;align-items:center;flex-wrap:wrap}
-footer a{color:#f6b83e;font-weight:650}
-@media(max-width:900px){.hero{gap:28px}.bookingLayout{grid-template-columns:1fr}.priceCard{position:static;order:-1}.aboutGrid{gap:25px}.heroPhoto .photoTag{left:10px}}
-@media(max-width:700px){.nav{min-height:70px;padding:10px 18px}.brand{font-size:23px}.brand img{width:31px;height:31px}nav a:not(.btn){display:none}nav .btn{font-size:13px;padding:11px 13px;min-height:42px}
-.hero{grid-template-columns:1fr;padding:48px 20px 69px;gap:33px}.hero h1{letter-spacing:-1.3px}.hero p.lead{font-size:16px}.heroPrice strong{font-size:35px}
-.heroPhoto img{aspect-ratio:1/1}.heroPhoto .photoTag{left:10px;bottom:15px;padding:11px 13px}
-.valueGrid{grid-template-columns:1fr;padding:16px}.valueItem{padding:11px 9px}.valueItem+.valueItem{border-left:0;border-top:1px solid #dce3eb}
-.container{padding:0 18px}.block{padding:68px 0}.steps,.aboutGrid{grid-template-columns:1fr}.bookingPanel,.cancelBox{padding:20px}
-form#booking{grid-template-columns:1fr}.wide{grid-column:auto}.bookingLayout{gap:18px}
-}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
-
+:root{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#1a2a40;background:#f3f5f9}
+*{box-sizing:border-box}body{margin:0;line-height:1.5}button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid #f7bf49;outline-offset:3px}
 [hidden]{display:none!important}
-.bookingSuccess{max-width:680px;margin:10px auto 0;padding:44px 30px;background:#fff;border:1px solid #dce5ef;border-radius:20px;text-align:center;box-shadow:0 16px 42px #12253a16;scroll-margin-top:110px}
-.successIcon{width:70px;height:70px;border-radius:50%;display:grid;place-items:center;background:#e4f8ee;color:#187a4a;font-size:38px;font-weight:850;margin:0 auto 19px}
-.bookingSuccess h2{margin-bottom:9px}.bookingSuccess>p{color:#54677d}
-.confirmationRows{margin:26px auto;max-width:450px;border-top:1px solid #dce5ef;border-bottom:1px solid #dce5ef}
-.confirmationRows div{display:flex;justify-content:space-between;gap:15px;padding:15px 0;align-items:center;text-align:left}
-.confirmationRows div+div{border-top:1px solid #e4eaf0}
-.confirmationRows span{color:#63748a}.confirmationRows strong{color:#15263d;overflow-wrap:anywhere}
-.successActions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
-.subnav{background:#eaf0f6;padding:14px 24px}.subnav a{font-weight:750;color:#234c75}
-@media(max-width:700px){.bookingSuccess{padding:30px 18px}.successActions .btn{width:100%}}
-</style></head><body>
-<header><div class="nav">
-<a href="/" class="brand" aria-label="DäckHem startsida"><img src="/favicon.svg" alt=""><span><span>Däck</span>Hem</span></a>
-<nav aria-label="Huvudmeny"><a href="/">Startsida</a><a href="/cancel.html">Avboka tid</a></nav>
-</div></header>
-<div class="subnav"><div class="container"><a href="/">← Tillbaka till startsidan</a></div></div>
-<main><section class="block bookingSection" id="boka"><div class="container">
-<p class="sectionLabel">Boka online</p><h2>Boka ditt hjulbyte</h2><p class="sectionLead" style="margin:0 0 32px">Fyll i uppgifterna nedan. Du får en bokningsbekräftelse via mejl.</p>
-<div class="bookingLayout" id="bookingLayout">
-<div class="bookingPanel"><h3>Dina bokningsuppgifter</h3><p>Välj en tid som passar dig. Vi kan kontakta dig om en justering behövs.</p>
-<form id="booking">
-<div><label for="name">Namn</label><input id="name" required maxlength="100" autocomplete="name" placeholder="För- och efternamn"></div>
-<div><label for="phone">Telefonnummer</label><input id="phone" type="tel" required maxlength="30" autocomplete="tel" placeholder="07X XXX XX XX"></div>
-<div><label for="email">E-postadress</label><input id="email" type="email" required maxlength="254" autocomplete="email" placeholder="namn@exempel.se"></div>
-<div><label for="plate">Registreringsnummer</label><input id="plate" required maxlength="20" placeholder="ABC123"></div>
-<div><label for="carBrand">Bilmärke</label><select id="carBrand" required><option value="">Välj bilmärke</option><option value="Audi">Audi</option><option value="BMW">BMW</option><option value="BYD">BYD</option><option value="Citroën">Citroën</option><option value="Cupra">Cupra</option><option value="Dacia">Dacia</option><option value="Fiat">Fiat</option><option value="Ford">Ford</option><option value="Honda">Honda</option><option value="Hyundai">Hyundai</option><option value="Kia">Kia</option><option value="Land Rover">Land Rover</option><option value="Lexus">Lexus</option><option value="Mazda">Mazda</option><option value="Mercedes-Benz">Mercedes-Benz</option><option value="MG">MG</option><option value="Mini">Mini</option><option value="Mitsubishi">Mitsubishi</option><option value="Nissan">Nissan</option><option value="Opel">Opel</option><option value="Peugeot">Peugeot</option><option value="Polestar">Polestar</option><option value="Porsche">Porsche</option><option value="Renault">Renault</option><option value="Saab">Saab</option><option value="Seat">Seat</option><option value="Skoda">Skoda</option><option value="Subaru">Subaru</option><option value="Suzuki">Suzuki</option><option value="Tesla">Tesla</option><option value="Toyota">Toyota</option><option value="Volkswagen">Volkswagen</option><option value="Volvo">Volvo</option><option value="Övrigt">Övrigt – skriv själv</option></select></div>
-<div id="customBrandWrap" hidden><label for="customBrand">Skriv bilmärke</label><input id="customBrand" maxlength="40" autocomplete="off" placeholder="Ange bilens bilmärke"></div>
-<div class="wide"><label for="address">Adress för däckbytet</label><input id="address" required maxlength="300" placeholder="Börja skriva gata och husnummer…" autocomplete="off" aria-autocomplete="list" aria-controls="addressResults"><p id="addressStatus" class="note" role="status" aria-live="polite">Skriv din adress så visas förslag automatiskt.</p><div id="addressResults" role="listbox" aria-label="Adressförslag"></div><button type="button" id="manualQuote" class="btn btn-outline" style="margin-top:10px;min-height:40px;padding:8px 14px">Beräkna pris för adressen</button><p class="note">Adressförslag från Google eller OpenStreetMap (via Photon). Kontrollera alltid husnummer och ort.</p></div>
-<div><label for="date">Önskat datum</label><input id="date" type="date" required></div>
-<div><label for="time">Önskad tid</label><input id="time" type="time" required></div>
-<div class="wide"><label for="notes">Övrig information (frivilligt)</label><textarea id="notes" rows="3" maxlength="1000" placeholder="Information om parkering eller bilen"></textarea></div>
-<div class="wide"><p class="note">Bokningarna kan överlappa. Vi kan kontakta dig för att anpassa ankomsttiden. Du kan avboka kostnadsfritt via hemsidan mer än 3 timmar före besöket. Vid senare avbokning, ring 070-789 23 40.</p><div id="quoteBox" role="status" aria-live="polite" style="background:#f0f5fa;border:1px solid #d0deec;border-radius:12px;padding:15px;margin:16px 0"><strong id="quoteTitle">Totalpris inklusive framkörning</strong><div id="quoteValue" style="font-size:29px;font-weight:850;color:#14283e">Välj adress för att se pris</div><small id="quoteInfo">Du ser alltid totalpriset innan du bekräftar bokningen.</small></div><button class="btn" id="confirmBooking" type="submit" disabled>Bekräfta bokning →</button><p id="message" role="status" aria-live="polite"></p></div>
-</form></div>
-<aside class="priceCard"><p class="eyebrow">Tydligt totalpris</p><strong class="amount">Från 350 kr totalt</strong><p>Hjulbyte inklusive framkörning. Priset beror på körsträckan och ditt exakta totalpris visas innan du bokar.*</p><ul><li>Boka önskat datum och klockslag online</li><li>Ha hjulen tillgängliga vid bilen</li><li>Vi kontaktar dig vid behov</li><li>Betala med Swish eller Revolut efteråt</li></ul><p class="note" style="color:#b8c7d7">* Vi bekräftar att adressen kan nås före besöket.</p><a class="contactLink" href="tel:0707892340">Frågor? 070-789 23 40 →</a></aside>
+header{background:#0d1b2e;color:#fff;border-bottom:1px solid #263a50}
+.nav{max-width:1180px;margin:auto;padding:16px 22px;display:flex;justify-content:space-between;align-items:center;gap:18px}
+.brand{display:flex;align-items:center;font-size:25px;font-weight:850;letter-spacing:-1px;gap:9px}.brand img{width:35px;height:35px}.brand b{color:#f7bc46}
+.navlinks{display:flex;gap:20px;color:#c5d2e0;font-size:14px}.navlinks a:hover{color:#f7bc46}
+.hero{background:radial-gradient(circle at 83% 20%,#284669,#0d1b2e 58%);color:#fff;padding:54px 22px 100px}
+.wrap{width:min(1120px,100%);margin:auto}.eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#f5b944;font-weight:800;margin:0 0 12px}
+.hero h1{font-size:clamp(32px,5vw,54px);line-height:1.12;max-width:740px;letter-spacing:-1.7px;margin:0 0 15px}
+.hero h1 span{color:#f4b942}.hero p.lead{max-width:650px;color:#cbd9e8;font-size:17px;margin:0}
+.main{max-width:1120px;padding:0 22px 130px;margin:-59px auto 0;position:relative}
+.progress{display:grid;grid-template-columns:repeat(3,1fr);background:#15283e;border:1px solid #34465e;color:#8f9cae;border-radius:18px;padding:17px;box-shadow:0 16px 35px #17263c20;gap:10px}
+.progressItem{display:flex;align-items:center;justify-content:center;gap:9px;font-weight:750;font-size:14px;padding:12px 5px;border-radius:11px}
+.progressItem .num{display:inline-grid;place-items:center;border:1px solid #637488;border-radius:50%;height:27px;width:27px;font-size:12px;flex-shrink:0}
+.progressItem.active{color:#fff;background:#203a56}.progressItem.active .num{background:#f5bb48;color:#13253b;border-color:#f5bb48}
+.progressItem.done{color:#d8e8f7}.progressItem.done .num{border-color:#76bf9b;color:#8ae3b4}
+.layout{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(260px,.85fr);gap:22px;align-items:start;margin-top:25px}
+.panel,.summary{background:#fff;border:1px solid #e1e7ef;border-radius:19px;box-shadow:0 10px 30px #1c38520a}
+.panel{padding:30px}.panel h2{font-size:27px;letter-spacing:-.8px;color:#10263e;margin:0 0 5px}.muted{color:#617185;font-size:14px;margin:0 0 22px}
+.service{background:#f4f8fc;border:1px solid #dbe5f0;border-radius:16px;padding:18px;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:23px}
+.service strong{display:block;font-size:17px}.service small{display:block;color:#66768b;margin-top:4px}
+.counter{display:flex;align-items:center;gap:13px}.counter button{width:42px;height:42px;border:1px solid #ccd8e5;border-radius:12px;background:#fff;color:#1a354f;font-size:24px;font-weight:650}.counter strong{font-size:21px;min-width:15px;text-align:center}
+.vehicle{border:1px solid #d7e1eb;border-radius:17px;padding:19px;margin:0 0 17px;background:#fff}
+.vehicleHead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:17px}.vehicleTitle{font-size:18px;font-weight:800}.vehicleBadge{background:#e9f1f9;border-radius:20px;padding:6px 10px;font-size:12px;font-weight:750;color:#28425f}
+.fieldGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{min-width:0}.wide{grid-column:1/-1}label{display:block;font-size:13px;font-weight:720;color:#34455b;margin:0 0 7px}
+input,select,textarea{width:100%;border:1px solid #c8d5e2;border-radius:11px;min-height:49px;padding:12px 13px;color:#12283e;background:#fff}
+input::placeholder,textarea::placeholder{color:#8797a8}textarea{resize:vertical;min-height:94px}
+.small{font-size:12px;color:#63758b;margin:7px 0}
+.addrResults{display:grid;gap:5px;margin-top:6px}.addrResults button{background:#fff;text-align:left;border:1px solid #cfdae6;padding:10px;border-radius:9px;color:#19344e}.addrResults button:hover{background:#fff7e8;border-color:#edb849}
+.inlineBtn{border:0;background:transparent;color:#18507e;font-weight:800;padding:9px 0}.inlineBtn:hover{text-decoration:underline}
+.status{font-size:13px;color:#64768c;margin:7px 0;min-height:18px}
+.quote{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 15px;margin-top:14px;border-radius:12px;background:#edf4fa}
+.quote span{font-size:13px;font-weight:730}.quote strong{color:#173653;font-size:18px}.quote.pending strong{font-size:13px;color:#657589}
+.actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:23px}
+.button{border:0;display:inline-flex;align-items:center;justify-content:center;border-radius:12px;padding:13px 21px;background:#f6bd49;color:#12283e;font-weight:850;min-height:49px}
+.button:hover{background:#ffd16e}.button:disabled{opacity:.52;cursor:not-allowed}
+.secondary{background:#eaf0f6;color:#24415d}.secondary:hover{background:#dce7f1}
+.summary{position:sticky;top:18px;overflow:hidden}.summaryTop{background:#152a43;color:#fff;padding:22px}.summaryTop p{color:#f7bd49;text-transform:uppercase;font-size:11px;font-weight:800;letter-spacing:1.5px;margin:0 0 10px}.summaryTop strong{font-size:36px;letter-spacing:-1.3px}
+.summaryBody{padding:19px 22px}.sumRow{display:flex;justify-content:space-between;gap:12px;margin-bottom:12px;font-size:14px}.sumRow span{color:#586c81}.sumRow strong{white-space:nowrap}
+.sumLine{border-top:1px solid #e6ecf2;padding-top:14px;margin-top:13px}.summaryBody p{font-size:12px;color:#687b90;margin:13px 0 0}
+.message{margin:16px 0 0;color:#9d3333;font-size:14px;overflow-wrap:anywhere}.message:empty{display:none}
+.reviewCard{padding:16px;border:1px solid #e0e7ef;border-radius:13px;margin-bottom:12px;background:#fafcfe}.reviewCard b{display:block}.reviewCard p{margin:7px 0 0;font-size:13px;color:#5e6f83;overflow-wrap:anywhere}
+.reviewPrice{text-align:right;font-size:20px;font-weight:830;color:#193750}
+.success{max-width:690px;margin:24px auto;background:#fff;border:1px solid #dce7ef;border-radius:22px;text-align:center;padding:44px 24px;box-shadow:0 15px 38px #17355118}.tick{font-size:36px;display:grid;place-items:center;margin:auto auto 12px;width:68px;height:68px;background:#e4f8ed;border-radius:50%;color:#1a8a53}.success h2{font-size:30px;margin:9px 0}.success p{color:#576a80}.success .button{margin:8px}
+.mobileTotal{display:none}
+footer{background:#0d1b2e;color:#c1d0df;padding:28px 20px;text-align:center;font-size:13px}footer a{color:#f6bd49}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.summary{position:static}.panel{padding:22px}}
+@media(max-width:600px){.nav{padding:13px 15px}.brand{font-size:22px}.brand img{width:31px;height:31px}.navlinks{gap:12px;font-size:12px}
+.hero{padding:39px 17px 85px}.hero p.lead{font-size:15px}.main{padding:0 13px 118px;margin-top:-55px}
+.progress{padding:8px;gap:2px}.progressItem{flex-direction:column;font-size:11px;gap:4px;padding:10px 2px}.progressItem .num{width:24px;height:24px}.layout{margin-top:15px}.panel{padding:17px;border-radius:15px}.panel h2{font-size:24px}
+.fieldGrid{grid-template-columns:1fr}.wide{grid-column:auto}.vehicle{padding:14px}.service{padding:13px}.counter{gap:7px}.counter button{width:38px;height:38px}.actions{flex-wrap:wrap}.actions .button{flex:1}
+.mobileTotal{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:10;background:#0d2036;color:#fff;align-items:center;justify-content:space-between;gap:10px;padding:10px 18px calc(10px + env(safe-area-inset-bottom));box-shadow:0 -8px 24px #14223755}.mobileTotal small{display:block;color:#b6cbe1}.mobileTotal strong{font-size:22px;color:#ffc45c}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header><div class="nav wrap"><a class="brand" href="/" aria-label="DäckHem startsida"><img src="/favicon.svg" alt=""><span><b>Däck</b>Hem</span></a><nav class="navlinks" aria-label="Huvudmeny"><a href="/">Startsida</a><a href="/cancel.html">Avboka tid</a></nav></div></header>
+<section class="hero"><div class="wrap"><p class="eyebrow">DäckHem · Boka online</p><h1>Hjulbyte som passar <span>din vardag.</span></h1><p class="lead">Vi kommer till bilen, hemma eller på jobbet. Boka en eller flera personbilar på samma eller olika adresser. Se det exakta totalpriset innan du bekräftar.</p></div></section>
+<main class="main">
+<div class="progress" aria-label="Bokningssteg"><div class="progressItem active" data-step-indicator="1"><span class="num">1</span>Fordon & adresser</div><div class="progressItem" data-step-indicator="2"><span class="num">2</span>Datum & tider</div><div class="progressItem" data-step-indicator="3"><span class="num">3</span>Uppgifter</div></div>
+<div id="bookingLayout" class="layout">
+<div class="panel">
+<section id="step1"><p class="eyebrow">Steg 01</p><h2>Välj dina fordon</h2><p class="muted">Välj antal personbilar och ange adress för varje bil. Varje adress får sitt eget pris.</p>
+<div class="service"><div><strong>Hjulbyte · personbil</strong><small>Från 350 kr totalt per bil inklusive framkörning</small></div><div class="counter"><button id="minus" type="button" aria-label="Ta bort en bil">−</button><strong id="counterValue">1</strong><button id="plus" type="button" aria-label="Lägg till en bil">+</button></div></div>
+<div id="vehicleCards"></div>
+<div class="actions"><span class="small">Max 5 personbilar. Ingen mängdrabatt.</span><button class="button" type="button" id="toStep2">Välj tider →</button></div>
+<p id="message1" role="status" class="message"></p></section>
+<section id="step2" hidden><p class="eyebrow">Steg 02</p><h2>Välj datum och tid</h2><p class="muted">Varje bil kan ha en egen tid. Behöver du justera någon bokning kan du göra det innan du bekräftar.</p><div id="timeCards"></div>
+<div class="actions"><button class="button secondary" type="button" id="back1">← Tillbaka</button><button class="button" type="button" id="toStep3">Fortsätt →</button></div><p id="message2" role="status" class="message"></p></section>
+<section id="step3" hidden><p class="eyebrow">Steg 03</p><h2>Kontrollera din bokning</h2><p class="muted">Samma kontaktuppgifter gäller alla bilar. Kontrollera adresser, tider och priser nedan.</p>
+<div class="fieldGrid">
+<div class="field"><label for="customerName">Ditt namn</label><input id="customerName" autocomplete="name" required maxlength="100" placeholder="För- och efternamn"></div>
+<div class="field"><label for="customerPhone">Telefonnummer</label><input id="customerPhone" autocomplete="tel" type="tel" required maxlength="30" placeholder="07X XXX XX XX"></div>
+<div class="field wide"><label for="customerEmail">E-postadress</label><input id="customerEmail" autocomplete="email" type="email" required maxlength="254" placeholder="namn@exempel.se"></div>
 </div>
-<div id="bookingSuccess" class="bookingSuccess" hidden role="status" aria-live="polite">
- <div class="successIcon" aria-hidden="true">✓</div>
- <h2>Tack för din bokning!</h2>
- <p>Din bokning hos DäckHem är registrerad.</p>
- <div class="confirmationRows"><div><span>Bokningsnummer</span><strong id="successBookingNumber"></strong></div><div><span>Pris</span><strong id="successPrice"></strong></div></div>
- <p id="successEmail"></p>
- <p class="note">Vi kan kontakta dig om ankomsttiden behöver justeras.</p>
- <div class="successActions"><button type="button" class="btn" id="bookAnother">Boka en till bil →</button><a href="/" class="btn btn-outline">Tillbaka till startsidan</a></div>
+<h3>Din sammanfattning</h3><div id="review"></div>
+<p class="small">Priserna inkluderar framkörning. Betala efter utfört arbete med Swish eller Revolut. Kostnadsfri avbokning via mejllänken mer än 3 timmar före respektive tid.</p>
+<div class="actions"><button class="button secondary" type="button" id="back2">← Tillbaka</button><button class="button" type="button" id="confirmBooking">Bekräfta bokning →</button></div><p id="message3" role="status" class="message"></p></section>
 </div>
-</div></section>
+<aside class="summary" aria-label="Prissammanfattning"><div class="summaryTop"><p>Ditt totalpris</p><strong id="grandTotal">–</strong><div style="font-size:12px;color:#c9d6e6">Inklusive framkörning · ingen extra avgift</div></div><div class="summaryBody"><div class="sumRow"><span>Antal personbilar</span><strong id="summaryCount">1</strong></div><div id="summaryCars"></div><div class="sumRow sumLine"><span>Att betala efter hjulbytet</span><strong id="summaryTotal">–</strong></div><p>Priser beräknas per adress med körsträcka. Samtliga priser måste vara klara före bokning.</p></div></aside>
+</div>
+<section id="success" class="success" hidden role="status" aria-live="polite"><div class="tick">✓</div><h2>Tack för din bokning!</h2><p>Din beställning är registrerad. En gemensam bokningsbekräftelse med varje bil och dess avbokningslänk skickas till din e-post.</p><h3 id="successCount"></h3><div id="successCars"></div><h2 id="successTotal"></h2><button class="button" type="button" id="again">Gör en ny bokning</button><a class="button secondary" href="/">Till startsidan</a></section>
 </main>
-<footer><div class="footerInner"><div><strong>DäckHem</strong><div>Mobilt hjulbyte – vi kommer till dig</div></div><div><a href="/cancel.html">Avboka tid</a> · <a href="tel:0707892340">070-789 23 40</a></div></div></footer>
+<div class="mobileTotal" id="mobileTotal"><div><small id="mobileCount">1 personbil</small><strong id="mobilePrice">–</strong></div><span style="font-size:12px;color:#b6cbe1">Totalt inklusive<br>framkörning</span></div>
+<footer><div class="wrap"><b>DäckHem</b> · Mobilt hjulbyte hemma eller på jobbet · <a href="/cancel.html">Avboka tid</a> · <a href="tel:0707892340">070-789 23 40</a></div></footer>
 <script>
-
-const $=id=>document.getElementById(id);
-const pad=n=>String(n).padStart(2,'0');
-const brandSelect=$('carBrand'),customBrand=$('customBrand'),customBrandWrap=$('customBrandWrap');
-function updateBrandInput(){const other=brandSelect.value==='Övrigt';customBrandWrap.hidden=!other;customBrand.required=other;if(!other)customBrand.value='';}
-brandSelect.addEventListener('change',updateBrandInput);updateBrandInput();
-const now=new Date();
-$('date').min=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
-async function api(path,payload){
- const response=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
- if(!response.ok){
-  const body=await response.text();
-  let detail='Något gick fel. Försök igen.';
-  try{const error=JSON.parse(body);if(typeof error==='string')detail=error;else if(error.errors)detail=Object.values(error.errors).flat().join(' ');else if(error.detail)detail=error.detail;}catch{if(body&&!body.trim().startsWith('<'))detail=body;}
-  throw new Error(detail);
+'use strict';
+const $ = id => document.getElementById(id);
+const brands = ['Audi','BMW','BYD','Citroën','Cupra','Dacia','Fiat','Ford','Honda','Hyundai','Kia','Land Rover','Lexus','Mazda','Mercedes-Benz','MG','Mini','Mitsubishi','Nissan','Opel','Peugeot','Polestar','Porsche','Renault','Saab','Seat','Skoda','Subaru','Suzuki','Tesla','Toyota','Volkswagen','Volvo','Övrigt'];
+const money = n => Number(n).toLocaleString('sv-SE',{maximumFractionDigits:0})+' kr';
+const pad = n => String(n).padStart(2,'0');
+const today = () => { const d=new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); };
+let vehicles=[],nextId=1,currentStep=1,saving=false;
+function newCar(){return {id:nextId++,plate:'',brand:'',customBrand:'',address:'',notes:'',date:'',time:'',quote:null,session:crypto.randomUUID(),request:0,timer:null};}
+vehicles.push(newCar());
+function allQuoted(){return vehicles.every(v=>v.quote && v.quote.address===v.address.trim());}
+function total(){return vehicles.reduce((sum,v)=>sum+(v.quote?.price||0),0);}
+function fieldInput(label,id,value,max,placeholder){const div=document.createElement('div');div.className='field';const l=document.createElement('label');l.htmlFor=id;l.textContent=label;const input=document.createElement('input');input.id=id;input.required=true;input.maxLength=max;input.placeholder=placeholder||'';input.value=value;div.append(l,input);return {div,input};}
+function renderVehicles(){
+ const list=$('vehicleCards');list.replaceChildren();
+ vehicles.forEach((v,i)=>{
+  const card=document.createElement('article');card.className='vehicle';
+  const heading=document.createElement('div');heading.className='vehicleHead';
+  const name=document.createElement('strong');name.className='vehicleTitle';name.textContent='Personbil '+(i+1);
+  const badge=document.createElement('span');badge.className='vehicleBadge';badge.textContent=v.quote?money(v.quote.price):'Pris väntar';heading.append(name,badge);
+  const grid=document.createElement('div');grid.className='fieldGrid';
+  const plate=fieldInput('Registreringsnummer','plate'+v.id,v.plate,20,'ABC123');plate.input.addEventListener('input',()=>{v.plate=plate.input.value;});
+  const brandDiv=document.createElement('div');brandDiv.className='field';
+  const brandLabel=document.createElement('label');brandLabel.htmlFor='brand'+v.id;brandLabel.textContent='Bilmärke';
+  const brand=document.createElement('select');brand.id='brand'+v.id;brand.required=true;brand.append(new Option('Välj bilmärke',''));
+  brands.forEach(b=>brand.append(new Option(b==='Övrigt'?'Övrigt – skriv själv':b,b)));brand.value=v.brand;
+  const custom=document.createElement('input');custom.maxLength=40;custom.placeholder='Skriv bilmärket';custom.value=v.customBrand;custom.hidden=v.brand!=='Övrigt';custom.required=v.brand==='Övrigt';custom.style.marginTop='8px';custom.setAttribute('aria-label','Ange annat bilmärke');
+  brand.addEventListener('change',()=>{v.brand=brand.value;custom.hidden=v.brand!=='Övrigt';custom.required=v.brand==='Övrigt';});custom.addEventListener('input',()=>{v.customBrand=custom.value;custom.setCustomValidity('');});
+  brandDiv.append(brandLabel,brand,custom);grid.append(plate.div,brandDiv);
+  const addrDiv=document.createElement('div');addrDiv.className='field wide';
+  const addrLabel=document.createElement('label');addrLabel.htmlFor='address'+v.id;addrLabel.textContent='Adress för bil '+(i+1);
+  const addr=document.createElement('input');addr.id='address'+v.id;addr.maxLength=300;addr.required=true;addr.autocomplete='off';addr.placeholder='Gata, husnummer, postnummer och ort';addr.value=v.address;
+  const status=document.createElement('p');status.className='status';status.setAttribute('role','status');status.textContent=v.quote?'✓ Pris för adressen beräknat':'Skriv adressen så visas förslag.';
+  const suggestions=document.createElement('div');suggestions.className='addrResults';suggestions.setAttribute('role','listbox');
+  const manual=document.createElement('button');manual.type='button';manual.className='inlineBtn';manual.textContent='Beräkna pris för angiven adress';
+  const box=document.createElement('div');box.className='quote'+(v.quote?'':' pending');const label=document.createElement('span');label.textContent='Totalpris för bil '+(i+1);const amount=document.createElement('strong');amount.textContent=v.quote?money(v.quote.price):'Välj adress';box.append(label,amount);
+  const reflect=()=>{amount.textContent=v.quote?money(v.quote.price):'Välj adress';box.classList.toggle('pending',!v.quote);badge.textContent=v.quote?money(v.quote.price):'Pris väntar';updateSummary();};
+  async function quote(){
+   const address=v.address.trim(),seq=++v.request;
+   v.quote=null;reflect();
+   if(address.length<7){status.textContent='Ange en fullständig adress med husnummer och ort.';return;}
+   status.textContent='Beräknar pris…';amount.textContent='Beräknar…';
+   try{
+    const response=await fetch('/api/pricing/quote',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({address})});
+    const data=await response.json();if(seq!==v.request||v.address.trim()!==address)return;
+    if(!response.ok)throw Error(data.message||'Priset kunde inte beräknas.');
+    if(!Number.isFinite(Number(data.price))||Number(data.price)<350)throw Error('Ogiltigt pris från servern.');
+    v.quote={address,price:Number(data.price)};status.textContent='✓ Pris klart för den valda adressen.';suggestions.replaceChildren();reflect();
+   }catch(err){if(seq!==v.request)return;v.quote=null;reflect();status.textContent=err.message||'Kunde inte beräkna priset. Försök igen.';}
+  }
+  manual.addEventListener('click',()=>{suggestions.replaceChildren();quote();});
+  addr.addEventListener('input',()=>{
+   v.address=addr.value;v.quote=null;const seq=++v.request;reflect();suggestions.replaceChildren();clearTimeout(v.timer);
+   if(v.address.trim().length<4){status.textContent='Skriv gata och husnummer för att få förslag.';return;}
+   status.textContent='Söker adresser…';
+   v.timer=setTimeout(async()=>{
+    const query=v.address.trim();
+    try{
+     const res=await fetch('/api/address/suggest?'+new URLSearchParams({q:query,session:v.session}));
+     if(!res.ok)throw Error('Kunde inte hämta adressförslag.');
+     const items=await res.json();if(seq!==v.request||v.address.trim()!==query)return;
+     suggestions.replaceChildren();status.textContent=items.length?'Välj rätt adress:':'Inga förslag hittades. Skriv hela adressen och beräkna pris manuellt.';
+     items.forEach(item=>{const b=document.createElement('button');b.type='button';b.textContent=item.label;b.addEventListener('click',()=>{v.address=item.label.slice(0,300);addr.value=v.address;v.session=crypto.randomUUID();suggestions.replaceChildren();quote();});suggestions.append(b);});
+    }catch{if(seq===v.request)status.textContent='Adressförslag saknas. Skriv hela adressen och välj Beräkna pris.';}
+   },450);
+  });
+  addrDiv.append(addrLabel,addr,status,suggestions,manual,box);
+  const notesDiv=document.createElement('div');notesDiv.className='field wide';const notesLabel=document.createElement('label');notesLabel.textContent='Övrig information (frivilligt)';notesLabel.htmlFor='notes'+v.id;
+  const notes=document.createElement('textarea');notes.id='notes'+v.id;notes.maxLength=1000;notes.rows=2;notes.placeholder='Till exempel parkering eller särskilda önskemål';notes.value=v.notes;notes.addEventListener('input',()=>v.notes=notes.value);
+  notesDiv.append(notesLabel,notes);grid.append(addrDiv,notesDiv);card.append(heading,grid);list.append(card);
+ });
+ $('counterValue').textContent=vehicles.length;$('minus').disabled=vehicles.length===1;$('plus').disabled=vehicles.length===5;updateSummary();
+}
+function updateSummary(){
+ const box=$('summaryCars');box.replaceChildren();
+ vehicles.forEach((v,i)=>{const row=document.createElement('div');row.className='sumRow';const name=document.createElement('span');name.textContent='Bil '+(i+1)+(v.plate?' · '+v.plate.toUpperCase():'');const price=document.createElement('strong');price.textContent=v.quote?money(v.quote.price):'–';row.append(name,price);box.append(row);});
+ const complete=allQuoted(),t=complete?money(total()):'–';
+ $('summaryCount').textContent=vehicles.length;$('grandTotal').textContent=t;$('summaryTotal').textContent=t;$('mobilePrice').textContent=t;
+ $('mobileCount').textContent=vehicles.length+' '+(vehicles.length===1?'personbil':'personbilar');
+}
+$('minus').addEventListener('click',()=>{if(vehicles.length>1){const v=vehicles.pop();clearTimeout(v.timer);v.request++;renderVehicles();}});
+$('plus').addEventListener('click',()=>{if(vehicles.length<5){vehicles.push(newCar());renderVehicles();}});
+function showStep(n){currentStep=n;for(let i=1;i<=3;i++){$('step'+i).hidden=i!==n;const indicator=document.querySelector('[data-step-indicator="'+i+'"]');indicator.classList.toggle('active',i===n);indicator.classList.toggle('done',i<n);}document.querySelector('.progress').scrollIntoView({behavior:'smooth',block:'start'});}
+function validVehicleFields(){for(const v of vehicles){const ids=['plate'+v.id,'brand'+v.id,'address'+v.id];for(const id of ids){const field=$(id);if(!field.checkValidity()){field.reportValidity();return false;}}if(v.brand==='Övrigt'&&!v.customBrand.trim()){const input=$('brand'+v.id).nextElementSibling;input.setCustomValidity('Ange bilmärket.');input.reportValidity();return false;}}return true;}
+$('toStep2').addEventListener('click',()=>{
+ $('message1').textContent='';if(!validVehicleFields())return;
+ if(!allQuoted()){$('message1').textContent='Beräkna och kontrollera priset för samtliga adresser först.';return;}
+ renderTimes();showStep(2);
+});
+function renderTimes(){
+ const list=$('timeCards');list.replaceChildren();
+ vehicles.forEach((v,i)=>{
+  const div=document.createElement('article');div.className='vehicle';const title=document.createElement('div');title.className='vehicleHead';const h=document.createElement('strong');h.className='vehicleTitle';h.textContent='Bil '+(i+1)+' · '+v.plate.toUpperCase();const price=document.createElement('span');price.className='vehicleBadge';price.textContent=money(v.quote.price);title.append(h,price);
+  const caption=document.createElement('p');caption.className='small';caption.textContent=v.address;
+  const grid=document.createElement('div');grid.className='fieldGrid';
+  const date=fieldInput('Önskat datum','date'+v.id,v.date,10,'');date.input.type='date';date.input.min=today();date.input.addEventListener('change',()=>v.date=date.input.value);
+  const time=fieldInput('Önskad tid','time'+v.id,v.time,5,'');time.input.type='time';time.input.addEventListener('change',()=>v.time=time.input.value);
+  grid.append(date.div,time.div);div.append(title,caption,grid);list.append(div);
+ });
+}
+$('back1').addEventListener('click',()=>{renderVehicles();showStep(1);});
+$('toStep3').addEventListener('click',()=>{
+ $('message2').textContent='';
+ for(const v of vehicles){
+  for(const id of ['date'+v.id,'time'+v.id]){const el=$(id);if(!el.checkValidity()){el.reportValidity();return;}}
+  const when=new Date(v.date+'T'+v.time+':00');
+  if(!Number.isFinite(when.getTime())||when<=new Date()){$('message2').textContent='Välj en framtida tid för varje bil.';return;}
  }
- return response.json();
+ renderReview();showStep(3);
+});
+$('back2').addEventListener('click',()=>{renderTimes();showStep(2);});
+function renderReview(){
+ const list=$('review');list.replaceChildren();
+ vehicles.forEach((v,i)=>{
+  const div=document.createElement('div');div.className='reviewCard';const heading=document.createElement('b');heading.textContent='Bil '+(i+1)+' · '+v.plate.toUpperCase()+' · '+(v.brand==='Övrigt'?v.customBrand:v.brand);
+  const details=document.createElement('p');details.textContent=v.address+' · '+v.date+' '+v.time;
+  const price=document.createElement('div');price.className='reviewPrice';price.textContent=money(v.quote.price);
+  div.append(heading,details,price);list.append(div);
+ });
+ const sum=document.createElement('div');sum.className='reviewCard';sum.style.display='flex';sum.style.justifyContent='space-between';const a=document.createElement('strong');a.textContent='Totalt inklusive framkörning';const b=document.createElement('strong');b.textContent=money(total());sum.append(a,b);list.append(sum);
 }
-// Google Places (New) via our server. No Google key is exposed to the browser.
-const addressInput=$('address'),addressStatus=$('addressStatus'),addressResults=$('addressResults');
-let addressTimer,requestNumber=0,selectedAddress='',addressSession=crypto.randomUUID();
-let currentQuote=null,quoteRequestNumber=0;
-const confirmBooking=$('confirmBooking');
-function resetPrice(){
- ++quoteRequestNumber;currentQuote=null;confirmBooking.disabled=true;
- $('quoteValue').textContent='Välj adress för att se pris';
- $('quoteInfo').textContent='Du ser alltid totalpriset innan du bekräftar bokningen.';
-}
-async function loadPrice(address){
- const sequence=++quoteRequestNumber;
- currentQuote=null;confirmBooking.disabled=true;
- $('quoteValue').textContent='Beräknar ditt totalpris…';
- $('quoteInfo').textContent='Inklusive framkörning.';
+$('confirmBooking').addEventListener('click',async()=>{
+ if(saving)return;$('message3').textContent='';
+ const name=$('customerName'),phone=$('customerPhone'),email=$('customerEmail');
+ for(const el of [name,phone,email]){if(!el.checkValidity()){el.reportValidity();return;}}
+ if(!allQuoted()){$('message3').textContent='Adresserna måste prisberäknas igen.';return;}
+ const payload={customerName:name.value.trim(),phoneNumber:phone.value.trim(),email:email.value.trim(),quotedTotalPrice:total(),vehicles:vehicles.map(v=>({registrationNumber:v.plate.trim(),carBrand:v.brand==='Övrigt'?v.customBrand.trim():v.brand,address:v.address.trim(),notes:v.notes.trim()||null,bookingDateTime:v.date+'T'+v.time+':00',quotedPrice:v.quote.price}))};
+ saving=true;const btn=$('confirmBooking');btn.disabled=true;btn.textContent='Registrerar bokningen…';
  try{
-  const response=await fetch('/api/pricing/quote',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({address})});
-  const result=await response.json();
-  if(sequence!==quoteRequestNumber||addressInput.value.trim()!==address)return;
-  if(!response.ok)throw Error(result.message||'Kunde inte beräkna priset.');
-  currentQuote={address,price:result.price};
-  $('quoteValue').textContent=result.price+' kr';
-  $('quoteInfo').textContent='Totalt inklusive framkörning. Inga extra framkörningsavgifter.';
-  confirmBooking.disabled=false;
- }catch(err){
-  if(sequence!==quoteRequestNumber)return;
-  currentQuote=null;
-  $('quoteValue').textContent='Priset kunde inte beräknas';
-  $('quoteInfo').textContent=err.message||'Försök igen eller kontakta oss.';
-  confirmBooking.disabled=true;
- }
-}
-$('manualQuote').addEventListener('click',()=>{
- const address=addressInput.value.trim();
- if(address.length<7){addressStatus.textContent='Ange fullständig gata, husnummer och ort.';return;}
- selectedAddress=address;
- ++requestNumber;clearTimeout(addressTimer);clearAddressSuggestions();
- addressStatus.textContent='Beräknar pris för angiven adress…';
- loadPrice(address);
+  const response=await fetch('/api/bookings/multi',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  const body=await response.json().catch(()=>({}));if(!response.ok){let err=body.message||body.detail||'Bokningen kunde inte genomföras.';if(body.errors)err=Object.values(body.errors).flat().join(' ');throw Error(err);}
+  $('bookingLayout').hidden=true;document.querySelector('.progress').hidden=true;$('mobileTotal').hidden=true;
+  $('successCount').textContent=body.vehicleCount+' '+(body.vehicleCount===1?'bil':'bilar')+' bokade';
+  const successCars=$('successCars');successCars.replaceChildren();(body.vehicles||[]).forEach((v,i)=>{const div=document.createElement('p');div.textContent='Bil '+(i+1)+': '+v.registrationNumber+' · '+v.address+' · '+money(v.price);successCars.append(div);});
+  $('successTotal').textContent='Totalt '+money(body.totalPrice);$('success').hidden=false;$('success').scrollIntoView({behavior:'smooth',block:'start'});
+ }catch(e){$('message3').textContent=e.message||'Bokningen misslyckades. Försök igen.';}
+ finally{saving=false;btn.disabled=false;btn.textContent='Bekräfta bokning →';}
 });
-function clearAddressSuggestions(){addressResults.replaceChildren();}
-addressInput.addEventListener('input',()=>{
- selectedAddress='';resetPrice();clearAddressSuggestions();clearTimeout(addressTimer);
- const query=addressInput.value.trim(),current=++requestNumber;
- addressStatus.classList.remove('ok');
- if(query.length<4){addressStatus.textContent='Skriv gata och husnummer så visas förslag.';return;}
- addressStatus.textContent='Söker adresser…';
- addressTimer=setTimeout(async()=>{
-  try{
-   const response=await fetch('/api/address/suggest?'+new URLSearchParams({q:query,session:addressSession}));
-   if(!response.ok)throw Error('Adresstjänsten kunde inte svara just nu.');
-   const items=await response.json();
-   if(current!==requestNumber||addressInput.value.trim()!==query)return;
-   clearAddressSuggestions();
-   if(!items.length){addressStatus.textContent='Inga adressförslag hittades. Lägg till ort och husnummer, eller skriv hela adressen själv.';return;}
-   addressStatus.textContent='Välj rätt adress:';
-   for(const item of items){
-    const option=document.createElement('button');option.type='button';option.setAttribute('role','option');
-    option.textContent=item.label;
-    option.addEventListener('click',()=>{
-     addressInput.value=item.label.slice(0,300);selectedAddress=addressInput.value;
-     ++requestNumber;clearAddressSuggestions();addressStatus.textContent='✓ Adress vald: '+selectedAddress;
-     addressStatus.classList.add('ok');addressSession=crypto.randomUUID();
-     loadPrice(selectedAddress);
-    });
-    addressResults.appendChild(option);
-   }
-  }catch(err){if(current===requestNumber){clearAddressSuggestions();addressStatus.textContent='Adressförslagen kunde inte hämtas. Skriv fullständig gata, nummer, postnummer och ort och klicka på Beräkna pris.';}}
- },450);
-});
-$('booking').addEventListener('submit',async e=>{
- e.preventDefault();
- const form=e.currentTarget,msg=$('message'),button=confirmBooking;
- const dateTime=`${$('date').value}T${$('time').value}:00`;
- if(new Date(dateTime)<=new Date()){msg.textContent='Välj en tid i framtiden.';return;}
- if(!currentQuote||currentQuote.address!==$('address').value.trim()){msg.textContent='Välj adress och invänta totalpriset innan du bokar.';return;}
- button.disabled=true;msg.className='pending';msg.textContent='Registrerar din bokning…';
- try{
-  const result=await api('/api/bookings',{customerName:$('name').value.trim(),phoneNumber:$('phone').value.trim(),email:$('email').value.trim(),registrationNumber:$('plate').value.trim(),carBrand:$('carBrand').value==='Övrigt' ? $('customBrand').value.trim() : $('carBrand').value,address:$('address').value.trim(),bookingDateTime:dateTime,notes:$('notes').value.trim()||null,quotedPrice:currentQuote.price});
-  form.reset();updateBrandInput();selectedAddress='';resetPrice();clearAddressSuggestions();addressStatus.classList.remove('ok');addressStatus.textContent='Skriv din adress så visas förslag automatiskt.';
-  const code='DH-'+String(result.id).replace(/-/g,'').slice(0,8).toUpperCase();
-  $('successBookingNumber').textContent=code;
-  $('successPrice').textContent=result.price+' kr';
-  $('successEmail').textContent=result.emailQueued
-   ? 'Din bokningsbekräftelse skickas via mejl. Spara mejlet om du behöver avboka.'
-   : 'Mejlet kunde inte köas. Spara din avbokningsnyckel här: '+result.cancellationToken;
-  $('bookingLayout').hidden=true;
-  $('bookingSuccess').hidden=false;
-  msg.textContent='';msg.className='';
-  $('bookingSuccess').scrollIntoView({behavior:'smooth',block:'start'});
- }catch(err){msg.className='error';msg.textContent=err instanceof TypeError?'Kunde inte nå servern. Öppna hemsidan via DäckHem.Api och försök igen.':err.message;}
- finally{button.disabled=!currentQuote;}
-});
-
-$('bookAnother').addEventListener('click',()=>{
- $('bookingSuccess').hidden=true;
- $('bookingLayout').hidden=false;
- $('message').textContent='';$('message').className='';
- window.scrollTo({top:0,behavior:'smooth'});
-});
-
-</script></body></html>
+$('again').addEventListener('click',()=>{vehicles=[newCar()];renderVehicles();$('success').hidden=true;$('bookingLayout').hidden=false;document.querySelector('.progress').hidden=false;$('mobileTotal').hidden=false;['customerName','customerPhone','customerEmail'].forEach(id=>$(id).value='');showStep(1);});
+renderVehicles();
+</script>
+</body>
+</html>

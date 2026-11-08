@@ -159,6 +159,30 @@ namespace DackHem.Api
                     """);
             }
 
+            // Separate additive tables for multi-vehicle orders. Existing Bookings records are untouched.
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                db.Database.ExecuteSqlRaw("""
+                    CREATE TABLE IF NOT EXISTS BookingOrderVehicles (
+                        OrderId TEXT NOT NULL,
+                        BookingId TEXT NOT NULL PRIMARY KEY,
+                        VehicleIndex INTEGER NOT NULL
+                    )
+                    """);
+                db.Database.ExecuteSqlRaw("""
+                    CREATE TABLE IF NOT EXISTS BookingOrderEmailOutbox (
+                        OrderId TEXT NOT NULL PRIMARY KEY,
+                        ProtectedTokens TEXT NOT NULL,
+                        CustomerSent INTEGER NOT NULL DEFAULT 0,
+                        OwnerSent INTEGER NOT NULL DEFAULT 0,
+                        Attempts INTEGER NOT NULL DEFAULT 0,
+                        CreatedUtc TEXT NOT NULL,
+                        NextAttemptUtc TEXT NOT NULL
+                    )
+                    """);
+            }
+
             app.Run();
         }
     }

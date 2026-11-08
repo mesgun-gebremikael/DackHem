@@ -145,15 +145,37 @@ public class AdminBookingsController : ControllerBase
         }
         finally { await distanceConnection.CloseAsync(); }
 
+        // Each car stays a normal booking; link vehicles belonging to one customer order.
+        var orderVehicles = new Dictionary<string, (string OrderId, int VehicleIndex, int Count)>(StringComparer.OrdinalIgnoreCase);
+        var orderConnection = _db.Database.GetDbConnection();
+        await orderConnection.OpenAsync();
+        try
+        {
+            using var command = orderConnection.CreateCommand();
+            command.CommandText = """
+                SELECT v.BookingId, v.OrderId, v.VehicleIndex,
+                       (SELECT COUNT(*) FROM BookingOrderVehicles x WHERE x.OrderId = v.OrderId) AS VehicleCount
+                FROM BookingOrderVehicles v
+                """;
+            using var reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+                orderVehicles[reader.GetString(0)] = (reader.GetString(1), reader.GetInt32(2), reader.GetInt32(3));
+        }
+        finally { await orderConnection.CloseAsync(); }
+
         var bookings = resultsAll.Skip((page - 1) * pageSize).Take(pageSize).Select(b =>
         {
             work.TryGetValue(b.Id.ToString().ToUpperInvariant(), out var w);
             var hasDistance = distances.TryGetValue(b.Id.ToString().ToUpperInvariant(), out var distanceMeters);
+            var hasOrder = orderVehicles.TryGetValue(b.Id.ToString().ToUpperInvariant(), out var order);
             return new
             {
                 b.Id, b.CustomerName, b.PhoneNumber, b.Email, b.RegistrationNumber,
                 b.Address, b.BookingDateTime, b.Notes, b.Price, b.Status, b.CreatedAtUtc,
                 DistanceMeters = hasDistance ? (int?)distanceMeters : null,
+                OrderId = hasOrder ? order.OrderId : null,
+                OrderVehicleIndex = hasOrder ? order.VehicleIndex : 1,
+                OrderVehicleCount = hasOrder ? order.Count : 1,
                 CancelledByCustomer = customerCancelledIds.Contains(b.Id.ToString()),
                 WorkStatus = b.Status == "Cancelled" ? "Cancelled" : w.Status ?? "Waiting",
                 AssignedTo = w.Assignee ?? "",
