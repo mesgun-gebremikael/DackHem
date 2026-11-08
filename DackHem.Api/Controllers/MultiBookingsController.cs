@@ -84,6 +84,8 @@ public sealed class MultiBookingsController : ControllerBase
             if (plate.Any(char.IsControl) || !plates.Add(plate))
                 return BadRequest(new { message = "Ange olika, giltiga registreringsnummer för varje bil." });
             var brand = vehicle.CarBrand.Trim();
+            if (plate.Length == 0 || brand.Length == 0 || vehicle.Address.Trim().Length == 0)
+                return BadRequest(new { message = "Registreringsnummer, bilmärke och adress får inte vara tomma." });
             if (brand.Any(char.IsControl))
                 return BadRequest(new { message = "Bilmärket innehåller ogiltiga tecken." });
             var notes = vehicle.Notes?.Trim();
