@@ -80,7 +80,7 @@ footer{background:#0d1b2e;color:#c1d0df;padding:28px 20px;text-align:center;font
 <p id="message1" role="status" class="message"></p></section>
 <section id="step2" hidden><p class="eyebrow">Steg 02</p><h2>Välj datum och tid</h2><p class="muted">Varje bil kan ha en egen tid. Behöver du justera någon bokning kan du göra det innan du bekräftar.</p><div id="timeCards"></div>
 <div class="actions"><button class="button secondary" type="button" id="back1">← Tillbaka</button><button class="button" type="button" id="toStep3">Fortsätt →</button></div><p id="message2" role="status" class="message"></p></section>
-<section id="step3" hidden><p class="eyebrow">Steg 03</p><h2>Kontrollera din bokning</h2><p class="muted">Samma kontaktuppgifter gäller alla bilar. Kontrollera adresser, tider och priser nedan.</p>
+<section id="step3" hidden><p class="eyebrow">Steg 03</p><h2>Kontrollera din bokning</h2><p class="muted" id="bookingReviewIntro">Kontrollera dina kontaktuppgifter, adress, tid och pris nedan.</p>
 <div class="fieldGrid">
 <div class="field"><label for="customerName">Ditt namn</label><input id="customerName" autocomplete="name" required maxlength="100" placeholder="För- och efternamn"></div>
 <div class="field"><label for="customerPhone">Telefonnummer</label><input id="customerPhone" autocomplete="tel" type="tel" required maxlength="30" placeholder="07X XXX XX XX"></div>
@@ -204,6 +204,9 @@ $('toStep3').addEventListener('click',()=>{
   const when=new Date(v.date+'T'+v.time+':00');
   if(!Number.isFinite(when.getTime())||when<=new Date()){$('message2').textContent='Välj en framtida tid för varje bil.';return;}
  }
+ $('bookingReviewIntro').textContent=vehicles.length===1
+  ? 'Kontrollera dina kontaktuppgifter, adress, tid och pris nedan.'
+  : 'Kontrollera dina kontaktuppgifter samt bilarnas adresser, tider och priser nedan.';
  renderReview();showStep(3);
 });
 $('back2').addEventListener('click',()=>{renderTimes();showStep(2);});
