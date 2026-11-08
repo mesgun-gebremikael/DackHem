@@ -123,7 +123,7 @@ function renderVehicles(){
   const brand=document.createElement('select');brand.id='brand'+v.id;brand.required=true;brand.append(new Option('Välj bilmärke',''));
   brands.forEach(b=>brand.append(new Option(b==='Övrigt'?'Övrigt – skriv själv':b,b)));brand.value=v.brand;
   const custom=document.createElement('input');custom.maxLength=40;custom.placeholder='Skriv bilmärket';custom.value=v.customBrand;custom.hidden=v.brand!=='Övrigt';custom.required=v.brand==='Övrigt';custom.style.marginTop='8px';custom.setAttribute('aria-label','Ange annat bilmärke');
-  brand.addEventListener('change',()=>{v.brand=brand.value;custom.hidden=v.brand!=='Övrigt';custom.required=v.brand==='Övrigt';});custom.addEventListener('input',()=>v.customBrand=custom.value);
+  brand.addEventListener('change',()=>{v.brand=brand.value;custom.hidden=v.brand!=='Övrigt';custom.required=v.brand==='Övrigt';});custom.addEventListener('input',()=>{v.customBrand=custom.value;custom.setCustomValidity('');});
   brandDiv.append(brandLabel,brand,custom);grid.append(plate.div,brandDiv);
   const addrDiv=document.createElement('div');addrDiv.className='field wide';
   const addrLabel=document.createElement('label');addrLabel.htmlFor='address'+v.id;addrLabel.textContent='Adress för bil '+(i+1);
@@ -179,7 +179,7 @@ function updateSummary(){
 $('minus').addEventListener('click',()=>{if(vehicles.length>1){const v=vehicles.pop();clearTimeout(v.timer);v.request++;renderVehicles();}});
 $('plus').addEventListener('click',()=>{if(vehicles.length<5){vehicles.push(newCar());renderVehicles();}});
 function showStep(n){currentStep=n;for(let i=1;i<=3;i++){$('step'+i).hidden=i!==n;const indicator=document.querySelector('[data-step-indicator="'+i+'"]');indicator.classList.toggle('active',i===n);indicator.classList.toggle('done',i<n);}document.querySelector('.progress').scrollIntoView({behavior:'smooth',block:'start'});}
-function validVehicleFields(){for(const v of vehicles){const ids=['plate'+v.id,'brand'+v.id,'address'+v.id];if(v.brand==='Övrigt')ids.push('brand'+v.id);for(const id of ids){const field=$(id);if(!field.checkValidity()){field.reportValidity();return false;}}if(v.brand==='Övrigt'&&!v.customBrand.trim()){const input=$('brand'+v.id).nextElementSibling;input.reportValidity();return false;}}return true;}
+function validVehicleFields(){for(const v of vehicles){const ids=['plate'+v.id,'brand'+v.id,'address'+v.id];for(const id of ids){const field=$(id);if(!field.checkValidity()){field.reportValidity();return false;}}if(v.brand==='Övrigt'&&!v.customBrand.trim()){const input=$('brand'+v.id).nextElementSibling;input.setCustomValidity('Ange bilmärket.');input.reportValidity();return false;}}return true;}
 $('toStep2').addEventListener('click',()=>{
  $('message1').textContent='';if(!validVehicleFields())return;
  if(!allQuoted()){$('message1').textContent='Beräkna och kontrollera priset för samtliga adresser först.';return;}
