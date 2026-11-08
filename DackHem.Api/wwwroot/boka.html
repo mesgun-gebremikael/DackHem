@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0c192b">
+<meta name="theme-color" content="#252925">
 <meta name="description" content="Boka mobilt hjulbyte för en eller flera personbilar med olika adresser och tider. Se ditt exakta totalpris inklusive framkörning innan du bokar.">
 <title>Boka hjulbyte – DäckHem</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -64,6 +64,77 @@ footer{background:#0d1b2e;color:#c1d0df;padding:28px 20px;text-align:center;font
 .mobileTotal{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:10;background:#0d2036;color:#fff;align-items:center;justify-content:space-between;gap:10px;padding:10px 18px calc(10px + env(safe-area-inset-bottom));box-shadow:0 -8px 24px #14223755}.mobileTotal small{display:block;color:#b6cbe1}.mobileTotal strong{font-size:22px;color:#ffc45c}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+
+/* DäckHem Warm Premium · presentation only: no booking or pricing logic changes */
+:root{--dh-ink:#222624;--dh-charcoal:#252925;--dh-gold:#f4b744;--dh-cream:#faf7f1;--dh-stone:#f2ede5;--dh-muted:#616966;--dh-line:#e7e1d7}
+body{color:var(--dh-ink);background:var(--dh-cream)}
+header{background:rgba(34,38,36,.97);border-bottom:1px solid #ffffff1a}
+.brand{letter-spacing:-1px}
+.btn{background:linear-gradient(145deg,#ffd071,#f4b744);color:#25251f;border-radius:14px;box-shadow:0 8px 22px #bc84242a}
+.btn:hover{background:#ffce6a}
+.btn-outline{background:#fffdf8;color:#262b27;border-color:#ded6c8;box-shadow:none}
+.btn-outline:hover{background:#f7f0e7}
+input,textarea,select{border:1px solid #cec9bf;background:#fffefd;color:#262b27;border-radius:13px}
+input:focus,textarea:focus,select:focus{border-color:#b9892e}
+footer{background:#252925;color:#e4e4df}
+footer a{color:#f9c66a}
+
+:root{background:var(--dh-cream);color:var(--dh-ink)}
+header{background:#252925;border-bottom-color:#42453d}
+.navlinks{color:#e4e4df}
+.hero{background:radial-gradient(ellipse at 85% 10%,#f2e0c5 0%,transparent 48%),linear-gradient(120deg,#fffaf3,#f2ede4);color:#292d29}
+.hero .eyebrow{color:#9b691e}
+.hero h1{color:#282c28}
+.hero h1 span{color:#b27b2b}
+.hero p.lead{color:#59645e}
+.main{margin-top:-35px}
+.progress{background:#fffdf8;border:1px solid #e6ded0;color:#70726d;box-shadow:0 15px 38px #4e463619}
+.progressItem.active{color:#262924;background:#f6ead6}
+.progressItem.active .num{background:#f4b744;border-color:#f4b744;color:#29271e}
+.progressItem.done{color:#4d6754}
+.progressItem.done .num{color:#32744c;border-color:#7caa89}
+.progressItem .num{border-color:#c8c0b5}
+.panel,.summary{border-color:#e9e0d4;border-radius:23px;box-shadow:0 14px 40px #554b3a10;background:#fffefd}
+.panel h2{color:#272c28}
+.muted,.small,.status{color:#686e68}
+.service{background:#faf3e9;border-color:#eddfc9;border-radius:17px}
+.service small{color:#656b64}
+.counter button{background:#fffdf9;color:#2f332d;border-color:#cfc9bb}
+.vehicle{border-color:#e6dfd4;background:#fffefa;border-radius:18px}
+.vehicleBadge{background:#f7edd9;color:#7b551f}
+label{color:#353c34}
+input,select,textarea{border-color:#d0c7b9;color:#292e28}
+input::placeholder,textarea::placeholder{color:#91968d}
+.addrResults button{border-color:#d9d0c2;color:#30362d}
+.addrResults button:hover{background:#fff5e7;border-color:#dbb16b}
+.inlineBtn{color:#855d25}
+.quote{background:#f7f1e7}
+.quote strong,.reviewPrice{color:#262b27}
+.button{background:linear-gradient(140deg,#ffd071,#f4b744);color:#252920;border-radius:13px;box-shadow:0 6px 18px #b9892c20}
+.button:hover{background:#ffd474}
+.secondary{background:#f0ede8;color:#31362e;box-shadow:none}
+.secondary:hover{background:#e9e4dc}
+.summaryTop{background:linear-gradient(135deg,#272c28,#383d36);color:#fff}
+.summaryTop p,.summaryTop strong{color:#f7c46b}
+.summaryBody{background:#fffefd}
+.summaryBody p,.sumRow span{color:#676e67}
+.sumLine{border-color:#eae3d8}
+.reviewCard{background:#fffdfa;border-color:#e9e1d5}
+.success{background:#fffefa;border-color:#e7dfd4;box-shadow:0 15px 38px #51463218}
+.success p{color:#676e67}
+footer{background:#252925}
+@media(max-width:600px){
+ .hero{padding-bottom:72px}
+ .main{margin-top:-29px}
+ .progress{border-radius:17px}
+ .progressItem{font-size:11px}
+ .progressItem.active{background:#f8eedc}
+ .mobileTotal{background:rgba(37,41,37,.98);box-shadow:0 -8px 24px #282a2740}
+ .mobileTotal small{color:#e1e0d9}
+ .mobileTotal strong{color:#ffd071}
+}
+
 </style>
 </head>
 <body>
